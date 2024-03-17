@@ -15,5 +15,5 @@ then after, you need to clone the project using:
 
 To start the server, follow the instructions:
 
-1- `cd server`
-2- `npm start`
+1. `cd server`
+2. `npm start`
