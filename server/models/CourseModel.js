@@ -1,6 +1,7 @@
 //! TODO: create a schema for the course model
 
-import { model, models, Schema } from "mongoose";
+import pkg from "mongoose";
+const { Schema, model, models } = pkg;
 
 const courseSchema = new Schema({
   creator: {

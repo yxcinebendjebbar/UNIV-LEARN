@@ -1,6 +1,7 @@
 //! TODO: create a schema for the forum model
 
-import { Schema, model, models } from "mongoose";
+import pkg from "mongoose";
+const { Schema, model, models } = pkg;
 
 const forumSchema = new Schema({
   course: {

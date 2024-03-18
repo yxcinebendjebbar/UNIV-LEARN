@@ -1,6 +1,7 @@
 //! TODO: create a schema for the course review model
 
-import { Schema, model, models } from "mongoose";
+import pkg from "mongoose";
+const { Schema, model, models } = pkg;
 
 const reviewSchema = new Schema({
   course: {
