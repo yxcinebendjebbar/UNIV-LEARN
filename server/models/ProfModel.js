@@ -1,8 +1,8 @@
-//! TODO: create a schema for the student model
+//! TODO: create a schema for the teacher model
 
 import { model, models, Schema } from "mongoose";
 
-const studentSchema = new Schema({
+const profSchema = new Schema({
   fullName: {
     type: String,
     required: [true, "Please provide a full name"],
@@ -26,6 +26,6 @@ const studentSchema = new Schema({
   },
 });
 
-const Student = models.Student || model("Student", studentSchema);
+const Prof = models.Prof || model("Prof", profSchema);
 
-export default Student;
+export default Prof;
