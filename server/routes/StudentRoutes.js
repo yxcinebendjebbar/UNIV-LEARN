@@ -1,5 +1,5 @@
 import express from "express";
-
+import bcrypt from "bcrypt";
 import Student from "../models/StudentModel.js";
 
 const router = express.Router();
@@ -7,8 +7,14 @@ const router = express.Router();
 // Student sign up
 router.post("/signup", async (req, res) => {
   try {
-    const newStudent = new Student(req.body);
-    console.log(newStudent);
+    const { fullName, email, passwrd } = req.body;
+
+    const newStudent = new Student({
+      fullName,
+      email,
+      passwrd, 
+    });
+
     const student = await newStudent.save();
     res.status(201).json(student);
   } catch (error) {
@@ -27,8 +33,8 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    if (student.passwrd !== passwrd) {
-
+    const passwordMatch = await bcrypt.compare(passwrd, student.passwrd);
+    if (!passwordMatch) {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
