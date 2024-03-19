@@ -18,9 +18,12 @@ const studentSchema = new Schema({
     required: [true, "Please provide a password"],
     validate: {
       validator: function (password) {
-        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          password
+        );
       },
-      message: "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
+      message:
+        "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
     },
   },
   status: {
@@ -36,7 +39,7 @@ studentSchema.pre("save", async function (next) {
     return next();
   }
   try {
-    const hashedPassword = await bcrypt.hash(student.passwrd, 10);
+    const hashedPassword = await bcrypt.hash(student.passwrd, 12);
     student.passwrd = hashedPassword;
     next();
   } catch (error) {
