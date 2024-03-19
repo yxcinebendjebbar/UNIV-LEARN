@@ -16,4 +16,26 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+// Student login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, passwrd } = req.body;
+
+    const student = await Student.findOne({ email });
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    if (student.passwrd !== passwrd) {
+
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    res.status(200).json({ message: "Login successful", student });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
