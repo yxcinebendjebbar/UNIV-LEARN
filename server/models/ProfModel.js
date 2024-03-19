@@ -1,6 +1,6 @@
-//! TODO: create a schema for the teacher model
-
 import pkg from "mongoose";
+import bcrypt from "bcrypt";
+
 const { Schema, model, models } = pkg;
 
 const profSchema = new Schema({
@@ -16,15 +16,32 @@ const profSchema = new Schema({
   passwrd: {
     type: String,
     required: [true, "Please provide a password"],
-    match: [
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
-      "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
-    ],
+    validate: {
+      validator: function (password) {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
+      },
+      message: "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
+    },
   },
   status: {
     type: String,
     default: "allowed",
   },
+});
+
+// Hash password before saving to the database
+profSchema.pre("save", async function (next) {
+  const prof = this;
+  if (!prof.isModified("passwrd")) {
+    return next();
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(prof.passwrd, 12);
+    prof.passwrd = hashedPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 });
 
 const Prof = models.Prof || model("Prof", profSchema);
