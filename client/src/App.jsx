@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <div className='w-full h-screen flex justify-center items-center'>
-      <h1 className='text-xl'>React App</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
