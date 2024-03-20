@@ -38,7 +38,15 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    res.status(200).json({ message: "Login successful", student });
+    req.session.user = { email: student.email, id: student._id };
+    req.session.save((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Session error", err });
+      }
+      // res.send("Login successful, session user id: " + req.session.user.id);
+      res.status(200).json({ message: "Login successful", student });
+    });
+    // res.redirect("/hp");
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
