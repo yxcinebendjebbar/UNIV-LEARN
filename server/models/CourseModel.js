@@ -16,6 +16,16 @@ const courseSchema = new Schema({
     type: String,
     required: [true, "Please provide a description"],
   },
+  photo: {
+    type: String,
+    required: [true, "Please provide a photo"],
+  },
+  videos: [
+    {
+      type: String,
+      required: [true, "Please provide a video"],
+    },
+  ],
   specialty: {
     type: String,
     required: [true, "Please provide a specialty"],
@@ -40,10 +50,14 @@ const courseSchema = new Schema({
     type: Number,
     default: 0,
   },
-  progress: {
-    type: Number,
-    default: 0,
-    max: 100,
+  studentProgress: {
+    type: Schema.Types.ObjectId,
+    ref: "Student",
+    progress: {
+      type: Number,
+      default: 0,
+      max: 100,
+    },
   },
 });
 

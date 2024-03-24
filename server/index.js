@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import connectToDB from "./utils/database.js";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import session from "express-session";
 import studentRoutes from "./routes/StudentRoutes.js";
 import profsRoutes from "./routes/ProfRoutes.js";
@@ -24,14 +24,14 @@ app.use(
 );
 
 app.use(
-  "/students",
+  "/api/students",
   (req, res, next) => {
     console.log(req.session);
     next();
   },
   studentRoutes
 );
-app.use("/profs", profsRoutes);
+app.use("/api/profs", profsRoutes);
 
 // const requireAuth = (req, res, next) => {
 //   if (req.session.userId) {
