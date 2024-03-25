@@ -9,7 +9,7 @@ const replySchema = new Schema({
     ref: "Forum",
     required: true,
   },
-  writerName: {
+  writer: {
     type: Schema.Types.ObjectId,
     ref: "Student" || "Prof",
     required: true,
@@ -17,6 +17,10 @@ const replySchema = new Schema({
   content: {
     type: String,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

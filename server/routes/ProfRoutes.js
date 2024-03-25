@@ -4,14 +4,6 @@ import Prof from "../models/ProfModel.js";
 import session from "express-session";
 
 const router = express.Router();
-router.use(
-  session({
-    secret: "secret-key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true, maxAge: 3600000 },
-  })
-);
 
 // Prof sign up
 router.post("/signup", async (req, res) => {
@@ -47,11 +39,14 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    req.session.userId = prof._id;
-    res.status(200).json({ message: "Login successful", student });
-    // res.redirect("/hp");
-
-    res.status(200).json({ message: "Login successful", prof });
+    req.session.user = {id: prof._id ,role: "prof"};
+    req.session.save((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Session error", err });
+      }
+      res.status(200).json({ message: "Login successful", prof });
+    });
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
