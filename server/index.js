@@ -23,14 +23,7 @@ app.use(
   })
 );
 
-app.use(
-  "/api/students",
-  (req, res, next) => {
-    console.log(req.session);
-    next();
-  },
-  studentRoutes
-);
+app.use("/api/students", studentRoutes);
 app.use("/api/profs", profsRoutes);
 
 // const requireAuth = (req, res, next) => {

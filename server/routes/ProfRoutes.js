@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
     const prof = await Prof.findOne({ email });
 
     if (!prof) {
-      return res.status(404).json({ error: "Professor not found" });
+      return res.status(404).json({ error: "Prof not found" });
     }
 
     const passwordMatch = await bcrypt.compare(passwrd, prof.passwrd);
@@ -47,11 +47,15 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    req.session.userId = prof._id;
-    res.status(200).json({ message: "Login successful", student });
+    req.session.user = { email: prof.email, id: prof._id };
+    req.session.save((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Session error", err });
+      }
+      // res.send("Login successful, session user id: " + req.session.user.id);
+      res.status(200).json({ message: "Login successful", prof });
+    });
     // res.redirect("/hp");
-
-    res.status(200).json({ message: "Login successful", prof });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
