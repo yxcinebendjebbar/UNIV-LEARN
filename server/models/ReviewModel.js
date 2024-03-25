@@ -1,6 +1,7 @@
 //! TODO: create a schema for the course review model
 
 import pkg from "mongoose";
+import validator from "validator";
 const { Schema, model, models } = pkg;
 
 const reviewSchema = new Schema({
@@ -18,6 +19,12 @@ const reviewSchema = new Schema({
     type: String,
     required: true,
   },
+});
+
+// XSS protection
+reviewSchema.pre('save', function(next) {
+  this.content = validator.escape(this.content.trim());
+  next();
 });
 
 const Review = models.Review || model("Review", reviewSchema);

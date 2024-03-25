@@ -1,7 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import Prof from "../models/ProfModel.js";
-import session from "express-session";
 
 const router = express.Router();
 

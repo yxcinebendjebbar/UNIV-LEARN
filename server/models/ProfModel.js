@@ -1,5 +1,6 @@
 import pkg from "mongoose";
 import bcrypt from "bcrypt";
+import validator from "validator";
 
 const { Schema, model, models } = pkg;
 
@@ -42,6 +43,15 @@ profSchema.pre("save", async function (next) {
   } catch (error) {
     return next(error);
   }
+});
+
+// XSS protection
+profSchema.pre("save", function (next) {
+  const prof = this;
+  if (prof.isModified("fullName")) {
+    prof.fullName = validator.escape(prof.fullName.trim());
+  }
+  next();
 });
 
 const Prof = models.Prof || model("Prof", profSchema);
