@@ -1,17 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import Prof from "../models/ProfModel.js";
-import session from "express-session";
 
 const router = express.Router();
-router.use(
-  session({
-    secret: "secret-key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true, maxAge: 3600000 },
-  })
-);
 
 // Prof sign up
 router.post("/signup", async (req, res) => {

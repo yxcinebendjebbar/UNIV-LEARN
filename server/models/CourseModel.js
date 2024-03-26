@@ -1,6 +1,7 @@
 //! TODO: create a schema for the course model
 
 import pkg from "mongoose";
+import validator from "validator";
 const { Schema, model, models } = pkg;
 
 const courseSchema = new Schema({
@@ -59,6 +60,17 @@ const courseSchema = new Schema({
       max: 100,
     },
   },
+});
+
+// XSS protection
+courseSchema.pre("save", function (next) {
+  this.name = validator.escape(this.name);
+  this.description = validator.escape(this.description);
+  this.specialty = validator.escape(this.specialty);
+  this.faculty = validator.escape(this.faculty);
+  this.department = validator.escape(this.department);
+  this.level = validator.escape(this.level);
+  next();
 });
 
 const Course = models.Course || model("Course", courseSchema);

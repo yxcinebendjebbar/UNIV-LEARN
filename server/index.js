@@ -5,6 +5,8 @@ import * as dotenv from "dotenv";
 import session from "express-session";
 import studentRoutes from "./routes/StudentRoutes.js";
 import profsRoutes from "./routes/ProfRoutes.js";
+import forumsRoutes from "./routes/ForumRoutes.js";
+import replyRoutes from "./routes/ReplyRoutes.js";
 
 dotenv.config();
 
@@ -19,12 +21,14 @@ app.use(
     secret: "secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: "auto", maxAge: 3000 },
+    cookie: { secure: "auto", maxAge: 5*60*1000 },
   })
 );
 
 app.use("/api/students", studentRoutes);
 app.use("/api/profs", profsRoutes);
+app.use("/api/forums", forumsRoutes);
+app.use("/api/reply", replyRoutes);
 
 // const requireAuth = (req, res, next) => {
 //   if (req.session.userId) {
