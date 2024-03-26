@@ -12,14 +12,33 @@
 @tailwind components;
 @tailwind utilities;
 
-.primary-btn {
-  @apply border border-neutral-900 font-bold text-neutral-900 bg-white px-4 py-1 text-center;
+.dark {
+  @apply dark:bg-neutral-900 dark:text-neutral-100;
 }
 
-.secondary-btn {
-  @apply border border-neutral-900 font-bold text-white bg-neutral-900 px-4 py-1 text-center;
+.light {
+  @apply bg-neutral-100 text-neutral-900;
 }
 
-.text-btn {
-  @apply text-neutral-900 font-bold;
+.Solid {
+  @apply bg-neutral-900 text-neutral-100 px-4 py-2 dark:bg-neutral-100 dark:text-neutral-900;
+}
+.Bordered {
+  @apply border border-neutral-900 text-neutral-900 px-4 py-2 dark:border-neutral-100 dark:text-neutral-100;
+}
+
+.Light {
+  @apply bg-transparent text-neutral-900 px-4 py-2 dark:text-neutral-100;
+}
+
+.text-header {
+  @apply text-xl md:text-2xl lg:text-4xl font-bold;
+}
+
+.text-desc {
+  @apply text-lg md:text-xl lg:text-2xl;
+}
+
+.text-subheader {
+  @apply md:text-lg lg:text-xl text-gray-500 dark:text-gray-400;
 }

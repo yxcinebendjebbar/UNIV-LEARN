@@ -1,31 +1,52 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import Switcher from "./Switcher";
 import univlearn from "../assets/univ-learn-logo-black.png";
 
-function Navbar() {
+function NavBar() {
+  const location = useLocation();
   return (
-    <nav className='flex justify-between shadow-neutral-600 shadow-md z-[9999px]'>
-      <div className='flex justify-center items-center'>
+    <nav className='h-16 flex items-center justify-between border-b border-neutral-800'>
+      <div className='p-4 flex items-center gap-2'>
         <img
           src={univlearn}
-          draggable='false'
-          alt='UNIVLEARN logo'
-          className='w-8 m-2 ml-10'
+          alt='UnivLearn'
+          width={32}
+          className='dark:invert'
         />
-        <h1 className='text-5xl m-2 font-bold pb-2'>UNIVLEARN</h1>
+        <h1 className='text-2xl font-bold hidden sm:block md:text-3xl lg:text-4xl'>
+          UNIVLEARN
+        </h1>
       </div>
-      <ul className='flex gap-3 justify-evenly items-center mx-3'>
-        <li>
-          <button className='text-btn'>Sign in as Teacher</button>
-        </li>
-        <li>
-          <button className='primary-btn'>Login</button>
-        </li>
-        <li>
-          <button className='secondary-btn'>Sign up</button>
-        </li>
-      </ul>
+      {location.pathname === "/" && (
+        <ul className='flex items-center gap-2 mr-4'>
+          <li>
+            <button
+              className='Solid rounded hover:bg-neutral-800 transition-all'
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              Login
+            </button>
+          </li>
+          <li>
+            <button
+              className='Bordered rounded'
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              Sign up
+            </button>
+          </li>
+          <li>
+            <Switcher />
+          </li>
+        </ul>
+      )}
     </nav>
   );
 }
 
-export default Navbar;
+export default NavBar;
