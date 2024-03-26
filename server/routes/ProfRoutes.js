@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    req.session.user = { email: prof.email, id: prof._id };
+    req.session.user = { email: prof.email, id: prof._id, role: "prof" };
     req.session.save((err) => {
       if (err) {
         return res.status(500).json({ error: "Session error", err });
