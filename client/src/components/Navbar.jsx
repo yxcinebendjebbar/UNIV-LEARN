@@ -22,7 +22,7 @@ function NavBar() {
         <ul className='flex items-center gap-2 mr-4'>
           <li>
             <button
-              className='Solid rounded hover:bg-neutral-800 transition-all'
+              className='Solid '
               onClick={() => {
                 window.location.href = "/login";
               }}
@@ -32,9 +32,9 @@ function NavBar() {
           </li>
           <li>
             <button
-              className='Bordered rounded'
+              className='Bordered'
               onClick={() => {
-                window.location.href = "/login";
+                window.location.href = "/signup";
               }}
             >
               Sign up

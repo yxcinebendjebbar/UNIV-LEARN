@@ -18,7 +18,7 @@ function Switcher() {
   return (
     <div>
       <button onClick={() => setDarkMode(!darkMode)}>
-        {darkMode ? <CiDark width={32} /> : <CiLight width={32} />}
+        {darkMode ? <CiLight width={32} /> : <CiDark width={32} />}
       </button>
     </div>
   );
