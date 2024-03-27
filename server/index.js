@@ -7,6 +7,7 @@ import studentRoutes from "./routes/StudentRoutes.js";
 import profsRoutes from "./routes/ProfRoutes.js";
 import forumsRoutes from "./routes/ForumRoutes.js";
 import replyRoutes from "./routes/ReplyRoutes.js";
+import courseRoutes from "./routes/CourseRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(
 app.use("/api/profs", profsRoutes);
 app.use("/api/forums", forumsRoutes);
 app.use("/api/reply", replyRoutes);
+app.use("/api/courses", courseRoutes);
 
 // const requireAuth = (req, res, next) => {
 //   if (req.session.userId) {
