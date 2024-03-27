@@ -171,11 +171,17 @@ async function convertVideosToM3u8(videos, userId, name) {
       const originalResolution = await getVideoResolution(video.path);
       const resolutionsToConvert = getResolutionsToConvert(originalResolution);
       
+      // Create an array to store paths for this video
+      const pathsForVideo = [];
+      
       for (const resolution of resolutionsToConvert) {
         const { folderPath, masterM3u8Path } = await convertVideo(video.path, userId, name, resolution.width, resolution.height);
         const originalVideoPath = path.posix.normalize(path.posix.join(folderPath, path.basename(video.path)));
-        convertedPaths.push({ folderPath, originalVideoPath, masterM3u8Path });
+        pathsForVideo.push({ folderPath, originalVideoPath, masterM3u8Path });
       }
+      
+      // Push the paths for this video to convertedPaths
+      convertedPaths.push(pathsForVideo[0]);
     } catch (error) {
       console.error('Error converting video:', video.path, error);
     }
