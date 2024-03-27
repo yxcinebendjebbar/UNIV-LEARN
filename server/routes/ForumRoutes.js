@@ -45,7 +45,7 @@ router.get("/:id", isLoggedIn ,async (req, res) => {
     }
   });
 
-router.post("/create", isLoggedIn, isProfessor, async (req, res) => {
+router.post("/create", isProfessor , async (req, res) => {
   try {
     const newForum = new Forum({
       title: req.body.title,
