@@ -40,7 +40,7 @@ function NavBar() {
               Sign up
             </button>
           </li>
-          <li>
+          <li className='mx-3'>
             <Switcher />
           </li>
         </ul>
