@@ -1,10 +1,12 @@
 import express from 'express';
 import multer from 'multer';
-import Course from '../models/CourseModel.js';
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import Course from '../models/CourseModel.js';
+import Prof from '../models/ProfModel.js';
+import Student from '../models/StudentModel.js';
 
 const router = express.Router();
 ffmpeg.setFfmpegPath('C:/ffmpeg-6.1.1-full_build/bin/ffmpeg');
@@ -58,16 +60,48 @@ router.get('/', isLoggedIn , async (req, res) => {
 });
 
 // Route for retrieving a single course by its ID
-router.get('/:id', isLoggedIn ,  async (req, res) => {
+router.get('/:id', isLoggedIn, async (req, res) => {
   try {
     const courseId = req.params.id;
+    const userId = req.session.user.id;
+    const userRole = req.session.user.role;
+
     const course = await Course.findById(courseId);
     
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
-    res.status(200).json(course);
+
+    // Check if the user is enrolled in the course
+    let isEnrolled = false;
+    if (userRole === 'student') {
+      const student = await Student.findById(userId);
+      if (!student) {
+        return res.status(404).json({ error: 'Student not found' });
+      }
+      isEnrolled = student.enrolledCourses.some(enrolledCourse => String(enrolledCourse.courseId) === courseId);
+    } else if (userRole === 'prof') {
+      const professor = await Professor.findById(userId);
+      if (!professor) {
+        return res.status(404).json({ error: 'Professor not found' });
+      }
+      isEnrolled = professor.enrolledCourses.some(enrolledCourse => String(enrolledCourse.courseId) === courseId);
+    }
+
+    // Return different responses based on enrollment status
+    if (isEnrolled) {
+      // Return course data without any restrictions
+      return res.status(200).json(course);
+    } else {
+      // Return a restricted version of the course data
+      const restrictedCourseData = {
+        _id: course._id,
+        name: course.courseName,
+        description: course.description,
+        // Add any other properties you want to include in the restricted version
+      };
+      return res.status(200).json(restrictedCourseData);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -316,6 +350,70 @@ function calculateBitrate(width, height, frameRate = 30, encoding = 'h264') {
   // Clamp the bitrate to reasonable ranges (adjust as needed)
   return Math.min(Math.max(estimatedBitrate, 0.4 * 1024 * 1024), 8 * 1024 * 1024); // Clamp to range (0.4 - 8 Mbps)
 }
+
+// Route for enrolling in a course
+router.post('/:id/enroll', isLoggedIn , async (req, res) => {
+  try {
+    const { id: courseId } = req.params;
+    const userId = req.session.user.id;
+    const role = req.session.user.role;
+
+    let user;
+    if (role === 'prof') {
+      user = await Prof.findById(userId);
+    } else if (role === 'student') {
+      user = await Student.findById(userId);
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+
+    // Check if the user is already enrolled in the course
+    if (role === 'prof' && user.enrolledCourses.includes(courseId)) {
+      return res.status(400).json({ error: "Professor is already enrolled in this course" });
+    } else if (role === 'student' && user.enrolledCourses.includes(courseId)) {
+      return res.status(400).json({ error: "Student is already enrolled in this course" });
+    }
+
+    // Enroll the user in the course based on their role
+    user.enrolledCourses.push(courseId);
+    await user.save();
+
+    res.status(200).json({ message: "User enrolled in the course successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Get enrolled courses
+router.get("/enrolled-courses", isLoggedIn ,async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const role = req.session.user.role;
+
+    let user;
+    if (role === 'student') {
+      user = await Student.findById(userId).populate("enrolledCourses.courseId");
+    } else if (role === 'prof') {
+      user = await Prof.findById(userId).populate("enrolledCourses.courseId");
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ enrolledCourses: user.enrolledCourses });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 export default router;
