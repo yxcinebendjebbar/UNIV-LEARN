@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "../components/NavBar";
+import Accordion from "../components/Accordion";
 import studying from "../assets/studying-header.png";
 import studentImg from "../assets/student.jpg";
 import teacherImg from "../assets/teacher.jpg";
+import Footer from "../components/Footer";
 
 const categories = [
   {
@@ -138,6 +140,54 @@ function LandingPage() {
           </AnimatePresence>
         </div>
       </section>
+      <section className='mx-8 md:px-24 mt-32 pb-8 flex flex-col items-center lg:items-start lg:flex-row lg:justify-between gap-x-5'>
+        <div className='lg:max-w-60'>
+          <h2 className='text-header'> FAQ</h2>
+          <p className='text-subheader'>
+            Still having any questions? Contact our team via
+            support.univlearn@gmail.com
+          </p>
+          <button className='Light font-medium'>See All FAQ's</button>
+        </div>
+        <div className='mt-8 w-2/3 flex flex-col gap-16'>
+          <Accordion
+            title='Can i enroll in multiple classes at once?'
+            defaultState='opened'
+          >
+            Absolutely! You can enroll in multiple courses simultaneously and
+            access them at your convenience.
+          </Accordion>
+          <Accordion
+            title='What kind of support can I expect from instructors?'
+            defaultState='closed'
+          >
+            Our instructors are available to answer your questions and provide
+            feedback on your assignments and projects.
+          </Accordion>
+          <Accordion
+            title='Are the courses self-paced or do they have specific start and end dates?'
+            defaultState='closed'
+          >
+            Our courses are self-paced, so you can start and finish them at your
+            convenience.
+          </Accordion>
+          <Accordion
+            title='Are there any prerequisites for the courses?'
+            defaultState='closed'
+          >
+            Some courses may have prerequisites, but most of them are open to
+            anyone interested in learning.
+          </Accordion>
+          <Accordion
+            title='Can I download the course materials for offline access?'
+            defaultState='closed'
+          >
+            Yes, you can download the course materials and access them offline
+            at any time.
+          </Accordion>
+        </div>
+      </section>
+      <Footer />
     </div>
   );
 }
