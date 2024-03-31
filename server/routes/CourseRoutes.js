@@ -60,7 +60,7 @@ router.get('/', isLoggedIn , async (req, res) => {
 });
 
 // Route for retrieving a single course by its ID
-router.get('/:id', isLoggedIn, async (req, res) => {
+router.get('course/:id', isLoggedIn, async (req, res) => {
   try {
     const courseId = req.params.id;
     const userId = req.session.user.id;
@@ -414,6 +414,54 @@ router.get("/enrolled-courses", isLoggedIn ,async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+router.get('/search', async (req, res) => {
+  try {
+    const { searchTerm, filters } = req.query;
+
+    let query = {};
+    const matchConditions = [];
+
+    if (searchTerm) {
+      matchConditions.push({
+        $or: [
+          { courseName: { $regex: searchTerm, $options: 'i' } },
+          { description: { $regex: searchTerm, $options: 'i' } }
+        ]
+      });
+    }
+
+    if (filters) {
+      const filterObject = JSON.parse(filters);
+
+      const availableFilters = ['department', 'faculty', 'level'];
+      availableFilters.forEach(filterKey => {
+        if (filterObject[filterKey]) {
+          const filterValues = Array.isArray(filterObject[filterKey]) ? filterObject[filterKey] : [filterObject[filterKey]];
+          matchConditions.push({ [filterKey]: { $in: filterValues } });
+        }
+      });
+    }
+
+    if (matchConditions.length > 0) {
+      query = { $and: matchConditions };
+    }
+    const courses = await Course.find(query).select('-videos'); 
+
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
 
 
 export default router;

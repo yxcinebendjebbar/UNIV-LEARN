@@ -52,12 +52,12 @@ function videosArrayValidator(videos) {
 
 // XSS protection
 courseSchema.pre("save", function (next) {
-  this.courseName = validator.escape(this.courseName);
-  this.description = validator.escape(this.description);
-  this.specialty = validator.escape(this.specialty);
-  this.faculty = validator.escape(this.faculty);
-  this.department = validator.escape(this.department);
-  this.level = validator.escape(this.level);
+  this.courseName = validator.escape(this.courseName.trim());
+  this.description = validator.escape(this.description.trim());
+  this.specialty = validator.escape(this.specialty.trim());
+  this.faculty = validator.escape(this.faculty.trim());
+  this.department = validator.escape(this.department.trim());
+  this.level = validator.escape(this.level.trim());
   next();
 });
 
