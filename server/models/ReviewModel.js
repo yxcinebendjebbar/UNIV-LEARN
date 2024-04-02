@@ -10,7 +10,7 @@ const reviewSchema = new Schema({
     ref: "Course",
     required: true,
   },
-  writerId: {
+  writerName: {
     type: Schema.Types.ObjectId,
     ref: "Student" || "Prof",
     required: true,

@@ -4,14 +4,6 @@ import validator from "validator";
 
 const { Schema, model, models } = pkg;
 
-const enrolledCourse = new Schema({
-  courseId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
-  }
-});
-
 const profSchema = new Schema({
   fullName: {
     type: String,
@@ -36,13 +28,6 @@ const profSchema = new Schema({
     type: String,
     default: "allowed",
   },
-  enrolledCourses: {
-    type: [enrolledCourse]
-  },
-  profilePicture:{
-    type: String,
-    default: "assets/default-profilepic.jpg"
-  }
 });
 
 // Hash password before saving to the database

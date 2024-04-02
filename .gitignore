@@ -19,4 +19,3 @@ client/.env.development.local
 build
 dist
 
-/server/uploads
