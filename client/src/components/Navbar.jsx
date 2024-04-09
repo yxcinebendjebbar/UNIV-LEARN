@@ -153,7 +153,7 @@ function NavBar() {
                       className='w-14 h-14 rounded-full object-cover'
                     />
                     <div>
-                      <h2 className='text-header'>{user?.fullName}</h2>
+                      <h2 className='text-header'>{user?.username}</h2>
                       <a href='/profile'>View Profile</a>
                     </div>
                   </li>

@@ -3,22 +3,22 @@ import axios from "axios";
 import Switcher from "../components/Switcher";
 import { useAuth } from "../hooks/useAuth";
 
-axios.defaults.baseURL = "http://localhost:8000";
 function LoginPage() {
   const { login } = useAuth();
   const logIn = async (email, password) => {
     await axios
-      .post("/api/students/login", {
-        email,
-        passwrd: password,
-      })
+      .post(
+        "/api/users/login",
+        {
+          email,
+          passwrd: password,
+        },
+        { withCredentials: true }
+      )
       .then(async (res) => {
         console.log(res);
         if (res.data.auth) {
-          await login({
-            email,
-            fullName: res.data.studentfullName,
-          });
+          await login(res.data.user);
         }
       })
       .catch((err) => {
@@ -115,7 +115,7 @@ function LoginPage() {
             </p>
             <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
               <a
-                href='#'
+                href='/login-teacher'
                 className='font-medium text-primary-600 hover:underline dark:text-primary-500'
               >
                 Log in as Teacher

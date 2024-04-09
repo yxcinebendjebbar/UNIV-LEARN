@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import Switcher from "../components/Switcher";
 import { useAuth } from "../hooks/useAuth";
@@ -13,7 +14,7 @@ function SignupPage() {
           fullName,
           email,
           passwrd: password,
-          role: "student",
+          role: "prof",
         },
         { withCredentials: true }
       )
@@ -28,11 +29,9 @@ function SignupPage() {
         console.error(err);
         if (error.includes("E11000")) {
           confirm("Email already exists. Do you want to login?")
-            ? (window.location.href = "/login")
-            : (window.location.href = "/signup");
+            ? (window.location.href = "/login-teacher")
+            : (window.location.href = "/signup-teacher");
           return;
-        } else {
-          alert("An error occurred. Please try again later.");
         }
       });
   };
@@ -173,7 +172,7 @@ function SignupPage() {
             <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
               Already have an account?{" "}
               <a
-                href='/login'
+                href='/login-teacher'
                 className='font-medium text-primary-600 hover:underline dark:text-primary-500'
               >
                 Log in
@@ -182,10 +181,10 @@ function SignupPage() {
             <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
               Or sign up as{" "}
               <a
-                href='/signup-teacher'
+                href='/signup'
                 className='font-medium text-primary-600 hover:underline dark:text-primary-500'
               >
-                Teacher
+                Student
               </a>
             </p>
           </form>

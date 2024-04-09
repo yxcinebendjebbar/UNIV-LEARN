@@ -4,7 +4,7 @@ import validator from "validator";
 
 const { Schema, model, models } = pkg;
 
-const profSchema = new Schema({
+const userSchema = new Schema({
   fullName: {
     type: String,
     required: [true, "Please provide a full name"],
@@ -19,10 +19,17 @@ const profSchema = new Schema({
     required: [true, "Please provide a password"],
     validate: {
       validator: function (password) {
-        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          password
+        );
       },
-      message: "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
+      message:
+        "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
     },
+  },
+  role: {
+    type: String,
+    enum: ["student", "teacher"],
   },
   status: {
     type: String,
@@ -31,14 +38,14 @@ const profSchema = new Schema({
 });
 
 // Hash password before saving to the database
-profSchema.pre("save", async function (next) {
-  const prof = this;
-  if (!prof.isModified("passwrd")) {
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (!user.isModified("passwrd")) {
     return next();
   }
   try {
-    const hashedPassword = await bcrypt.hash(prof.passwrd, 12);
-    prof.passwrd = hashedPassword;
+    const hashedPassword = await bcrypt.hash(user.passwrd, 12);
+    user.passwrd = hashedPassword;
     next();
   } catch (error) {
     return next(error);
@@ -46,14 +53,14 @@ profSchema.pre("save", async function (next) {
 });
 
 // XSS protection
-profSchema.pre("save", function (next) {
-  const prof = this;
-  if (prof.isModified("fullName")) {
-    prof.fullName = validator.escape(prof.fullName.trim());
+userSchema.pre("save", function (next) {
+  const user = this;
+  if (user.isModified("fullName")) {
+    user.fullName = validator.escape(user.fullName.trim());
   }
   next();
 });
 
-const Prof = models.Prof || model("Prof", profSchema);
+const User = models.User || model("User", userSchema);
 
-export default Prof;
+export default User;
