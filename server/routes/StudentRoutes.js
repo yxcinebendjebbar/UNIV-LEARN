@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Student sign up
 router.post("/signup", async (req, res) => {
+  console.log(req.body);
   try {
     const { fullName, email, passwrd } = req.body;
 
@@ -16,9 +17,12 @@ router.post("/signup", async (req, res) => {
     });
 
     const student = await newStudent.save();
-    res.status(201).json(student);
+    res.status(201).json({
+      message: "Student created successfully",
+      auth: true,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, auth: false });
   }
 });
 
@@ -38,13 +42,19 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    req.session.user = {id: student._id ,role: "student"};
+    req.session.user = { id: student._id, role: "student" };
     req.session.save((err) => {
       if (err) {
         return res.status(500).json({ error: "Session error", err });
       }
       // res.send("Login successful, session user id: " + req.session.user.id);
-      res.status(200).json({ message: "Login successful", student });
+      res
+        .status(200)
+        .json({
+          message: "Login successful",
+          studentfullName: student.fullName,
+          auth: true,
+        });
     });
     console.log(req.session.user);
     // res.redirect("/hp");
@@ -54,4 +64,3 @@ router.post("/login", async (req, res) => {
 });
 
 export default router;
-
