@@ -26,7 +26,9 @@ To start the server, follow the instructions:
 
 First, you need to install the current dependecies:
 
+
 1-`cd client`
+
 2-`npm i` or `npm install`
 
 
