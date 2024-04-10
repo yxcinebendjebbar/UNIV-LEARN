@@ -25,8 +25,12 @@ To start the server, follow the instructions:
 ## Client set up
 
 First, you need to install the current dependecies:
+
 1-`cd client`
+
 2-`npm i` or `npm install`
+
+
 
 After that, launch the client vite server in dev mode: 
 `npm run dev`
