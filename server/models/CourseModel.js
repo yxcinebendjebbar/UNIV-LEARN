@@ -7,7 +7,7 @@ const { Schema, model, models } = pkg;
 const courseSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
-    ref: "Prof",
+    ref: "User",
   },
   name: {
     type: String,

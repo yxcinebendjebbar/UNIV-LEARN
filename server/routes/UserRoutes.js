@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import User from "../models/UserModel.js";
+import Course from "../models/CourseModel.js";
 
 const router = express.Router();
 
@@ -69,13 +70,35 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// get user info
+// get profs names with posted courses
 
-router.get("/me", (req, res) => {
-  if (req.session.user) {
-    res.status(200).json(req.session.user);
-  } else {
-    res.status(404).json({ error: "User not found" });
+router.get("/profs", async (req, res) => {
+  try {
+    const result = await Course.aggregate([
+      {
+        $group: {
+          _id: "$creator",
+          courses: { $push: "$fullName" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "prof",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$user.fullName",
+        },
+      },
+    ]);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

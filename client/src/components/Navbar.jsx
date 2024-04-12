@@ -137,7 +137,7 @@ function NavBar() {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -100, opacity: 0 }}
-                className='w-full fixed right-0 top-0 origin-top-right h-screen bg-neutral-100 dark:bg-neutral-900'
+                className='w-full fixed right-0 top-0 origin-top-right h-screen z-50 bg-neutral-100 dark:bg-neutral-900'
               >
                 <div className='flex justify-end p-4'>
                   <IoClose
