@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaStar } from "react-icons/fa";
@@ -241,7 +242,7 @@ function HomePage() {
           })}
         </div>
       </section>
-      <main className='mx-8 md:px-24 mt-32 pb-8'>
+      <section className='mx-8 md:px-24 mt-32 pb-8'>
         <div className='border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center'>
           <h2 className='mb-4 text-header'>Learning Paths</h2>
           <button
@@ -304,7 +305,8 @@ function HomePage() {
             );
           })}
         </div>
-      </main>
+      </section>
+      <Footer />
     </div>
   );
 }

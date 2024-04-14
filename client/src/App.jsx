@@ -11,6 +11,8 @@ import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
 import TeacherSignupPage from "./pages/TeacherSignupPage";
 import TeacherLoginPage from "./pages/TeacherLoginPage";
+import CoursesPage from "./pages/CoursesPage";
+import CoursePage from "./pages/CoursePage";
 
 function App() {
   return (
@@ -22,7 +24,22 @@ function App() {
           <Route path='/signup' element={<SignupPage />} />
           <Route path='/signup-teacher' element={<TeacherSignupPage />} />
           <Route path='/login-teacher' element={<TeacherLoginPage />} />
-
+          <Route
+            path='/courses'
+            element={
+              <ProtectedRoute>
+                <CoursesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/courses/:id'
+            element={
+              <ProtectedRoute>
+                <CoursePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path='/home'
             element={
