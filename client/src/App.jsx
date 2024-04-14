@@ -9,6 +9,8 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
+import Dashboard from "./pages/Dashboard.jsx";
+import NewCourseForm from "./components/NewCourseForm.jsx";
 import TeacherSignupPage from "./pages/TeacherSignupPage";
 import TeacherLoginPage from "./pages/TeacherLoginPage";
 import CoursesPage from "./pages/CoursesPage";
@@ -19,6 +21,11 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/signup' element={<SignupPage />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/addNewCourse' element={<NewCourseForm />} />
           <Route path='/' element={<LandingPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<SignupPage />} />
@@ -54,6 +61,7 @@ function App() {
   );
 }
 
+// eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   if (!user) {
