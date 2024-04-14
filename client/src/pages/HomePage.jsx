@@ -1,11 +1,10 @@
-import React from "react";
-import NavBar from "../components/NavBar";
+import HomeNavBar from "../components/Navbar.jsx";
 
 function HomePage() {
   const user = JSON.parse(localStorage.getItem("user"));
   return (
     <div>
-      <NavBar />
+      <HomeNavBar />
       HomePage
     </div>
   );

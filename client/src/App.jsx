@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,18 +9,21 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
+import Dashboard from "./pages/Dashboard.jsx";
+import NewCourseForm from "./components/NewCourseForm.jsx";
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path='/' element={<LandingPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignupPage />} />
-
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/addNewCourse" element={<NewCourseForm />} />
           <Route
-            path='/home'
+            path="/home"
             element={
               <ProtectedRoute>
                 <HomePage />
@@ -34,11 +36,12 @@ function App() {
   );
 }
 
+// eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   if (!user) {
     // user is not authenticated
-    return <Navigate to='/login' />;
+    return <Navigate to="/login" />;
   }
   return children;
 };
