@@ -221,10 +221,14 @@ router.post(
       });
 
       await course.save();
-      res.status(201).json(course);
+      res
+        .status(201)
+        .json({ message: "Course has been saved", course: course });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal server error" });
+      res
+        .status(500)
+        .json({ error: "Internal server error", errorMessage: error });
     }
   }
 );

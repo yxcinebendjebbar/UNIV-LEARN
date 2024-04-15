@@ -28,7 +28,7 @@ export default function Dashboard() {
             <nav className='flex items-center gap-4 md:gap-2 lg:gap-4'>
               <a
                 className='rounded-lg border border-gray-200  px-3 py-2 text-sm  dark:border-gray-800'
-                href='#'
+                href='/new-course'
               >
                 Add New Course
               </a>
@@ -46,7 +46,7 @@ export default function Dashboard() {
               <div className='grid items-center grid-cols-[50px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
                 <div>
                   <img
-                    src='/placeholder.svg'
+                    src='https://via.placeholder.com/150'
                     width='100'
                     height='60'
                     alt='Course thumbnail'
