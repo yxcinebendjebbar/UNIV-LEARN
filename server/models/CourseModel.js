@@ -23,8 +23,14 @@ const courseSchema = new Schema({
   },
   videos: [
     {
-      type: String,
-      required: [true, "Please provide a video"],
+      title: {
+        type: String,
+        required: [true, "Please provide a video"],
+      },
+      url: {
+        type: String,
+        required: [true, "Please provide a video"],
+      },
     },
   ],
   specialty: {

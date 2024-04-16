@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import ffmpeg from "fluent-ffmpeg";
+// import ffmpeg from "ffmpeg";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
@@ -8,9 +9,7 @@ import Course from "../models/CourseModel.js";
 import User from "../models/UserModel.js";
 
 const router = express.Router();
-ffmpeg.setFfmpegPath(
-  "C:/Users/YXCINE/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-7.0-essentials_build/bin/ffmpeg"
-);
+ffmpeg.setFfmpegPath("C:/ffmpeg-6.1.1-full_build/bin/ffmpeg");
 
 const isLoggedIn = (req, res, next) => {
   if (!req.session.user) {
@@ -20,7 +19,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const isProfessor = (req, res, next) => {
-  if (!req.session.user || req.session.user.role !== "prof") {
+  if (!req.session.user || req.session.user.role !== "teacher") {
     return res
       .status(403)
       .json({ error: "Only professors can perform this action" });
@@ -33,7 +32,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ensure userId and courseName are provided
     const name = req.body.name.trim();
-    const userId = req.session.user.username;
+    const userId = req.session.user.id;
     if (!userId || !name) {
       return cb(new Error("User ID and course name are required"));
     }
@@ -70,7 +69,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 router.get("course/:id", isLoggedIn, async (req, res) => {
   try {
     const courseId = req.params.id;
-    const userId = req.session.user.username;
+    const userId = req.session.user.id;
     const userRole = req.session.user.role;
 
     const course = await Course.findById(courseId);
@@ -89,7 +88,7 @@ router.get("course/:id", isLoggedIn, async (req, res) => {
       isEnrolled = student.enrolledCourses.some(
         (enrolledCourse) => String(enrolledCourse.courseId) === courseId
       );
-    } else if (userRole === "prof") {
+    } else if (userRole === "teacher") {
       const professor = await User.findById(userId);
       if (!professor) {
         return res.status(404).json({ error: "Professor not found" });
@@ -120,10 +119,10 @@ router.get("course/:id", isLoggedIn, async (req, res) => {
 });
 
 // Route for deleting a course by its ID
-router.delete("/course/:id", isProfessor, async (req, res) => {
+router.delete("/:id", isProfessor, async (req, res) => {
   try {
     const courseId = req.params.id;
-    const userId = req.session.user.username;
+    const userId = req.session.user.id;
 
     // Find the course by ID
     const course = await Course.findById(courseId);
@@ -183,7 +182,7 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      const userId = req.session.user.username;
+      const userId = req.session.user.id;
       const { name, description, specialty, faculty, department, level } =
         req.body; // Use 'name' field as 'courseName'
       const { photo, videos } = req.files;
@@ -206,7 +205,7 @@ router.post(
       console.log(videoData);
       const course = new Course({
         userId,
-        courseName: name,
+        name,
         description,
         specialty,
         faculty,
@@ -221,14 +220,10 @@ router.post(
       });
 
       await course.save();
-      res
-        .status(201)
-        .json({ message: "Course has been saved", course: course });
+      res.status(201).json(course);
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({ error: "Internal server error", errorMessage: error });
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 );
@@ -455,10 +450,10 @@ router.post("/:id/enroll", isLoggedIn, async (req, res) => {
     const role = req.session.user.role;
 
     let user;
-    if (role === "prof") {
-      user = await Prof.findById(userId);
+    if (role === "teacher") {
+      user = await User.findById(userId);
     } else if (role === "student") {
-      user = await Student.findById(userId);
+      user = await User.findById(userId);
     }
 
     if (!user) {
@@ -471,7 +466,7 @@ router.post("/:id/enroll", isLoggedIn, async (req, res) => {
     }
 
     // Check if the user is already enrolled in the course
-    if (role === "prof" && user.enrolledCourses.includes(courseId)) {
+    if (role === "teacher" && user.enrolledCourses.includes(courseId)) {
       return res
         .status(400)
         .json({ error: "Professor is already enrolled in this course" });
@@ -502,10 +497,8 @@ router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
 
     let user;
     if (role === "student") {
-      user = await Student.findById(userId).populate(
-        "enrolledCourses.courseId"
-      );
-    } else if (role === "prof") {
+      user = await User.findById(userId).populate("enrolledCourses.courseId");
+    } else if (role === "teacher") {
       user = await Prof.findById(userId).populate("enrolledCourses.courseId");
     }
 
@@ -519,46 +512,46 @@ router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
   }
 });
 
-router.get("/search", async (req, res) => {
-  try {
-    const { searchTerm, filters } = req.query;
+// router.get("/search", async (req, res) => {
+//   try {
+//     const { searchTerm, filters } = req.query;
 
-    let query = {};
-    const matchConditions = [];
+//     let query = {};
+//     const matchConditions = [];
 
-    if (searchTerm) {
-      matchConditions.push({
-        $or: [
-          { courseName: { $regex: searchTerm, $options: "i" } },
-          { description: { $regex: searchTerm, $options: "i" } },
-        ],
-      });
-    }
+//     if (searchTerm) {
+//       matchConditions.push({
+//         $or: [
+//           { courseName: { $regex: searchTerm, $options: "i" } },
+//           { description: { $regex: searchTerm, $options: "i" } },
+//         ],
+//       });
+//     }
 
-    if (filters) {
-      const filterObject = JSON.parse(filters);
+//     if (filters) {
+//       const filterObject = JSON.parse(filters);
 
-      const availableFilters = ["department", "faculty", "level"];
-      availableFilters.forEach((filterKey) => {
-        if (filterObject[filterKey]) {
-          const filterValues = Array.isArray(filterObject[filterKey])
-            ? filterObject[filterKey]
-            : [filterObject[filterKey]];
-          matchConditions.push({ [filterKey]: { $in: filterValues } });
-        }
-      });
-    }
+//       const availableFilters = ["department", "faculty", "level"];
+//       availableFilters.forEach((filterKey) => {
+//         if (filterObject[filterKey]) {
+//           const filterValues = Array.isArray(filterObject[filterKey])
+//             ? filterObject[filterKey]
+//             : [filterObject[filterKey]];
+//           matchConditions.push({ [filterKey]: { $in: filterValues } });
+//         }
+//       });
+//     }
 
-    if (matchConditions.length > 0) {
-      query = { $and: matchConditions };
-    }
-    const courses = await Course.find(query).select("-videos");
+//     if (matchConditions.length > 0) {
+//       query = { $and: matchConditions };
+//     }
+//     const courses = await Course.find(query).select("-videos");
 
-    res.status(200).json(courses);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+//     res.status(200).json(courses);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 export default router;

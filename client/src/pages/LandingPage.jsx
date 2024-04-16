@@ -31,7 +31,7 @@ const categories = [
 
 function LandingPage() {
   return (
-    <div className='w-screen h-screen'>
+    <div className='w-screen'>
       <LandingNavBar />
       <main className='mx-8 md:px-24 mt-32 mb-52'>
         <div className='flex items-center justify-between'>
@@ -70,25 +70,27 @@ function LandingPage() {
           Such variation of topics and categories
         </p>
         <div className='flex flex-wrap items-center justify-center gap-8 mt-8'>
-          {categories.map((category, i) => (
-            <AnimatePresence key={i}>
+          <AnimatePresence>
+            {categories.map((category, i) => (
               <motion.div
-                key={category}
+                key={i}
                 className='w-56 h-72  flex flex-col justify-center items-center rounded shadow-lg hover:cursor-pointer dark:shadow-white/5'
                 whileHover={{ scale: 1.02, brightness: 100 }}
-                transition={{ duration: 0.3 }}
+                onClick={() => {
+                  window.location.href = "/courses";
+                }}
               >
                 <img
                   src={category.image}
                   alt={category.title}
-                  className='w-56 h-64 object-cover self-start -z-40  rounded'
+                  className='w-56 h-64 object-cover self-start  rounded'
                 />
                 <p className='text-center  font-bold text-neutral-900 dark:text-neutral-100'>
                   {category.title}
                 </p>
               </motion.div>
-            </AnimatePresence>
-          ))}
+            ))}
+          </AnimatePresence>
         </div>
       </section>
       <section className='mx-8 md:px-24 mt-32 pb-8'>
@@ -100,11 +102,14 @@ function LandingPage() {
               <motion.div
                 className='relative flex justify-center items-center w-72 h-[432px]'
                 whileHover={{ scale: 1.02 }}
+                onClick={() => {
+                  window.location.href = "/signup";
+                }}
               >
                 <img
                   src={studentImg}
                   alt='Student'
-                  className='h-full w-full object-cover rounded -z-10 brightness-75'
+                  className='h-full w-full object-cover rounded *:brightness-75'
                 />
                 <motion.p
                   className='text-center font-bold text-neutral-100 absolute text-3xl w-full h-full flex justify-center items-center'
@@ -120,11 +125,14 @@ function LandingPage() {
               <motion.div
                 className='relative flex justify-center items-center w-72 h-[432px]'
                 whileHover={{ scale: 1.02 }}
+                onClick={() => {
+                  window.location.href = "/signup-teacher";
+                }}
               >
                 <img
                   src={teacherImg}
                   alt='Student'
-                  className='h-full w-full object-cover rounded -z-10 brightness-75 transition-all'
+                  className='h-full w-full object-cover rounded brightness-75 transition-all'
                 />
                 <motion.p
                   className='text-center font-bold text-neutral-100 absolute text-3xl w-full h-full flex justify-center items-center'

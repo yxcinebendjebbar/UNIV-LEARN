@@ -19,7 +19,11 @@ router.post("/signup", async (req, res) => {
     });
 
     const user = await newUser.save();
-    req.session.user = { username: user.fullName, role: user.role };
+    req.session.user = {
+      username: user.fullName,
+      role: user.role,
+      id: user._id,
+    };
     req.session.save((err) => {
       if (err) {
         return res.status(500).json({ error: "Session error", err });
@@ -51,7 +55,11 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    req.session.user = { username: user.fullName, role: user.role };
+    req.session.user = {
+      username: user.fullName,
+      role: user.role,
+      id: user._id,
+    };
     req.session.save((err) => {
       if (err) {
         return res.status(500).json({ error: "Session error", err });
