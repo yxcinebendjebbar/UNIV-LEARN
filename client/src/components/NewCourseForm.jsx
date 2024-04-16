@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 
 axios.defaults.baseURL = "http://localhost:8000";
 
 function NewCourseForm() {
   const navigate = useNavigate();
+
+  const [isUploading, setIsUploading] = useState(false);
 
   const [thumbnailSrc, setThumbnailSrc] = useState("");
 
@@ -24,6 +26,7 @@ function NewCourseForm() {
 
   const postCourse = async (courseData) => {
     try {
+      setIsUploading(true);
       const response = await axios.post("/api/courses/post", courseData, {
         withCredentials: true,
         headers: {
@@ -33,8 +36,11 @@ function NewCourseForm() {
       alert(response.data.message);
       navigate("/dashboard");
     } catch (error) {
+      setIsUploading(false);
       console.error(error);
       alert("Failed to create course! ");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -42,37 +48,17 @@ function NewCourseForm() {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const name = formData.get("name");
-    const description = formData.get("description");
-    const faculty = formData.get("faculty");
-    const department = formData.get("department");
-    const specialty = formData.get("specialty");
-    const level = formData.get("level");
-    const photo = formData.get("thumbnail");
-    const videos = formData.getAll("videos");
-    const videoTitles = formData.getAll("videoTitles");
-    const courseData = {
-      name,
-      description,
-      faculty,
-      department,
-      specialty,
-      level,
-      photo,
-      videos: videos.map((video, index) => ({
-        title: videoTitles[index],
-        video,
-      })),
-    };
 
-    console.log("photo", photo);
-    console.log("videos", videos);
-
-    postCourse(courseData);
+    postCourse(formData);
   };
 
   return (
     <form className='bg-gray-100/40 min-h-screen' onSubmit={handleSubmitCourse}>
+      {isUploading && (
+        <div className='fixed top-0 left-0 w-full h-full bg-black/35 flex items-center justify-center'>
+          <Spinner color='primary' />
+        </div>
+      )}
       <div
         className='rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-3xl bg-white min-h-screen'
         data-v0-t='card'
@@ -192,7 +178,7 @@ function NewCourseForm() {
                 <input
                   className='flex h-10  rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
                   id='thumbnail'
-                  name='thumbnail'
+                  name='photo'
                   type='file'
                   accept='image/*'
                   onChange={handleThumbnailChange}

@@ -29,11 +29,15 @@ app.use(
     cookie: { secure: "auto", maxAge: 1000 * 60 * 60 * 24 },
   })
 );
+app.use(express.static("uploads"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/forums", forumsRoutes);
 app.use("/api/reply", replyRoutes);
 app.use("/api/courses", courseRoutes);
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 // const requireAuth = (req, res, next) => {
 //   if (req.session.userId) {

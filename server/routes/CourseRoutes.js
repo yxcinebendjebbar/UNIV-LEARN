@@ -66,56 +66,71 @@ router.get("/", isLoggedIn, async (req, res) => {
 });
 
 // Route for retrieving a single course by its ID
-router.get("course/:id", isLoggedIn, async (req, res) => {
+// router.get("course/:id", isLoggedIn, async (req, res) => {
+//   try {
+//     const courseId = req.params.id;
+//     const userId = req.session.user.id;
+//     const userRole = req.session.user.role;
+
+//     const course = await Course.findById(courseId);
+
+//     if (!course) {
+//       return res.status(404).json({ error: "Course not found" });
+//     }
+
+//     // Check if the user is enrolled in the course
+//     let isEnrolled = false;
+//     if (userRole === "student") {
+//       const student = await User.findById(userId);
+//       if (!student) {
+//         return res.status(404).json({ error: "Student not found" });
+//       }
+//       isEnrolled = student.enrolledCourses.some(
+//         (enrolledCourse) => String(enrolledCourse.courseId) === courseId
+//       );
+//     } else if (userRole === "teacher") {
+//       const professor = await User.findById(userId);
+//       if (!professor) {
+//         return res.status(404).json({ error: "Professor not found" });
+//       }
+//       isEnrolled = professor.enrolledCourses.some(
+//         (enrolledCourse) => String(enrolledCourse.courseId) === courseId
+//       );
+//     }
+
+//     // Return different responses based on enrollment status
+//     if (isEnrolled) {
+//       // Return course data without any restrictions
+//       return res.status(200).json(course);
+//     } else {
+//       // Return a restricted version of the course data
+//       const restrictedCourseData = {
+//         _id: course._id,
+//         name: course.courseName,
+//         description: course.description,
+//         photo: course.photo,
+//         videos: course.videos,
+//         rating: course.rating,
+//         // Add any other properties you want to include in the restricted version
+//       };
+//       return res.status(200).json(restrictedCourseData);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+router.get("/:id", isLoggedIn, async (req, res) => {
   try {
     const courseId = req.params.id;
-    const userId = req.session.user.id;
-    const userRole = req.session.user.role;
 
     const course = await Course.findById(courseId);
 
-    if (!course) {
-      return res.status(404).json({ error: "Course not found" });
-    }
+    console.log(course);
 
-    // Check if the user is enrolled in the course
-    let isEnrolled = false;
-    if (userRole === "student") {
-      const student = await User.findById(userId);
-      if (!student) {
-        return res.status(404).json({ error: "Student not found" });
-      }
-      isEnrolled = student.enrolledCourses.some(
-        (enrolledCourse) => String(enrolledCourse.courseId) === courseId
-      );
-    } else if (userRole === "teacher") {
-      const professor = await User.findById(userId);
-      if (!professor) {
-        return res.status(404).json({ error: "Professor not found" });
-      }
-      isEnrolled = professor.enrolledCourses.some(
-        (enrolledCourse) => String(enrolledCourse.courseId) === courseId
-      );
-    }
-
-    // Return different responses based on enrollment status
-    if (isEnrolled) {
-      // Return course data without any restrictions
-      return res.status(200).json(course);
-    } else {
-      // Return a restricted version of the course data
-      const restrictedCourseData = {
-        _id: course._id,
-        name: course.courseName,
-        description: course.description,
-        // Add any other properties you want to include in the restricted version
-      };
-      return res.status(200).json(restrictedCourseData);
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+    res.status(200).json(course);
+  } catch (error) {}
 });
 
 // Route for deleting a course by its ID
@@ -205,7 +220,7 @@ router.post(
       console.log(videoData);
       const course = new Course({
         userId,
-        name,
+        courseName: name,
         description,
         specialty,
         faculty,
@@ -220,7 +235,7 @@ router.post(
       });
 
       await course.save();
-      res.status(201).json(course);
+      res.status(201).json({ message: "Course created successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal server error" });
@@ -507,6 +522,17 @@ router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
     }
 
     res.status(200).json({ enrolledCourses: user.enrolledCourses });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/my-courses", isProfessor, async (req, res) => {
+  try {
+    const courses = await Course.find({ userId: req.session.user.id }).populate(
+      "userId"
+    );
+    res.status(200).json(courses);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

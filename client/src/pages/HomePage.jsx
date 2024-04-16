@@ -159,24 +159,27 @@ function HomePage() {
         </p>
         <div className='flex flex-wrap gap-8 justify-center items-start'>
           {slicedTopCourses.map((course) => {
+            let courseSrc = course?.photo.slice(8);
             return (
               <Card
-                key={course._id}
+                key={course?._id}
                 classNames='bg-white dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
               >
                 <CardHeader classNames='border-b'>
                   <img
                     lazy='true'
                     draggable='false'
-                    src={course.photo}
-                    alt={course.name}
+                    src={`http://localhost:8000/${courseSrc}`}
+                    alt={course?.courseName}
                     className='w-full h-[177px] object-cover'
                   />
                 </CardHeader>
                 <CardContent classNames='p-4'>
                   <div className='flex items-center justify-between'>
                     <div>
-                      <h2 className='text-lg font-bold'>{course.name}</h2>
+                      <h2 className='text-lg font-bold'>
+                        {course?.courseName}
+                      </h2>
                       <p className='text-sm text-neutral-500'>
                         {course.instructor}
                       </p>
@@ -185,13 +188,13 @@ function HomePage() {
                       {course.rating} <FaStar color='yellow' />
                     </p>
                   </div>
-                  <p className=''>{course.description}</p>
+                  <p className=''>{course?.description}</p>
                 </CardContent>
                 <CardFooter classNames='p-4 flex justify-center items-center'>
                   <button
                     className='Solid'
                     onClick={() => {
-                      navigate(`/courses/${course._id}`);
+                      navigate(`/courses/${course?._id}`);
                     }}
                   >
                     Enroll now
@@ -199,7 +202,7 @@ function HomePage() {
                   <button
                     className='Light'
                     onClick={() => {
-                      navigate(`/courses/${course._id}`);
+                      navigate(`/courses/${course?._id}`);
                     }}
                   >
                     View course

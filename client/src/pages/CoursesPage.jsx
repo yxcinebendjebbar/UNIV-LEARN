@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { IoMdSearch } from "react-icons/io";
@@ -136,6 +137,8 @@ const financeSpecialties = [
 ];
 
 function CoursesPage() {
+  const navigate = useNavigate();
+
   const [courses, setCourses] = useState([]);
 
   const [selectedLevelKey, setSelectedLevelKey] = useState("None");
@@ -169,7 +172,7 @@ function CoursesPage() {
     fetchCourses();
   }, []);
 
-  console.log(searchText);
+  console.log(courses);
 
   const filteredCourses = useMemo(() => {
     let filtered = [...courses];
@@ -443,6 +446,7 @@ function CoursesPage() {
         </div>
         <div className='flex flex-wrap items-center justify-center gap-4'>
           {filteredCourses.map((course) => {
+            let courseSrc = course?.photo.slice(8);
             return (
               <Card
                 key={course._id}
@@ -452,13 +456,13 @@ function CoursesPage() {
                   <img
                     lazy='true'
                     draggable='false'
-                    src={course.photo}
-                    alt={course.name}
+                    src={`http://localhost:8000/${courseSrc}`}
+                    alt={course?.courseName}
                     className='w-full h-[177px] object-cover'
                   />
                 </CardHeader>
                 <CardContent classNames='p-4 flex items-center justify-between'>
-                  <h3 className='text-lg font-semibold'>{course.name}</h3>
+                  <h3 className='text-lg font-semibold'>{course.courseName}</h3>
 
                   <p className='flex items-center'>
                     {course.rating} <FaStar color='yellow' />
