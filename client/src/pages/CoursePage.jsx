@@ -1,12 +1,12 @@
-import { React, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
 import { FaStar } from "react-icons/fa";
 import { CardIntro, CardIntroHeader } from "../components/CardIntro";
 import { Courseinfo } from "../components/Courseinfo";
@@ -137,15 +137,15 @@ function CoursePage() {
   let courseSrc = course?.photo.slice(8);
 
   return (
-    <div className='Course page'>
+    <div className="Course page">
       <NavBar />
       {!course ? (
-        <div className='h-full w-full bg-black/35'>
+        <div className="h-full w-full bg-black/35">
           <Spinner />
         </div>
       ) : (
-        <main className='mx-300 md:px-24 mt-32 pb-8 items-center'>
-          <div className='flex flex-wrap gap-8 justify-center items-center'>
+        <main className="mx-300 md:px-24 mt-32 pb-8 items-center">
+          <div className="flex flex-wrap gap-8 justify-center items-center">
             <div>
               <div
                 style={{
@@ -156,31 +156,31 @@ function CoursePage() {
               >
                 <CardIntro
                   key={course?._id}
-                  classNames='bg-white cursor-pointer dark:bg-neutral-800 w-full border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
+                  classNames="bg-white cursor-pointer dark:bg-neutral-800 w-full border dark:border-neutral-600 shadow-lg dark:shadow-white/5"
                 >
-                  <div className='flex'>
-                    <div className='w-1/3'>
+                  <div className="flex">
+                    <div className="w-1/3">
                       {" "}
                       {/* Adjust the width as needed */}
                       <CardIntroHeader>
                         <img
-                          lazy='true'
-                          draggable='false'
+                          lazy="true"
+                          draggable="false"
                           src={`http://localhost:8000/${courseSrc}`}
                           alt={course?.courseName}
-                          className='w-full h-auto'
+                          className="w-full h-auto"
                         />
                       </CardIntroHeader>
                     </div>
-                    <div className='w-2/3 p-5'>
-                      <h2 className='text-lg font-bold pb-10'>
+                    <div className="w-2/3 p-5">
+                      <h2 className="text-lg font-bold pb-10">
                         {course.courseName}
                       </h2>
                       <p>{course?.description}</p>
                     </div>
-                    <div className='flex items-center p-6'>
+                    <div className="flex items-center p-6">
                       {course?.rating}
-                      <FaStar className='text-yellow-500 mr-1' />
+                      <FaStar className="text-yellow-500 mr-1" />
                     </div>
                   </div>
                 </CardIntro>

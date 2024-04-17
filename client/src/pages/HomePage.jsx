@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -142,11 +142,11 @@ function HomePage() {
   return (
     <div>
       <NavBar />
-      <main className='mx-8 md:px-24 mt-32 pb-8'>
-        <div className='border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center'>
-          <h2 className='mb-4 text-header'>Top Courses</h2>
+      <main className="mx-8 md:px-24 mt-32 pb-8">
+        <div className="border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center">
+          <h2 className="mb-4 text-header">Top Courses</h2>
           <button
-            className='Bordered'
+            className="Bordered"
             onClick={() => {
               navigate("/courses");
             }}
@@ -154,45 +154,45 @@ function HomePage() {
             See more
           </button>
         </div>
-        <p className='text-subheader mb-8'>
+        <p className="text-subheader mb-8">
           Explore the trendiest courses of the month right here on our platform!
         </p>
-        <div className='flex flex-wrap gap-8 justify-center items-start'>
+        <div className="flex flex-wrap gap-8 justify-center items-start">
           {slicedTopCourses.map((course) => {
             let courseSrc = course?.photo.slice(8);
             return (
               <Card
                 key={course?._id}
-                classNames='bg-white dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
+                classNames="bg-white dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5"
               >
-                <CardHeader classNames='border-b'>
+                <CardHeader classNames="border-b">
                   <img
-                    lazy='true'
-                    draggable='false'
+                    lazy="true"
+                    draggable="false"
                     src={`http://localhost:8000/${courseSrc}`}
                     alt={course?.courseName}
-                    className='w-full h-[177px] object-cover'
+                    className="w-full h-[177px] object-cover"
                   />
                 </CardHeader>
-                <CardContent classNames='p-4'>
-                  <div className='flex items-center justify-between'>
+                <CardContent classNames="p-4">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h2 className='text-lg font-bold'>
+                      <h2 className="text-lg font-bold">
                         {course?.courseName}
                       </h2>
-                      <p className='text-sm text-neutral-500'>
+                      <p className="text-sm text-neutral-500">
                         {course.instructor}
                       </p>
                     </div>
-                    <p className='flex items-center'>
-                      {course.rating} <FaStar color='yellow' />
+                    <p className="flex items-center">
+                      {course.rating} <FaStar color="yellow" />
                     </p>
                   </div>
-                  <p className=''>{course?.description}</p>
+                  <p className="">{course?.description}</p>
                 </CardContent>
-                <CardFooter classNames='p-4 flex justify-center items-center'>
+                <CardFooter classNames="p-4 flex justify-center items-center">
                   <button
-                    className='Solid'
+                    className="Solid"
                     onClick={() => {
                       navigate(`/courses/${course?._id}`);
                     }}
@@ -200,7 +200,7 @@ function HomePage() {
                     Enroll now
                   </button>
                   <button
-                    className='Light'
+                    className="Light"
                     onClick={() => {
                       navigate(`/courses/${course?._id}`);
                     }}
@@ -213,11 +213,11 @@ function HomePage() {
           })}
         </div>
       </main>
-      <section className='mx-8 md:px-24 mt-32 pb-8'>
-        <div className='border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center'>
-          <h2 className='mb-4 text-header'>Most Active Trainers</h2>
+      <section className="mx-8 md:px-24 mt-32 pb-8">
+        <div className="border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center">
+          <h2 className="mb-4 text-header">Most Active Trainers</h2>
           <button
-            className='Bordered'
+            className="Bordered"
             onClick={() => {
               navigate("/courses");
             }}
@@ -225,31 +225,31 @@ function HomePage() {
             See more
           </button>
         </div>
-        <p className='text-subheader mb-8'>
+        <p className="text-subheader mb-8">
           Discover the most active trainers of the month right here on our
           platform!{" "}
         </p>
-        <div className='flex flex-wrap justify-center items-start gap-8'>
+        <div className="flex flex-wrap justify-center items-start gap-8">
           {mostActiveProfs.map((prof) => {
             return (
-              <div className='flex flex-col justify-center items-center'>
+              <div className="flex flex-col justify-center items-center">
                 <img
                   src={prof.profilePic}
                   alt={prof.fullName}
-                  className='rounded-full w-52'
-                  draggable='false'
+                  className="rounded-full w-52"
+                  draggable="false"
                 />
-                <h2 className='text-lg font-bold'>{prof.fullName}</h2>
+                <h2 className="text-lg font-bold">{prof.fullName}</h2>
               </div>
             );
           })}
         </div>
       </section>
-      <section className='mx-8 md:px-24 mt-32 pb-8'>
-        <div className='border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center'>
-          <h2 className='mb-4 text-header'>Learning Paths</h2>
+      <section className="mx-8 md:px-24 mt-32 pb-8">
+        <div className="border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center">
+          <h2 className="mb-4 text-header">Learning Paths</h2>
           <button
-            className='Bordered'
+            className="Bordered"
             onClick={() => {
               navigate("/courses");
             }}
@@ -257,11 +257,11 @@ function HomePage() {
             See more
           </button>
         </div>
-        <p className='text-subheader mb-8'>
+        <p className="text-subheader mb-8">
           Embark on the most popular learning paths of the month right here on
           our platform!
         </p>
-        <div className='flex flex-wrap gap-8 justify-center items-center'>
+        <div className="flex flex-wrap gap-8 justify-center items-center">
           {fakeLearningPathData.map((lp) => {
             //lp ==> learning path
             return (
@@ -270,25 +270,25 @@ function HomePage() {
                   navigate(`/learning-paths/${lp._id}`);
                 }}
                 key={lp._id}
-                classNames='bg-white cursor-pointer dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
+                classNames="bg-white cursor-pointer dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5"
               >
-                <CardHeader classNames='border-b'>
+                <CardHeader classNames="border-b">
                   <img
-                    lazy='true'
-                    draggable='false'
+                    lazy="true"
+                    draggable="false"
                     src={lp.photo}
                     alt={lp.name}
-                    className='w-full h-[177px] object-cover'
+                    className="w-full h-[177px] object-cover"
                   />
                 </CardHeader>
-                <CardContent classNames='p-4'>
-                  <h2 className='text-lg font-bold'>{lp.name}</h2>
+                <CardContent classNames="p-4">
+                  <h2 className="text-lg font-bold">{lp.name}</h2>
 
-                  <p className=''>{lp.description}</p>
+                  <p className="">{lp.description}</p>
                 </CardContent>
-                <CardFooter classNames='p-4 flex justify-center items-center'>
+                <CardFooter classNames="p-4 flex justify-center items-center">
                   <button
-                    className='Solid'
+                    className="Solid"
                     onClick={() => {
                       navigate(`/courses/${lp._id}`);
                     }}
@@ -296,7 +296,7 @@ function HomePage() {
                     Enroll now
                   </button>
                   <button
-                    className='Light'
+                    className="Light"
                     onClick={() => {
                       navigate(`/courses/${lp._id}`);
                     }}
