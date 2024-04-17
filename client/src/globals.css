@@ -29,7 +29,7 @@
 }
 
 .Light {
-  @apply bg-transparent text-neutral-900 px-4 py-2 dark:text-neutral-100 hover:text-neutral-700 transition-all;
+  @apply bg-transparent text-neutral-900 px-4 py-2 dark:text-neutral-100 hover:text-neutral-700 dark:hover:text-neutral-300 transition-all;
 }
 
 .text-header {

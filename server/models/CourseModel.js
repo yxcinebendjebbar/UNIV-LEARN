@@ -1,75 +1,67 @@
-//! TODO: create a schema for the course model
-
 import pkg from "mongoose";
 import validator from "validator";
 const { Schema, model, models } = pkg;
 
+const videoSchema = new Schema({
+  originalVideoPath: {
+    type: String,
+    required: true,
+  },
+  folderPath: {
+    type: String,
+    required: true,
+  },
+  m3u8MasterPath: {
+    type: String,
+    required: true,
+  },
+});
+
+// Define the course schema
 const courseSchema = new Schema({
-  creator: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
-  name: {
+  courseName: {
     type: String,
-    required: [true, "Please provide a title"],
+    required: true,
+    trim: true,
   },
   description: {
     type: String,
-    required: [true, "Please provide a description"],
+    required: true,
   },
-  photo: {
-    type: String,
-    required: [true, "Please provide a photo"],
-  },
-  videos: [
-    {
-      type: String,
-      required: [true, "Please provide a video"],
-    },
-  ],
-  specialty: {
-    type: String,
-    required: [true, "Please provide a specialty"],
-  },
-  faculty: {
-    type: String,
-    required: [true, "Please provide a faculty"],
-  },
-  department: {
-    type: String,
-    required: [true, "Please provide a department"],
-  },
-  level: {
-    type: String,
-    required: [true, "Please provide a level"],
+  specialty: String,
+  faculty: String,
+  department: String,
+  level: String,
+  photo: String,
+  // Embed the video schema within the course schema
+  videos: {
+    type: [videoSchema],
+    validate: [videosArrayValidator, "At least one video is required"],
   },
   rating: {
     type: Number,
     default: 0,
   },
-  nbEnrolled: {
-    type: Number,
-    default: 0,
-  },
-  studentProgress: {
-    type: Schema.Types.ObjectId,
-    ref: "Student",
-    progress: {
-      type: Number,
-      default: 0,
-      max: 100,
-    },
-  },
 });
+
+// Custom validator function to ensure at least one video is provided
+function videosArrayValidator(videos) {
+  return videos.length > 0;
+}
 
 // XSS protection
 courseSchema.pre("save", function (next) {
-  this.name = validator.escape(this.name);
-  this.description = validator.escape(this.description);
-  this.specialty = validator.escape(this.specialty);
-  this.faculty = validator.escape(this.faculty);
-  this.department = validator.escape(this.department);
-  this.level = validator.escape(this.level);
+  this.courseName = validator.escape(this.courseName.trim());
+  this.description = validator.escape(this.description.trim());
+  this.specialty = validator.escape(this.specialty.trim());
+  this.faculty = validator.escape(this.faculty.trim());
+  this.department = validator.escape(this.department.trim());
+  this.level = validator.escape(this.level.trim());
   next();
 });
 

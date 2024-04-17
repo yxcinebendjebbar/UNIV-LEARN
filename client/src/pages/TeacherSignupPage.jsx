@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import Switcher from "../components/Switcher";
 import { useAuth } from "../hooks/useAuth";
+import { Button } from "@nextui-org/react";
 
 axios.defaults.baseURL = "http://localhost:8000";
 function SignupPage() {
@@ -14,7 +15,7 @@ function SignupPage() {
           fullName,
           email,
           passwrd: password,
-          role: "prof",
+          role: "teacher",
         },
         { withCredentials: true }
       )
@@ -163,12 +164,15 @@ function SignupPage() {
                 Forgot password?
               </a>
             </div>
-            <button
+            <Button
               type='submit'
-              className='w-full Light bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+              className='w-full'
+              radius='sm'
+              variant='solid'
+              color='primary'
             >
               Sign up
-            </button>
+            </Button>
             <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
               Already have an account?{" "}
               <a

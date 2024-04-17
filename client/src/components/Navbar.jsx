@@ -75,6 +75,11 @@ function NavBar() {
               <li>
                 <a href='/home'>Home</a>
               </li>
+              {user.role === "teacher" && (
+                <li>
+                  <a href='/dashboard'>Dashboard</a>
+                </li>
+              )}
               <li>
                 <a href='/courses'>Courses</a>
               </li>
@@ -160,6 +165,11 @@ function NavBar() {
                   <li>
                     <a href='/home'>Home</a>
                   </li>
+                  {user.role === "teacher" && (
+                    <li>
+                      <a href='/dashboard'>Dashboard</a>
+                    </li>
+                  )}
                   <li>
                     <a href='/courses'>Courses</a>
                   </li>

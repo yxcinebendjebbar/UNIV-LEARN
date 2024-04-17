@@ -24,13 +24,32 @@ function App() {
           <Route path='/' element={<LandingPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<SignupPage />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/addNewCourse' element={<NewCourseForm />} />
-          <Route path='/' element={<LandingPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignupPage />} />
           <Route path='/signup-teacher' element={<TeacherSignupPage />} />
           <Route path='/login-teacher' element={<TeacherLoginPage />} />
+          <Route
+            path='/dashboard'
+            element={
+              <HeavilyProtectedRoute>
+                <Dashboard />
+              </HeavilyProtectedRoute>
+            }
+          />
+          <Route
+            path='/new-course'
+            element={
+              <HeavilyProtectedRoute>
+                <NewCourseForm />
+              </HeavilyProtectedRoute>
+            }
+          />
+          <Route
+            path='/home'
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path='/courses'
             element={
@@ -47,26 +66,27 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path='/home'
-            element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            }
-          />
         </Routes>
       </AuthProvider>
     </Router>
   );
 }
 
-// eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   if (!user) {
     // user is not authenticated
+    alert("You need to login first!");
     return <Navigate to='/login' />;
+  }
+  return children;
+};
+
+const HeavilyProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user || user.role !== "teacher") {
+    alert("You are not authorized to access this page");
+    return <Navigate to='/login-teacher' />;
   }
   return children;
 };
