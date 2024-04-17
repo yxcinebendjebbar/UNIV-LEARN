@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-
 import { Spinner } from "@nextui-org/react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -11,6 +10,7 @@ import { FaStar } from "react-icons/fa";
 import { CardIntro, CardIntroHeader } from "../components/CardIntro";
 import { Courseinfo } from "../components/Courseinfo";
 import DescriptionComp from "../components/DescriptionComp";
+import plugin from "tailwindcss/plugin";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.withCredentials = true;
@@ -37,7 +37,7 @@ const fakeCourseData = [
 const VideoJS = (props) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
-  const { options, onReady } = props;
+  const { options, onReady, resolutions } = props;
 
   useEffect(() => {
     // Make sure Video.js player is only initialized once
@@ -109,13 +109,19 @@ function CoursePage() {
     responsive: true,
     fluid: true,
     sources: course?.videos.map((video) => {
-      let videoSrc = video?.m3u8MasterPath.slice(8);
+      let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
       console.log(videoSrc);
       return {
-        src: "http://localhost:8000/" + videoSrc,
-        type: "video/m3u8",
+        src: videoSrc,
+        type: "application/x-mpegURL",
       };
     }),
+    plugin: {
+      videojsResolutionSwitcher: {
+        default: "low",
+        dynamicLabel: true,
+      },
+    },
   };
 
   const handlePlayerReady = (player) => {
