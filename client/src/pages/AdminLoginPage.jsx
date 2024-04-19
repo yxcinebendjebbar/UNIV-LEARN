@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { Button } from "@nextui-org/react";
 
 function LoginPage() {
-  const { login } = useAuth();
+  const { loginAdmin } = useAuth();
   const logIn = async (email, password) => {
     await axios
       .post(
@@ -19,7 +19,7 @@ function LoginPage() {
       .then(async (res) => {
         console.log(res);
         if (res.data.auth) {
-          await login(res.data.user);
+          await loginAdmin(res.data.user);
         }
       })
       .catch((err) => {
