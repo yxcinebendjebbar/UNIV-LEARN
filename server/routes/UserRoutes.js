@@ -1,9 +1,55 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
 
 const router = express.Router();
+
+const isLoggedIn = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Unauthorized access" });
+  }
+  next();
+};
+const isProfessor = (req, res, next) => {
+  if (!req.session.user || req.session.user.role !== "teacher") {
+    return res.status(403).json({ error: "Only professors can perform this action" });
+  }
+  next();
+};
+
+// Array of allowed file extensions
+const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+// Multer disk storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const userId = req.session.user.id;
+
+    if (!userId) {
+      return cb(new Error('Login required'));
+    }
+
+    const uploadPath = path.posix.join('uploads', String(userId), 'profilepicture'); // Use path.posix.join for forward slashes
+    // Create the directory if it doesn't exist
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath, 0o666);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase();
+
+      // Check if the file extension is allowed
+      if (!allowedExtensions.includes(ext)) {
+        return cb(new Error('Only JPG, JPEG, PNG files are allowed'));
+      }
+
+    cb(null, "pic"+ ext );
+  },
+});
+
+const upload = multer({ storage });
 
 // User sign up
 router.post("/signup", async (req, res) => {
@@ -107,6 +153,107 @@ router.get("/profs", async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Update profile picture
+router.put("/profile/profile-picture",isLoggedIn, upload.single("profilePicture"), async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const profilePicture = path.normalize(req.file.path).replace(/\\/g, '/');; // Assuming Multer has stored the file path in req.file.path
+
+    if (!userId) {
+      return res.status(401).json({ error: "User ID not found in session" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route to update user's own password
+router.put("/profile/password", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { passwrd } = req.body;
+
+    // Update the user's password
+    const updatedUser = await User.findByIdAndUpdate(userId, { passwrd }, { new: true, runValidators: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Respond with the updated user data
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Route to update user's own name
+router.put("/profile/name", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { name } = req.body;
+
+    // Update the user's name
+    const updatedUser = await User.findByIdAndUpdate(userId, { name }, { new: true, runValidators: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Respond with the updated user data
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Route to update user's own email
+router.put("/profile/email", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { email } = req.body;
+
+    // Update the user's email
+    const updatedUser = await User.findByIdAndUpdate(userId, { email }, { new: true, runValidators: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Respond with the updated user data
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Route to delete user's own profile
+router.delete("/profile", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 

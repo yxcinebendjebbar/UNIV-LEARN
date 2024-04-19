@@ -7,6 +7,7 @@ import userRoutes from "./routes/UserRoutes.js";
 import forumsRoutes from "./routes/ForumRoutes.js";
 import replyRoutes from "./routes/ReplyRoutes.js";
 import courseRoutes from "./routes/CourseRoutes.js";
+import adminRoutes from "./routes/AdminRoutes.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/forums", forumsRoutes);
 app.use("/api/reply", replyRoutes);
 app.use("/api/courses", courseRoutes);
+app.use("/api/admins", adminRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

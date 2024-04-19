@@ -7,9 +7,12 @@ import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import Course from "../models/CourseModel.js";
 import User from "../models/UserModel.js";
+import fsExtra from 'fs-extra';
+import mongoose from "mongoose";
 
 const router = express.Router();
 ffmpeg.setFfmpegPath("C:/ffmpeg-6.1.1-full_build/bin/ffmpeg");
+
 
 const isLoggedIn = (req, res, next) => {
   if (!req.session.user) {
@@ -31,11 +34,11 @@ const isProfessor = (req, res, next) => {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ensure userId and courseName are provided
-    const name = req.body.name.trim();
     const userId = req.session.user.id;
-    if (!userId || !name) {
+    if (!userId || !req.body.name) {
       return cb(new Error("User ID and course name are required"));
     }
+    const name = req.body.name.trim();
     const uploadPath = path.posix.join(
       "uploads",
       userId,
@@ -44,7 +47,7 @@ const storage = multer.diskStorage({
     ); // Use path.posix.join for forward slashes
     // Create the directory if it doesn't exist
     fs.mkdirSync(uploadPath, { recursive: true });
-    cb(null, uploadPath);
+    cb(null, uploadPath, 0o666);
   },
   filename: function (req, file, cb) {
     // Use the original filename for the file inside the folder
@@ -458,18 +461,12 @@ function calculateBitrate(width, height, frameRate = 30, encoding = "h264") {
 }
 
 // Route for enrolling in a course
-router.post("/:id/enroll", isLoggedIn, async (req, res) => {
+router.post("/enroll", isLoggedIn, async (req, res) => {
   try {
-    const { id: courseId } = req.params;
+    const courseId = req.body.courseId;
     const userId = req.session.user.id;
-    const role = req.session.user.role;
 
-    let user;
-    if (role === "teacher") {
-      user = await User.findById(userId);
-    } else if (role === "student") {
-      user = await User.findById(userId);
-    }
+    const  user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -481,23 +478,16 @@ router.post("/:id/enroll", isLoggedIn, async (req, res) => {
     }
 
     // Check if the user is already enrolled in the course
-    if (role === "teacher" && user.enrolledCourses.includes(courseId)) {
-      return res
-        .status(400)
-        .json({ error: "Professor is already enrolled in this course" });
-    } else if (role === "student" && user.enrolledCourses.includes(courseId)) {
-      return res
-        .status(400)
-        .json({ error: "Student is already enrolled in this course" });
+    if (user.enrolledCourses.some(course => course.courseId.toString() === courseId)) {
+      return res.status(400).json({ error: "User is already enrolled in this course" });
     }
 
-    // Enroll the user in the course based on their role
-    user.enrolledCourses.push(courseId);
-    await user.save();
+    course.enrollmentCount += 1;
 
-    res
-      .status(200)
-      .json({ message: "User enrolled in the course successfully" });
+    user.enrolledCourses.push({ courseId: new mongoose.Types.ObjectId(courseId) }); // Convert courseId to ObjectId
+    await Promise.all([user.save(), course.save()]);
+
+    res.status(200).json({ message: "User enrolled in the course successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -537,6 +527,195 @@ router.get("/my-courses", isProfessor, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.put("/update/details/:id", isProfessor, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const courseId = req.params.id;
+    const updateData = req.body;
+    
+    // Filter out fields that shouldn't be updated
+    const allowedFields = ["description", "specialty", "faculty", "department", "level", "rating"];
+    const filteredUpdateData = {};
+    for (const key in updateData) {
+      if (allowedFields.includes(key)) {
+        filteredUpdateData[key] = updateData[key];
+      }
+    }
+
+    // Find the course by ID
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Verify if the user is the owner of the course
+    if (course.userId.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+    }
+
+    // Update the course details
+    const updatedCourse = await Course.findByIdAndUpdate(courseId, filteredUpdateData, { new: true, runValidators: true });
+
+    // Respond with the updated course data
+    res.json(updatedCourse);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.put("/update/name/:id", isProfessor, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const courseId = req.params.id;
+    const { name: newName } = req.body;
+
+    // Find the course by ID
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Verify if the user is the owner of the course
+    if (course.userId.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+    }
+
+    // Rename course directory and contents
+    await renameCourseDirectory(course, newName);
+
+    // Update course name in the database
+    course.courseName = newName;
+    await course.save();
+
+    res.json({ message: "Course name updated successfully" });
+  } catch (error) {
+    console.error('Error updating course name:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+async function renameCourseDirectory(course, newName) {
+  try {
+    const oldName = course.courseName;
+    const uploadPath = path.posix.join("uploads", course.userId.toString());
+    const sourcePath = path.posix.join(uploadPath, oldName);
+    const destPath = path.posix.join(uploadPath, newName);
+
+    // Check if the source directory exists
+    const sourceExists = await fsExtra.pathExists(sourcePath);
+
+    if (!sourceExists) {
+      throw new Error('Source directory not found');
+    }
+
+    // Check if the destination directory exists
+    const destExists = await fsExtra.pathExists(destPath);
+
+    if (destExists) {
+      throw new Error('Destination directory already exists');
+    }
+
+    // Copy all files and subdirectories to the destination
+    await fsExtra.copy(sourcePath, destPath);
+
+    // Update the file paths for videos
+    for (const video of course.videos) {
+      video.originalVideoPath = video.originalVideoPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+      video.folderPath = video.folderPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+      video.m3u8MasterPath = video.m3u8MasterPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+    }
+
+    // Update the photo path if necessary
+    if (course.photo && course.photo.includes(`/${oldName}/`)) {
+      course.photo = course.photo.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+    }
+
+    // Remove the old directory
+    await fsExtra.remove(sourcePath);
+
+    console.log('Course directory renamed successfully');
+  } catch (error) {
+    console.error('Error renaming course directory:', error);
+    throw new Error('Failed to rename course directory');
+  }
+}
+
+router.put(
+  "/update/photoandvideo/:id",
+  isProfessor,
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "videos", maxCount: 5 },
+  ]),
+  async (req, res) => {
+    try {
+      const userId = req.session.user.id;
+      const courseId = req.params.id;
+      const { photo, videos } = req.files;
+
+      // Find the course by ID
+      const course = await Course.findById(courseId);
+
+      if (!course) {
+        return res.status(404).json({ error: "Course not found" });
+      }
+
+      // Verify if the user is the owner of the course
+      if (course.userId.toString() !== userId.toString()) {
+        return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+      }
+
+      // Function to remove directory recursively if empty
+      const removeDirIfEmpty = async (dirPath) => {
+        const isEmpty = (await fsExtra.readdir(dirPath)).length === 0;
+        if (isEmpty) {
+          await fsExtra.remove(dirPath);
+          console.log(`Directory ${dirPath} removed because it's empty`);
+        }
+      };
+
+      // Delete old photo if provided
+      if (photo && photo.length > 0) {
+        // Remove the old photo
+        await fsExtra.remove(course.photo);
+        await removeDirIfEmpty(path.dirname(course.photo));
+        const normalizedPhotoPath = photo[0].path.replace(/\\/g, "/");
+        course.photo = normalizedPhotoPath;
+      }
+
+      // Delete old videos if provided
+      if (videos && videos.length > 0) {
+        // Remove the old videos
+        await Promise.all(course.videos.map(async (video) => {
+          console.log(video.folderPath);
+          await fsExtra.remove(video.originalVideoPath);
+          await fsExtra.remove(path.dirname(path.dirname(video.m3u8MasterPath)));
+          await removeDirIfEmpty(path.dirname(video.originalVideoPath));
+        }));
+        const videoData = await convertVideosToM3u8(
+          videos,
+          course.userId.toString(),
+          course.courseName.trim()
+        ); // Pass userId and courseName
+        // Update existing videos or add new ones
+        course.videos = videoData.map((data) => ({
+          originalVideoPath: data.originalVideoPath,
+          folderPath: data.folderPath,
+          m3u8MasterPath: data.masterM3u8Path,
+        }));
+      }
+
+      // Save the updated course
+      await course.save();
+      res.status(200).json({ message: "Course videos and photo updated successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
 // router.get("/search", async (req, res) => {
 //   try {
