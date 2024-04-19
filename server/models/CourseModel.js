@@ -47,6 +47,10 @@ const courseSchema = new Schema({
     type: Number,
     default: 0,
   },
+  enrollmentCount: {
+    type: Number,
+    default: 0,
+  }
 });
 
 // Custom validator function to ensure at least one video is provided
@@ -62,6 +66,30 @@ courseSchema.pre("save", function (next) {
   this.faculty = validator.escape(this.faculty.trim());
   this.department = validator.escape(this.department.trim());
   this.level = validator.escape(this.level.trim());
+  next();
+});
+
+// Middleware for findOneAndUpdate
+courseSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.courseName) {
+    update.courseName = validator.escape(update.courseName.trim());
+  }
+  if (update.description) {
+    update.description = validator.escape(update.description.trim());
+  }
+  if (update.specialty) {
+    update.specialty = validator.escape(update.specialty.trim());
+  }
+  if (update.faculty) {
+    update.faculty = validator.escape(update.faculty.trim());
+  }
+  if (update.department) {
+    update.department = validator.escape(update.department.trim());
+  }
+  if (update.level) {
+    update.level = validator.escape(update.level.trim());
+  }
   next();
 });
 

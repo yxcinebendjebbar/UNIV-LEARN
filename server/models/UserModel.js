@@ -1,8 +1,23 @@
 import pkg from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import mongoose from "mongoose";
 
 const { Schema, model, models } = pkg;
+
+const enrolledCourseSchema = new Schema({
+  courseId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Course',
+    required: true,
+    validate: {
+      validator: function(v) {
+        return mongoose.Types.ObjectId.isValid(v);
+      },
+      message: props => `${props.value} is not a valid course ID!`
+    }
+  }
+});
 
 const userSchema = new Schema({
   fullName: {
@@ -13,6 +28,12 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please provide an email"],
     unique: [true, "Email already exists"],
+    validate: {
+      validator: function(value) {
+        return validator.isEmail(value);
+      },
+      message: "Please provide a valid email address",
+    },
   },
   passwrd: {
     type: String,
@@ -35,6 +56,14 @@ const userSchema = new Schema({
     type: String,
     default: "allowed",
   },
+  enrolledCourses: {
+    type: [enrolledCourseSchema],
+    default: []
+  },
+  profilePicture:{
+    type: String,
+    default: "assets/default-profilepic.jpg"
+  }
 });
 
 // Hash password before saving to the database
@@ -60,6 +89,25 @@ userSchema.pre("save", function (next) {
   }
   next();
 });
+
+// Pre middleware for findOneAndUpdate
+userSchema.pre('findOneAndUpdate', async function(next) {
+  try {
+    const updates = this._update;
+    if (updates.fullName) {
+      updates.fullName = validator.escape(updates.fullName.trim());
+    }
+    if (updates.passwrd) {
+      const hashedPassword = await bcrypt.hash(updates.passwrd, 12);
+      this._update.passwrd = hashedPassword;
+    }
+    next();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 
 const User = models.User || model("User", userSchema);
 
