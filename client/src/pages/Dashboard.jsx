@@ -1,25 +1,37 @@
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar.jsx";
 import axios from "axios";
-
+import { Spinner } from "@nextui-org/react";
+import { useAuth } from "../hooks/useAuth.jsx";
+import { MdEdit, MdDelete } from "react-icons/md";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [myCourses, setMyCourses] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("/api/courses/my-courses")
-      .then((response) => {
+    const fetchMyCourses = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `/api/courses/teacher-courses/${user.id}`
+        );
         setMyCourses(response.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMyCourses();
   }, []);
 
-  console.log(myCourses);
   return (
     <>
       <NavBar />
@@ -56,82 +68,48 @@ export default function Dashboard() {
           </header>
           <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
             <div className='border shadow-sm rounded-lg'>
-              <div className='grid items-center grid-cols-[50px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] f] gap-x-4'>
-                <div className='font-medium'>Thumbnail</div>
-                <div className='font-medium'>Title</div>
-                <div className='font-medium'>Rating</div>
-                <div className='font-medium'>Actions</div>
+              <div className='grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
+                <div className='md:font-medium'>Thumbnail</div>
+                <div className='md:font-medium'>Title</div>
+                <div className='md:font-medium'>Rating</div>
+                <div className='md:font-medium'>Actions</div>
               </div>
 
-              <div className='grid items-center grid-cols-[50px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
-                {myCourses.map((course) => {
-                  const courseSrc = course?.photo.slice(8);
-                  return (
-                    <>
-                      <div>
-                        <img
-                          src={`http://localhost:8000/${courseSrc}`}
-                          width='100'
-                          height='60'
-                          alt={course?.courseName}
-                          className='rounded-md aspect-video overflow-hidden object-cover border'
-                        />
-                      </div>
-                      <div className='truncate'>{course?.courseName}</div>
-                      <div className='truncate'>{course?.rating}</div>
-                      <div className='flex gap-4'>
-                        <button className='bg-[#fafafa] p-2 rounded-lg'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 512 512'
-                            className='h-8 w-8'
-                          >
-                            <path
-                              d='M384 224v184a40 40 0 01-40 40H104a40 40 0 01-40-40V168a40 40 0 0140-40h167.48'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth='32'
-                            />
-                            <path d='M459.94 53.25a16.06 16.06 0 00-23.22-.56L424.35 65a8 8 0 000 11.31l11.34 11.32a8 8 0 0011.34 0l12.06-12c6.1-6.09 6.67-16.01.85-22.38zM399.34 90L218.82 270.2a9 9 0 00-2.31 3.93L208.16 299a3.91 3.91 0 004.86 4.86l24.85-8.35a9 9 0 003.93-2.31L422 112.66a9 9 0 000-12.66l-9.95-10a9 9 0 00-12.71 0z' />
-                          </svg>
-                        </button>
-                        <button className='bg-[#fafafa] p-2 rounded-lg'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 512 512'
-                            className='h-8 w-8'
-                          >
-                            <path
-                              d='M112 112l20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth='32'
-                            />
-                            <path
-                              stroke='currentColor'
-                              strokeLinecap='round'
-                              strokeMiterlimit='10'
-                              strokeWidth='32'
-                              d='M80 112h352'
-                            />
-                            <path
-                              d='M192 112V72h0a23.93 23.93 0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8 224'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth='32'
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </>
-                  );
-                })}
+              <div className='grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
+                {isLoading ? (
+                  <div className='w-full h-full flex items-center justify-center'>
+                    <Spinner size='lg' color='primary' />
+                  </div>
+                ) : myCourses ? (
+                  myCourses?.map((course) => {
+                    const courseSrc = course?.photo.slice(8);
+                    return (
+                      <>
+                        <div>
+                          <img
+                            src={`http://localhost:8000/${courseSrc}`}
+                            width='100'
+                            height='60'
+                            alt={course?.courseName}
+                            className='rounded-md aspect-video overflow-hidden object-cover border'
+                          />
+                        </div>
+                        <div className='truncate'>{course?.courseName}</div>
+                        <div className='truncate'>{course?.rating}</div>
+                        <div className='flex gap-4'>
+                          <button className='p-2 rounded-lg'>
+                            <MdEdit />
+                          </button>
+                          <button className='p-2 rounded-lg'>
+                            <MdDelete />
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })
+                ) : (
+                  <div className='text-center w-full'>No courses found</div>
+                )}
               </div>
             </div>
           </main>

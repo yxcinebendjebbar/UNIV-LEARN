@@ -527,11 +527,12 @@ router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
   }
 });
 
-router.get("/my-courses", isProfessor, async (req, res) => {
+router.get("/teacher-courses/:id", isProfessor, async (req, res) => {
+  const id = req.params.id;
+
   try {
-    const courses = await Course.find({ userId: req.session.user.id }).populate(
-      "userId"
-    );
+    const courses = await Course.find({ userId: id }).populate("userId");
+
     res.status(200).json(courses);
   } catch (error) {
     res.status(500).json({ error: error.message });

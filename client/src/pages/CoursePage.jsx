@@ -1,8 +1,7 @@
 import { React, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import videojs from "video.js";
-import "video.js/dist/video-js.css";
+import ReactHlsPlayer from "react-hls-player";
 import { Spinner } from "@nextui-org/react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -10,7 +9,6 @@ import { FaStar } from "react-icons/fa";
 import { CardIntro, CardIntroHeader } from "../components/CardIntro";
 import { Courseinfo } from "../components/Courseinfo";
 import DescriptionComp from "../components/DescriptionComp";
-import plugin from "tailwindcss/plugin";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.withCredentials = true;
@@ -34,67 +32,76 @@ const fakeCourseData = [
   },
 ];
 
-const VideoJS = (props) => {
-  const videoRef = useRef(null);
-  const playerRef = useRef(null);
-  const { options, onReady, resolutions } = props;
+// const VideoJS = (props) => {
+//   const videoRef = useRef(null);
+//   const playerRef = useRef(null);
+//   const { options, onReady } = props;
 
-  useEffect(() => {
-    // Make sure Video.js player is only initialized once
-    if (!playerRef.current) {
-      // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
-      const videoElement = document.createElement("video-js");
+//   useEffect(() => {
+//     if (!playerRef.current) {
+//       const videoElement = document.createElement("video");
+//       videoElement.className = "video-js";
+//       videoRef.current.appendChild(videoElement);
 
-      videoElement.classList.add("vjs-big-play-centered");
-      videoRef.current.appendChild(videoElement);
+//       const player = (playerRef.current = videojs(videoElement, options, () => {
+//         console.log("player is ready");
+//         onReady && onReady(player);
+//       }));
 
-      const player = (playerRef.current = videojs(videoElement, options, () => {
-        videojs.log("player is ready");
-        onReady && onReady(player);
-      }));
+//       player.src(options.sources);
+//       player.on("resolutionchange", () => {
+//         console.log("Source changed to", player.src());
+//       });
+//     } else {
+//       const player = playerRef.current;
+//       player.src(options.sources);
+//     }
+//   }, [options, videoRef]);
 
-      // You could update an existing player in the `else` block here
-      // on prop change, for example:
-    } else {
-      const player = playerRef.current;
+//   useEffect(() => {
+//     if (!playerRef.current) {
+//       const videoElement = document.createElement("video");
+//       videoElement.className = "video-js";
+//       videoRef.current.appendChild(videoElement);
 
-      player.autoplay(options.autoplay);
-      player.src(options.sources);
-    }
-  }, [options, videoRef]);
+//       const player = (playerRef.current = videojs(videoElement, options, () => {
+//         console.log("player is ready");
+//         onReady && onReady(player);
+//       }));
 
-  // Dispose the Video.js player when the functional component unmounts
-  useEffect(() => {
-    const player = playerRef.current;
+//       player.on("resolutionchange", () => {
+//         console.log("Source changed to", player.src());
+//       });
 
-    return () => {
-      if (player && !player.isDisposed()) {
-        player.dispose();
-        playerRef.current = null;
-      }
-    };
-  }, [playerRef]);
+//       console.log("Setting sources:", options.sources);
+//       player.src(options.sources);
+//     } else {
+//       const player = playerRef.current;
+//       console.log("Resetting sources:", options.sources);
+//       player.src(options.sources);
 
-  return (
-    <div data-vjs-player>
-      <div ref={videoRef} />
-    </div>
-  );
-};
+//       player.load();
+//     }
+//   }, [options, videoRef]);
+
+//   return <div data-vjs-player ref={videoRef} />;
+// };
 
 function CoursePage() {
-  const playerRef = useRef(null);
-
   const { id } = useParams();
-  console.log(id);
 
   const [course, setCourse] = useState(null);
+
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+
+  const handleVideoClick = (index) => {
+    setActiveVideoIndex(index);
+  };
 
   useEffect(() => {
     axios
       .get(`/api/courses/${id}`)
       .then((res) => {
-        console.log(res);
         setCourse(res.data);
       })
       .catch((err) => {
@@ -102,43 +109,43 @@ function CoursePage() {
       });
   }, []);
 
-  console.log(course);
-  const videoJsOptions = {
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: course?.videos.map((video) => {
-      let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
-      console.log(videoSrc);
-      return {
-        src: videoSrc,
-        type: "application/x-mpegURL",
-      };
-    }),
-    plugin: {
-      videojsResolutionSwitcher: {
-        default: "low",
-        dynamicLabel: true,
-      },
-    },
-  };
+  let video = course?.videos[0];
 
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
+  let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
 
-    player.on("waiting", () => {
-      videojs.log("player is waiting");
-    });
+  // const videoJsOptions = {
+  //   autoplay: false,
+  //   controls: true,
+  //   responsive: true,
+  //   fluid: true,
+  //   sources: course?.videos.map((video) => {
+  //     let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
+  //     return {
+  //       src: videoSrc,
+  //       type: "application/x-mpegURL",
+  //     };
+  //   }),
+  //   plugin: {
+  //     videojsResolutionSwitcher: {
+  //       default: "low",
+  //       dynamicLabel: true,
+  //     },
+  //   },
+  // };
 
-    player.on("dispose", () => {
-      videojs.log("player will dispose");
-    });
-  };
+  // const handlePlayerReady = (player) => {
+  //   playerRef.current = player;
 
-  const navigate = useNavigate(); // Import useNavigate hook
-  // console.log("fakecourseintroData:", fakecourseintroData);
-  // console.log("fakeCourseData:", fakeCourseData);
+  //   player.on("waiting", () => {
+  //     videojs.log("player is waiting");
+  //   });
+
+  //   player.on("dispose", () => {
+  //     videojs.log("player will dispose");
+  //   });
+  // };
+
+  const navigate = useNavigate();
 
   let courseSrc = course?.photo.slice(8);
 
@@ -205,7 +212,38 @@ function CoursePage() {
         </main>
       )}
 
-      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+      <div className='lg:mx-60'>
+        {course?.videos.length === 1 ? (
+          <ReactHlsPlayer
+            src={`http://localhost:8000/${course?.videos[0].m3u8MasterPath.slice(
+              8
+            )}`}
+            controls
+          />
+        ) : (
+          <div className='flex flex-col lg:flex-row'>
+            <ReactHlsPlayer
+              src={`http://localhost:8000/${course?.videos[
+                activeVideoIndex
+              ].m3u8MasterPath.slice(8)}`}
+              controls
+            />
+            <div className='flex flex-wrap mx-4'>
+              {course?.videos.map((video, index) => (
+                <div key={index} onClick={() => handleVideoClick(index)}>
+                  <video
+                    src={`http://localhost:8000/${video.m3u8MasterPath.slice(
+                      8
+                    )}`}
+                    className='w-40 cursor-pointer p-2'
+                  />
+                  <h3>{video.title}</h3>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       <Footer />
     </div>

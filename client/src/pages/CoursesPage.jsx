@@ -444,7 +444,7 @@ function CoursesPage() {
             Reset all
           </Button>
         </div>
-        <div className='flex flex-wrap items-center justify-center gap-4'>
+        <div className='flex flex-wrap items-start justify-center gap-4'>
           {filteredCourses.map((course) => {
             let courseSrc = course?.photo.slice(8);
             return (

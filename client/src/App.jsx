@@ -15,6 +15,8 @@ import TeacherSignupPage from "./pages/TeacherSignupPage";
 import TeacherLoginPage from "./pages/TeacherLoginPage";
 import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
+import AdminPanelPage from "./pages/AdminPanelPage";
+import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 
 function App() {
   return (
@@ -26,6 +28,15 @@ function App() {
           <Route path='/signup' element={<SignupPage />} />
           <Route path='/signup-teacher' element={<TeacherSignupPage />} />
           <Route path='/login-teacher' element={<TeacherLoginPage />} />
+          <Route path='/aplogin' element={<AdminLoginPage />} />
+          <Route
+            path='/ap'
+            element={
+              <AdminAccessRoute>
+                <AdminPanelPage />
+              </AdminAccessRoute>
+            }
+          />
           <Route
             path='/dashboard'
             element={
@@ -87,6 +98,15 @@ const HeavilyProtectedRoute = ({ children }) => {
   if (!user || user.role !== "teacher") {
     alert("You are not authorized to access this page");
     return <Navigate to='/login-teacher' />;
+  }
+  return children;
+};
+
+const AdminAccessRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user || user.role !== "admin") {
+    alert("You are not authorized to access this page");
+    return <Navigate to='/aplogin' />;
   }
   return children;
 };
