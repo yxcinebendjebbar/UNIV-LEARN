@@ -8,15 +8,15 @@ const { Schema, model, models } = pkg;
 const enrolledCourseSchema = new Schema({
   courseId: {
     type: Schema.Types.ObjectId,
-    ref: 'Course',
+    ref: "Course",
     required: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return mongoose.Types.ObjectId.isValid(v);
       },
-      message: props => `${props.value} is not a valid course ID!`
-    }
-  }
+      message: (props) => `${props.value} is not a valid course ID!`,
+    },
+  },
 });
 
 const userSchema = new Schema({
@@ -29,7 +29,7 @@ const userSchema = new Schema({
     required: [true, "Please provide an email"],
     unique: [true, "Email already exists"],
     validate: {
-      validator: function(value) {
+      validator: function (value) {
         return validator.isEmail(value);
       },
       message: "Please provide a valid email address",
@@ -50,7 +50,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["student", "teacher"],
+    enum: ["student", "teacher", "admin"],
   },
   status: {
     type: String,
@@ -58,12 +58,12 @@ const userSchema = new Schema({
   },
   enrolledCourses: {
     type: [enrolledCourseSchema],
-    default: []
+    default: [],
   },
-  profilePicture:{
+  profilePicture: {
     type: String,
-    default: "assets/default-profilepic.jpg"
-  }
+    default: "assets/default-profilepic.jpg",
+  },
 });
 
 // Hash password before saving to the database
@@ -91,7 +91,7 @@ userSchema.pre("save", function (next) {
 });
 
 // Pre middleware for findOneAndUpdate
-userSchema.pre('findOneAndUpdate', async function(next) {
+userSchema.pre("findOneAndUpdate", async function (next) {
   try {
     const updates = this._update;
     if (updates.fullName) {
@@ -107,7 +107,6 @@ userSchema.pre('findOneAndUpdate', async function(next) {
     next(error);
   }
 });
-
 
 const User = models.User || model("User", userSchema);
 
