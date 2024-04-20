@@ -533,7 +533,7 @@ router.put("/courses/details/:id", isAdmin, async (req, res) => {
     }
 
     // Respond with the updated course data
-    res.json(updatedCourse);
+    res.status(204).json({ message: "Course details updated successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -542,7 +542,8 @@ router.put("/courses/details/:id", isAdmin, async (req, res) => {
 // Route to update course name
 router.put("/courses/name/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
-  const { name: newName } = req.body;
+  const { name } = req.body;
+  console.log(name);
   try {
     // Find the course by ID
     const course = await Course.findById(id);
@@ -552,10 +553,10 @@ router.put("/courses/name/:id", isAdmin, async (req, res) => {
     }
 
     // Rename course directory and contents
-    await renameCourseDirectory(course, newName);
+    await renameCourseDirectory(course, name);
 
     // Update course name in the database
-    course.courseName = newName;
+    course.courseName = name;
     await course.save();
 
     res.json({ message: "Course name updated successfully" });
@@ -565,12 +566,12 @@ router.put("/courses/name/:id", isAdmin, async (req, res) => {
   }
 });
 
-async function renameCourseDirectory(course, newName) {
+async function renameCourseDirectory(course, name) {
   try {
     const oldName = course.courseName;
     const uploadPath = path.posix.join("uploads", course.userId.toString());
     const sourcePath = path.posix.join(uploadPath, oldName);
-    const destPath = path.posix.join(uploadPath, newName);
+    const destPath = path.posix.join(uploadPath, name);
 
     // Check if the source directory exists
     const sourceExists = await fsExtra.pathExists(sourcePath);
@@ -593,15 +594,15 @@ async function renameCourseDirectory(course, newName) {
     for (const video of course.videos) {
       video.originalVideoPath = video.originalVideoPath.replace(
         new RegExp(`/${oldName}/`, "g"),
-        `/${newName}/`
+        `/${name}/`
       );
       video.folderPath = video.folderPath.replace(
         new RegExp(`/${oldName}/`, "g"),
-        `/${newName}/`
+        `/${name}/`
       );
       video.m3u8MasterPath = video.m3u8MasterPath.replace(
         new RegExp(`/${oldName}/`, "g"),
-        `/${newName}/`
+        `/${name}/`
       );
     }
 
@@ -609,7 +610,7 @@ async function renameCourseDirectory(course, newName) {
     if (course.photo && course.photo.includes(`/${oldName}/`)) {
       course.photo = course.photo.replace(
         new RegExp(`/${oldName}/`, "g"),
-        `/${newName}/`
+        `/${name}/`
       );
     }
 

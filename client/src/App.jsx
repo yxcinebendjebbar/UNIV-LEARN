@@ -122,7 +122,7 @@ const ProtectedRoute = ({ children }) => {
 
 const HeavilyProtectedRoute = ({ children }) => {
   const { user } = useAuth();
-  if (!user && user.role !== "teacher") {
+  if (!user || user.role !== "teacher") {
     alert("You are not authorized to access this page");
     return <Navigate to='/login-teacher' />;
   }
@@ -131,7 +131,7 @@ const HeavilyProtectedRoute = ({ children }) => {
 
 const AdminAccessRoute = ({ children }) => {
   const { user } = useAuth();
-  if (!user && user.role !== "admin") {
+  if (!user || user.role !== "admin") {
     alert("You are not authorized to access this page");
     return <Navigate to='/aplogin' />;
   }
