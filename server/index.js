@@ -31,6 +31,7 @@ app.use(
   })
 );
 app.use(express.static("uploads"));
+app.use(express.static("assets"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/forums", forumsRoutes);

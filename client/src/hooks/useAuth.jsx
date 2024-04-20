@@ -17,6 +17,10 @@ export const AuthProvider = ({ children }) => {
     setUser(data);
     navigate("/ap");
   };
+  const logoutAdmin = async () => {
+    setUser(null);
+    navigate("/aplogin", { replace: true });
+  };
 
   // call this function to sign out logged in user
   const logout = () => {
@@ -29,6 +33,7 @@ export const AuthProvider = ({ children }) => {
       user,
       login,
       loginAdmin,
+      logoutAdmin,
       logout,
     }),
     [user]

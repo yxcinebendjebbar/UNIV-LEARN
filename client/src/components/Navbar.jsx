@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 import Switcher from "./Switcher";
 import univlearn from "../assets/univ-learn-logo-black.png";
 import { motion, AnimatePresence } from "framer-motion";
+import { Avatar } from "@nextui-org/react";
 
 function NavBar() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -91,10 +92,11 @@ function NavBar() {
               </li>
               <li>
                 <div>
-                  <img
-                    src='https://cdn.vectorstock.com/i/preview-1x/16/05/male-avatar-profile-picture-silhouette-light-vector-5351605.jpg'
-                    alt='Profile'
-                    className='w-10 h-10 rounded-full object-cover cursor-pointer'
+                  <Avatar
+                    src={`http://localhost:8000/${user?.profilePicture.slice(
+                      7
+                    )}`}
+                    className=' cursor-pointer'
                     draggable='false'
                     onClick={toggleProfileMenu}
                   />
@@ -152,10 +154,12 @@ function NavBar() {
                 </div>
                 <ul className='flex flex-col items-start px-4 gap-4'>
                   <li className='flex gap-3 items-center border-b w-full pb-4'>
-                    <img
-                      src='https://cdn.vectorstock.com/i/preview-1x/16/05/male-avatar-profile-picture-silhouette-light-vector-5351605.jpg'
-                      alt='avatar'
-                      className='w-14 h-14 rounded-full object-cover'
+                    <Avatar
+                      size='lg'
+                      src={`http://localhost:8000/${user?.profilePicture.slice(
+                        7
+                      )}`}
+                      draggable='false'
                     />
                     <div>
                       <h2 className='text-header'>{user?.username}</h2>

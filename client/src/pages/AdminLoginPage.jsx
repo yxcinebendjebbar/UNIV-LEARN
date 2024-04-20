@@ -9,7 +9,7 @@ function LoginPage() {
   const logIn = async (email, password) => {
     await axios
       .post(
-        "/api/users/admin/login",
+        "/api/admins/login",
         {
           email,
           passwrd: password,

@@ -15,7 +15,7 @@ import { FaBook } from "react-icons/fa6";
 import { GoReport } from "react-icons/go";
 
 function Sidebar() {
-  const { user, logout } = useAuth();
+  const { user, logoutAdmin } = useAuth();
   const navigate = useNavigate();
   return (
     <div className='bg-white h-screen w-14 items-center md:w-1/4 p-2 dark:bg-neutral-800 flex flex-col md:items-start justify-between'>
@@ -53,7 +53,7 @@ function Sidebar() {
             <DropdownItem
               color='danger'
               onClick={() => {
-                logout();
+                logoutAdmin();
               }}
             >
               Logout
@@ -84,7 +84,7 @@ function Sidebar() {
           className='flex items-center gap-2 p-2 w-full rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800'
         >
           <FaBook className='scale-150' />
-          Posts
+          Courses
         </p>
         <p
           onClick={() => {
@@ -97,7 +97,14 @@ function Sidebar() {
         </p>
       </div>
       <div className='space-y-4'>
-        <Button variant='light' color='danger' className='hidden md:block'>
+        <Button
+          variant='light'
+          color='danger'
+          className='hidden md:block'
+          onClick={() => {
+            logoutAdmin();
+          }}
+        >
           Logout
         </Button>
         <Switcher />

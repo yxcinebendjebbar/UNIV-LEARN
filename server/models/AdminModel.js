@@ -1,30 +1,39 @@
 import pkg from "mongoose";
-const { Schema, model } = pkg;
+import validator from "validator";
+
+const { Schema, model, models } = pkg;
 
 const adminSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    unique: true 
+  fullName: {
+    type: String,
+    required: [true, "Please provide a full name"],
+  },
+  email: {
+    type: String,
+    required: [true, "Please provide an email"],
+    unique: [true, "Email already exists"],
+    validate: {
+      validator: function (value) {
+        return validator.isEmail(value);
+      },
+      message: "Please provide a valid email address",
+    },
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide a password"],
+    validate: {
+      validator: function (password) {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          password
+        );
+      },
+      message:
+        "Password must contain at least 8 characters, including UPPER/lowercase and numbers",
+    },
   },
 });
 
-const Admin = model("Admin", adminSchema);
-
-// Assume userId is the ObjectId of an existing user in your User collection
-//const userId = '661fd947c80e22b35386ea73'; // Replace this with an actual userId
-
-// Create a new admin object
-//const newAdmin = new Admin({ userId });
-
-// Save the new admin object to the database
-//newAdmin.save()
-//  .then((admin) => {
-//    console.log('Admin added successfully:', admin);
-//  })
-//  .catch((error) => {
-//    console.error('Error adding admin:', error);
-//  });
+const Admin = models.Admin || model("Admin", adminSchema);
 
 export default Admin;

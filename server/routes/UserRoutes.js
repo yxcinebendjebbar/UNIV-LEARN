@@ -75,6 +75,7 @@ router.post("/signup", async (req, res) => {
       username: user.fullName,
       role: user.role,
       id: user._id,
+      profilePicture: user.profilePicture,
     };
     req.session.save((err) => {
       if (err) {
@@ -111,6 +112,7 @@ router.post("/login", async (req, res) => {
       username: user.fullName,
       role: user.role,
       id: user._id,
+      profilePicture: user.profilePicture,
     };
     req.session.save((err) => {
       if (err) {
@@ -277,43 +279,6 @@ router.delete("/profile", isLoggedIn, async (req, res) => {
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-});
-
-//admin login
-router.post("/admin/login", async (req, res) => {
-  try {
-    const { email, passwrd } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    const passwordMatch = await bcrypt.compare(passwrd, user.passwrd);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Incorrect password" });
-    }
-    if (user.role !== "admin") {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    req.session.user = {
-      username: user.fullName,
-      role: user.role,
-      id: user._id,
-    };
-    req.session.save((err) => {
-      if (err) {
-        return res.status(500).json({ error: "Session error", err });
-      }
-      res.status(200).json({
-        message: "Login successful",
-        user: req.session.user,
-        auth: true,
-      });
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 });
 
