@@ -5,18 +5,17 @@ import Reply from "../models/ReplyModel.js";
 const router = express.Router();
 
 const isLoggedIn = (req, res, next) => {
-    if (!req.session.user) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-    next();
-  };
-  
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Unauthorized access" });
+  }
+  next();
+};
 
-router.post("/:forumId/replies",isLoggedIn, async (req, res) => {
+router.post("/:forumId/replies", isLoggedIn, async (req, res) => {
   try {
     const forumId = req.params.forumId;
-    const writer = req.session.user.id;
-    const {content } = req.body;
+    const authorId = req.session.user.id;
+    const { content } = req.body;
 
     const forum = await Forum.findById(forumId);
     if (!forum) {
@@ -25,7 +24,7 @@ router.post("/:forumId/replies",isLoggedIn, async (req, res) => {
 
     const newReply = new Reply({
       forum: forumId,
-      writer,
+      authorId,
       content,
     });
 

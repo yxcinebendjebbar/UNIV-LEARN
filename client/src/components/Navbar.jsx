@@ -6,7 +6,7 @@ import { IoClose } from "react-icons/io5";
 import Switcher from "./Switcher";
 import univlearn from "../assets/univ-learn-logo-black.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Button, Spacer } from "@nextui-org/react";
 
 function NavBar() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -85,10 +85,7 @@ function NavBar() {
                 <a href='/courses'>Courses</a>
               </li>
               <li>
-                <a href='/learning-paths'>Learning Paths</a>
-              </li>
-              <li>
-                <a href='/home'>About us</a>
+                <a href='/forums'>Forums</a>
               </li>
               <li>
                 <div>
@@ -117,14 +114,16 @@ function NavBar() {
                           <a href='/settings'>Settings</a>
                         </li>
                         <li>
-                          <button
-                            className='text-red-500 hover:underline'
+                          <Button
+                            variant='light'
+                            radius='sm'
+                            color='danger'
                             onClick={() => {
                               logout();
                             }}
                           >
                             Log out
-                          </button>
+                          </Button>
                         </li>
                       </ul>
                     </motion.div>
@@ -178,10 +177,7 @@ function NavBar() {
                     <a href='/courses'>Courses</a>
                   </li>
                   <li>
-                    <a href='/learning-paths'>Learning Paths</a>
-                  </li>
-                  <li>
-                    <a href='/about'>About us</a>
+                    <a href='/learning-paths'>Forums</a>
                   </li>
                   <li>
                     <a href='/settings'>Settings</a>

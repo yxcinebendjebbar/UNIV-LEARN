@@ -113,31 +113,55 @@ const fakeLearningPathData = [
 
 function HomePage() {
   const [courses, setCourses] = useState([]);
+  const [profs, setProfs] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("/api/courses/", { withCredentials: true })
-      .then((res) => {
-        setCourses(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const fetchCoursesAndProfs = async () => {
+      try {
+        const response1 = await axios.get("/api/courses/", {
+          withCredentials: true,
+        });
+        const response2 = await axios.get("/api/users/profs/", {
+          withCredentials: true,
+        });
+
+        if (response1) {
+          console.log(response1.data);
+          setCourses(response1.data);
+        }
+        if (response2) {
+          console.log(response2.data);
+          setProfs(response2.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCoursesAndProfs();
+    // axios
+    //   .get("/api/courses/", { withCredentials: true })
+    //   .then((res) => {
+    //     setCourses(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   }, []);
 
-  console.log(courses);
-
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  // const user = JSON.parse(localStorage.getItem("user"));
   const topCourses = courses.sort(
     (a, b) => parseFloat(b.rating) - parseFloat(a.rating)
   );
 
   const slicedTopCourses = topCourses.slice(0, 4);
 
-  const mostActiveProfs = fakeProfData.sort(
+  const mostActiveProfs = profs.sort(
     (a, b) => b.courses.length - a.courses.length
   );
+
+  console.log(mostActiveProfs);
 
   return (
     <div>
@@ -234,12 +258,16 @@ function HomePage() {
             return (
               <div className='flex flex-col justify-center items-center'>
                 <img
-                  src={prof.profilePic}
-                  alt={prof.fullName}
+                  src={`http://localhost:8000/${prof.profilePicture[0].slice(
+                    7
+                  )}`}
+                  alt={prof.name[0]}
                   className='rounded-full w-52'
                   draggable='false'
                 />
-                <h2 className='text-lg font-bold'>{prof.fullName}</h2>
+                <h2 className='text-lg font-bold w-32 text-center align-middle'>
+                  {prof.name[0]}
+                </h2>
               </div>
             );
           })}
@@ -247,67 +275,21 @@ function HomePage() {
       </section>
       <section className='mx-8 md:px-24 mt-32 pb-8'>
         <div className='border-b border-black dark:border-neutral-500 mb-1 flex justify-between items-center'>
-          <h2 className='mb-4 text-header'>Learning Paths</h2>
+          <h2 className='mb-4 text-header'>Browse Forums</h2>
           <button
-            className='Bordered'
+            className='Solid'
             onClick={() => {
-              navigate("/courses");
+              navigate("/forums");
             }}
           >
-            See more
+            Browse
           </button>
         </div>
         <p className='text-subheader mb-8'>
-          Embark on the most popular learning paths of the month right here on
-          our platform!
+          Explore this month's top forum discussions! Engage with trending
+          topics, share insights, and learn from the community's expertise. Join
+          the conversation now!
         </p>
-        <div className='flex flex-wrap gap-8 justify-center items-center'>
-          {fakeLearningPathData.map((lp) => {
-            //lp ==> learning path
-            return (
-              <Card
-                onClick={() => {
-                  navigate(`/learning-paths/${lp._id}`);
-                }}
-                key={lp._id}
-                classNames='bg-white cursor-pointer dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
-              >
-                <CardHeader classNames='border-b'>
-                  <img
-                    lazy='true'
-                    draggable='false'
-                    src={lp.photo}
-                    alt={lp.name}
-                    className='w-full h-[177px] object-cover'
-                  />
-                </CardHeader>
-                <CardContent classNames='p-4'>
-                  <h2 className='text-lg font-bold'>{lp.name}</h2>
-
-                  <p className=''>{lp.description}</p>
-                </CardContent>
-                <CardFooter classNames='p-4 flex justify-center items-center'>
-                  <button
-                    className='Solid'
-                    onClick={() => {
-                      navigate(`/courses/${lp._id}`);
-                    }}
-                  >
-                    Enroll now
-                  </button>
-                  <button
-                    className='Light'
-                    onClick={() => {
-                      navigate(`/courses/${lp._id}`);
-                    }}
-                  >
-                    View course
-                  </button>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
       </section>
       <Footer />
     </div>

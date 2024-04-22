@@ -10,11 +10,14 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
 import Dashboard from "./pages/Dashboard.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import NewCourseForm from "./components/NewCourseForm.jsx";
 import TeacherSignupPage from "./pages/TeacherSignupPage";
 import TeacherLoginPage from "./pages/TeacherLoginPage";
 import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
+import ForumsPage from "./pages/ForumsPage";
+import Replies from "./pages/Replies";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
@@ -80,6 +83,14 @@ function App() {
             }
           />
           <Route
+            path='/profile'
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path='/courses'
             element={
               <ProtectedRoute>
@@ -92,6 +103,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <CoursePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/forums'
+            element={
+              <ProtectedRoute>
+                <ForumsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/replies/:id'
+            element={
+              <ProtectedRoute>
+                <Replies />
               </ProtectedRoute>
             }
           />

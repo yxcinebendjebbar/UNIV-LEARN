@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
+import { profile } from "console";
 
 const router = express.Router();
 
@@ -139,8 +140,8 @@ router.get("/profs", async (req, res) => {
     const result = await Course.aggregate([
       {
         $group: {
-          _id: "$creator",
-          courses: { $push: "$fullName" },
+          _id: "$userId",
+          courses: { $push: "$courseName" },
         },
       },
       {
@@ -148,13 +149,15 @@ router.get("/profs", async (req, res) => {
           from: "users",
           localField: "_id",
           foreignField: "_id",
-          as: "prof",
+          as: "teacher",
         },
       },
       {
         $project: {
           _id: 0,
-          name: "$user.fullName",
+          name: "$teacher.fullName",
+          profilePicture: "$teacher.profilePicture",
+          courses: 1,
         },
       },
     ]);

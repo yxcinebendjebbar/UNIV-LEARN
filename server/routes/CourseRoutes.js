@@ -7,12 +7,11 @@ import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import Course from "../models/CourseModel.js";
 import User from "../models/UserModel.js";
-import fsExtra from 'fs-extra';
+import fsExtra from "fs-extra";
 import mongoose from "mongoose";
 
 const router = express.Router();
 ffmpeg.setFfmpegPath("C:/ffmpeg-6.1.1-full_build/bin/ffmpeg");
-
 
 const isLoggedIn = (req, res, next) => {
   if (!req.session.user) {
@@ -466,7 +465,7 @@ router.post("/enroll", isLoggedIn, async (req, res) => {
     const courseId = req.body.courseId;
     const userId = req.session.user.id;
 
-    const  user = await User.findById(userId);
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -478,16 +477,26 @@ router.post("/enroll", isLoggedIn, async (req, res) => {
     }
 
     // Check if the user is already enrolled in the course
-    if (user.enrolledCourses.some(course => course.courseId.toString() === courseId)) {
-      return res.status(400).json({ error: "User is already enrolled in this course" });
+    if (
+      user.enrolledCourses.some(
+        (course) => course.courseId.toString() === courseId
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ error: "User is already enrolled in this course" });
     }
 
     course.enrollmentCount += 1;
 
-    user.enrolledCourses.push({ courseId: new mongoose.Types.ObjectId(courseId) }); // Convert courseId to ObjectId
+    user.enrolledCourses.push({
+      courseId: new mongoose.Types.ObjectId(courseId),
+    }); // Convert courseId to ObjectId
     await Promise.all([user.save(), course.save()]);
 
-    res.status(200).json({ message: "User enrolled in the course successfully" });
+    res
+      .status(200)
+      .json({ message: "User enrolled in the course successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -504,7 +513,7 @@ router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
     if (role === "student") {
       user = await User.findById(userId).populate("enrolledCourses.courseId");
     } else if (role === "teacher") {
-      user = await Prof.findById(userId).populate("enrolledCourses.courseId");
+      user = await User.findById(userId).populate("enrolledCourses.courseId");
     }
 
     if (!user) {
@@ -534,9 +543,16 @@ router.put("/update/details/:id", isProfessor, async (req, res) => {
     const userId = req.session.user.id;
     const courseId = req.params.id;
     const updateData = req.body;
-    
+
     // Filter out fields that shouldn't be updated
-    const allowedFields = ["description", "specialty", "faculty", "department", "level", "rating"];
+    const allowedFields = [
+      "description",
+      "specialty",
+      "faculty",
+      "department",
+      "level",
+      "rating",
+    ];
     const filteredUpdateData = {};
     for (const key in updateData) {
       if (allowedFields.includes(key)) {
@@ -553,11 +569,19 @@ router.put("/update/details/:id", isProfessor, async (req, res) => {
 
     // Verify if the user is the owner of the course
     if (course.userId.toString() !== userId.toString()) {
-      return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+      return res
+        .status(403)
+        .json({
+          message: "Unauthorized: You are not the owner of this course",
+        });
     }
 
     // Update the course details
-    const updatedCourse = await Course.findByIdAndUpdate(courseId, filteredUpdateData, { new: true, runValidators: true });
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      filteredUpdateData,
+      { new: true, runValidators: true }
+    );
 
     // Respond with the updated course data
     res.json(updatedCourse);
@@ -581,7 +605,11 @@ router.put("/update/name/:id", isProfessor, async (req, res) => {
 
     // Verify if the user is the owner of the course
     if (course.userId.toString() !== userId.toString()) {
-      return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+      return res
+        .status(403)
+        .json({
+          message: "Unauthorized: You are not the owner of this course",
+        });
     }
 
     // Rename course directory and contents
@@ -593,8 +621,8 @@ router.put("/update/name/:id", isProfessor, async (req, res) => {
 
     res.json({ message: "Course name updated successfully" });
   } catch (error) {
-    console.error('Error updating course name:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating course name:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 async function renameCourseDirectory(course, newName) {
@@ -608,14 +636,14 @@ async function renameCourseDirectory(course, newName) {
     const sourceExists = await fsExtra.pathExists(sourcePath);
 
     if (!sourceExists) {
-      throw new Error('Source directory not found');
+      throw new Error("Source directory not found");
     }
 
     // Check if the destination directory exists
     const destExists = await fsExtra.pathExists(destPath);
 
     if (destExists) {
-      throw new Error('Destination directory already exists');
+      throw new Error("Destination directory already exists");
     }
 
     // Copy all files and subdirectories to the destination
@@ -623,23 +651,35 @@ async function renameCourseDirectory(course, newName) {
 
     // Update the file paths for videos
     for (const video of course.videos) {
-      video.originalVideoPath = video.originalVideoPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
-      video.folderPath = video.folderPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
-      video.m3u8MasterPath = video.m3u8MasterPath.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+      video.originalVideoPath = video.originalVideoPath.replace(
+        new RegExp(`/${oldName}/`, "g"),
+        `/${newName}/`
+      );
+      video.folderPath = video.folderPath.replace(
+        new RegExp(`/${oldName}/`, "g"),
+        `/${newName}/`
+      );
+      video.m3u8MasterPath = video.m3u8MasterPath.replace(
+        new RegExp(`/${oldName}/`, "g"),
+        `/${newName}/`
+      );
     }
 
     // Update the photo path if necessary
     if (course.photo && course.photo.includes(`/${oldName}/`)) {
-      course.photo = course.photo.replace(new RegExp(`/${oldName}/`, 'g'), `/${newName}/`);
+      course.photo = course.photo.replace(
+        new RegExp(`/${oldName}/`, "g"),
+        `/${newName}/`
+      );
     }
 
     // Remove the old directory
     await fsExtra.remove(sourcePath);
 
-    console.log('Course directory renamed successfully');
+    console.log("Course directory renamed successfully");
   } catch (error) {
-    console.error('Error renaming course directory:', error);
-    throw new Error('Failed to rename course directory');
+    console.error("Error renaming course directory:", error);
+    throw new Error("Failed to rename course directory");
   }
 }
 
@@ -665,7 +705,11 @@ router.put(
 
       // Verify if the user is the owner of the course
       if (course.userId.toString() !== userId.toString()) {
-        return res.status(403).json({ message: "Unauthorized: You are not the owner of this course" });
+        return res
+          .status(403)
+          .json({
+            message: "Unauthorized: You are not the owner of this course",
+          });
       }
 
       // Function to remove directory recursively if empty
@@ -689,12 +733,16 @@ router.put(
       // Delete old videos if provided
       if (videos && videos.length > 0) {
         // Remove the old videos
-        await Promise.all(course.videos.map(async (video) => {
-          console.log(video.folderPath);
-          await fsExtra.remove(video.originalVideoPath);
-          await fsExtra.remove(path.dirname(path.dirname(video.m3u8MasterPath)));
-          await removeDirIfEmpty(path.dirname(video.originalVideoPath));
-        }));
+        await Promise.all(
+          course.videos.map(async (video) => {
+            console.log(video.folderPath);
+            await fsExtra.remove(video.originalVideoPath);
+            await fsExtra.remove(
+              path.dirname(path.dirname(video.m3u8MasterPath))
+            );
+            await removeDirIfEmpty(path.dirname(video.originalVideoPath));
+          })
+        );
         const videoData = await convertVideosToM3u8(
           videos,
           course.userId.toString(),
@@ -710,7 +758,9 @@ router.put(
 
       // Save the updated course
       await course.save();
-      res.status(200).json({ message: "Course videos and photo updated successfully" });
+      res
+        .status(200)
+        .json({ message: "Course videos and photo updated successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal server error" });

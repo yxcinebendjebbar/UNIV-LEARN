@@ -10,9 +10,9 @@ const replySchema = new Schema({
     ref: "Forum",
     required: true,
   },
-  writer: {
+  authorId: {
     type: Schema.Types.ObjectId,
-    ref: "Student" || "Prof",
+    ref: "User",
     required: true,
   },
   content: {
@@ -26,7 +26,7 @@ const replySchema = new Schema({
 });
 
 // XSS protection
-replySchema.pre('save', function(next) {
+replySchema.pre("save", function (next) {
   this.content = validator.escape(this.content.trim());
   next();
 });

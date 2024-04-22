@@ -18,22 +18,22 @@ const forumSchema = new Schema({
   },
   createdBy: {
     type: Schema.Types.ObjectId,
-    ref: "Prof", 
+    ref: "User",
     required: true,
   },
   course: {
     type: Schema.Types.ObjectId,
-    ref: "Course", 
+    ref: "Course",
   },
 });
 
 // XSS protection
-forumSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
+forumSchema.pre("save", function (next) {
+  if (this.isModified("title")) {
     this.title = validator.escape(this.title.trim());
   }
-  
-  if (this.isModified('description')) {
+
+  if (this.isModified("description")) {
     this.description = validator.escape(this.description.trim());
   }
 
