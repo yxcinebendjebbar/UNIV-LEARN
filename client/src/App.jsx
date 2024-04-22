@@ -15,19 +15,21 @@ import TeacherSignupPage from "./pages/TeacherSignupPage";
 import TeacherLoginPage from "./pages/TeacherLoginPage";
 import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
+import { Profile } from "./pages/profile.jsx";
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path='/' element={<LandingPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignupPage />} />
-          <Route path='/signup-teacher' element={<TeacherSignupPage />} />
-          <Route path='/login-teacher' element={<TeacherLoginPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup-teacher" element={<TeacherSignupPage />} />
+          <Route path="/login-teacher" element={<TeacherLoginPage />} />
           <Route
-            path='/dashboard'
+            path="/dashboard"
             element={
               <HeavilyProtectedRoute>
                 <Dashboard />
@@ -35,7 +37,7 @@ function App() {
             }
           />
           <Route
-            path='/new-course'
+            path="/new-course"
             element={
               <HeavilyProtectedRoute>
                 <NewCourseForm />
@@ -43,7 +45,7 @@ function App() {
             }
           />
           <Route
-            path='/home'
+            path="/home"
             element={
               <ProtectedRoute>
                 <HomePage />
@@ -51,7 +53,7 @@ function App() {
             }
           />
           <Route
-            path='/courses'
+            path="/courses"
             element={
               <ProtectedRoute>
                 <CoursesPage />
@@ -59,7 +61,7 @@ function App() {
             }
           />
           <Route
-            path='/courses/:id'
+            path="/courses/:id"
             element={
               <ProtectedRoute>
                 <CoursePage />
@@ -77,7 +79,7 @@ const ProtectedRoute = ({ children }) => {
   if (!user) {
     // user is not authenticated
     alert("You need to login first!");
-    return <Navigate to='/login' />;
+    return <Navigate to="/login" />;
   }
   return children;
 };
@@ -86,7 +88,7 @@ const HeavilyProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   if (!user || user.role !== "teacher") {
     alert("You are not authorized to access this page");
-    return <Navigate to='/login-teacher' />;
+    return <Navigate to="/login-teacher" />;
   }
   return children;
 };
