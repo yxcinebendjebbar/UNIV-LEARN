@@ -287,9 +287,9 @@ function AdminUsersPage() {
   return (
     <div className='flex justify-start'>
       <Sidebar />
-      <div className='grid place-items-center'>
-        <div className='self-stretch mx-5 mt-8'>
-          <Table radius='sm' className='min-w-96 w-[42rem] mx-4'>
+      <div className='grid place-items-center w-full'>
+        <div className='self-stretch mx-5 mt-8 w-full p-4'>
+          <Table radius='sm'>
             <TableHeader columns={columns}>
               {(column) => (
                 <TableColumn

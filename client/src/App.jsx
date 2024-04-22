@@ -19,7 +19,6 @@ import AdminPanelPage from "./pages/AdminPanelPage";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import AdminCoursesPage from "./pages/AdminCoursesPage.jsx";
-import AdminReportsPage from "./pages/AdminReportsPage.jsx";
 
 function App() {
   return (
@@ -53,14 +52,6 @@ function App() {
             element={
               <AdminAccessRoute>
                 <AdminCoursesPage />
-              </AdminAccessRoute>
-            }
-          />
-          <Route
-            path='/ap/reports'
-            element={
-              <AdminAccessRoute>
-                <AdminReportsPage />
               </AdminAccessRoute>
             }
           />

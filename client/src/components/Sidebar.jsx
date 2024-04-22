@@ -42,12 +42,6 @@ function Sidebar() {
             >
               Courses
             </DropdownItem>
-            <DropdownItem
-              icon={<GoReport />}
-              onClick={() => navigate("/ap/reports")}
-            >
-              Reports
-            </DropdownItem>
           </DropdownSection>
           <DropdownSection>
             <DropdownItem
@@ -85,15 +79,6 @@ function Sidebar() {
         >
           <FaBook className='scale-150' />
           Courses
-        </p>
-        <p
-          onClick={() => {
-            navigate("/ap/reports");
-          }}
-          className='flex items-center gap-2 p-2 w-full rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800'
-        >
-          <GoReport className='scale-150' />
-          Reports
         </p>
       </div>
       <div className='space-y-4'>

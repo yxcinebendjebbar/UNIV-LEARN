@@ -51,6 +51,7 @@ const upload1 = multer({ storage: storage1 });
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ensure userId and courseName are provided
+    console.log(req.body);
     if (!req.body.userId || !req.body.name) {
       return cb(new Error("User ID and course name are required"));
     }
@@ -625,16 +626,14 @@ async function renameCourseDirectory(course, name) {
 }
 
 router.put(
-  "/courses/photoandvideo",
+  "/courses/photo/",
   isAdmin,
-  upload2.fields([
-    { name: "photo", maxCount: 1 },
-    { name: "videos", maxCount: 5 },
-  ]),
+  upload2.fields([{ name: "photo", maxCount: 1 }]),
   async (req, res) => {
     try {
-      const { courseId } = req.body; // courseId for identifying the course to update
-      const { photo, videos } = req.files;
+      const courseId = req.body.courseId; // courseId for identifying the course to update
+      console.log(req.files);
+      const { photo } = req.files;
 
       // Find the course by ID
       const course = await Course.findById(courseId);
@@ -662,30 +661,30 @@ router.put(
       }
 
       // Delete old videos if provided
-      if (videos && videos.length > 0) {
-        // Remove the old videos
-        await Promise.all(
-          course.videos.map(async (video) => {
-            console.log(video.folderPath);
-            await fsExtra.remove(video.originalVideoPath);
-            await fsExtra.remove(
-              path.dirname(path.dirname(video.m3u8MasterPath))
-            );
-            await removeDirIfEmpty(path.dirname(video.originalVideoPath));
-          })
-        );
-        const videoData = await convertVideosToM3u8(
-          videos,
-          course.userId.toString(),
-          course.courseName.trim()
-        ); // Pass userId and courseName
-        // Update existing videos or add new ones
-        course.videos = videoData.map((data) => ({
-          originalVideoPath: data.originalVideoPath,
-          folderPath: data.folderPath,
-          m3u8MasterPath: data.masterM3u8Path,
-        }));
-      }
+      // if (videos && videos.length > 0) {
+      //   // Remove the old videos
+      //   await Promise.all(
+      //     course.videos.map(async (video) => {
+      //       console.log(video.folderPath);
+      //       await fsExtra.remove(video.originalVideoPath);
+      //       await fsExtra.remove(
+      //         path.dirname(path.dirname(video.m3u8MasterPath))
+      //       );
+      //       await removeDirIfEmpty(path.dirname(video.originalVideoPath));
+      //     })
+      //   );
+      //   const videoData = await convertVideosToM3u8(
+      //     videos,
+      //     course.userId.toString(),
+      //     course.courseName.trim()
+      //   ); // Pass userId and courseName
+      //   // Update existing videos or add new ones
+      //   course.videos = videoData.map((data) => ({
+      //     originalVideoPath: data.originalVideoPath,
+      //     folderPath: data.folderPath,
+      //     m3u8MasterPath: data.masterM3u8Path,
+      //   }));
+      // }
 
       // Save the updated course
       await course.save();

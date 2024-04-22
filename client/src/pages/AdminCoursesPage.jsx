@@ -79,7 +79,17 @@ function AdminCoursesPage() {
 
     const newName = formData.get("newName");
 
-    console.log(newName);
+    const courseData = {
+      description: formData.get("description"),
+      faculty: formData.get("faculty"),
+      department: formData.get("department"),
+      specialty: formData.get("specialty"),
+      level: formData.get("level"),
+    };
+
+    const coursePhoto = formData.get("thumbnail");
+
+    console.log(selectedCourse?.courseName);
 
     try {
       let response;
@@ -91,7 +101,18 @@ function AdminCoursesPage() {
       }
       const response2 = await axios.put(
         `api/admins/courses/details/${selectedCourse?._id}`,
-        formData,
+        courseData
+      );
+
+      const response3 = await axios.put(
+        `api/admins/courses/photo`,
+        {
+          name: selectedCourse?.courseName,
+          userId: selectedCourse?.userId,
+          courseId: selectedCourse?._id,
+          photo: coursePhoto,
+        },
+
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -100,6 +121,7 @@ function AdminCoursesPage() {
       );
       console.log(response);
       console.log(response2);
+      console.log(response3);
       alert("Course updated successfully!");
       setIsLoading(false);
     } catch (error) {
@@ -110,12 +132,24 @@ function AdminCoursesPage() {
     }
   };
 
+  const deleteCourse = async () => {
+    try {
+      const response = await axios.delete(
+        `api/admins/courses/${selectedCourse?._id}`
+      );
+      console.log(response);
+      alert("Course deleted successfully!");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className='flex justify-start'>
       <Sidebar />
-      <div className='grid place-items-center'>
-        <div className='self-stretch mx-5 mt-8'>
-          <Table radius='sm' className='min-w-96 w-[42rem] mx-4'>
+      <div className='grid place-items-center w-full'>
+        <div className='self-stretch mx-5 mt-8 w-full p-4'>
+          <Table radius='sm'>
             <TableHeader>
               <TableColumn>Thumbnail</TableColumn>
               <TableColumn>Course Name</TableColumn>
@@ -131,7 +165,7 @@ function AdminCoursesPage() {
                       <img
                         src={`http://localhost:8000/${course?.photo.slice(7)}`}
                         alt={course?.courseName}
-                        className='w-20 rounded object-cover'
+                        className='w-32 h-16 rounded object-cover'
                       />
                     </TableCell>
                     <TableCell>{course?.courseName}</TableCell>
@@ -332,6 +366,7 @@ function AdminCoursesPage() {
                                 <label htmlFor='thumbnail'>Thumbnail</label>
                                 <input
                                   id='thumbnail'
+                                  name='thumbnail'
                                   type='file'
                                   onChange={handleThumbnailChange}
                                 />
@@ -366,10 +401,10 @@ function AdminCoursesPage() {
                     return (
                       <>
                         <ModalHeader className='flex flex-col gap-1'>
-                          {`Deleting ${selectedUser?.fullName}'s account`}
+                          {`Deleting ${selectedCourse?.courseName}`}
                         </ModalHeader>
                         <ModalBody>
-                          <h2>Are you sure you want to delete this account?</h2>
+                          <h2>Are you sure you want to delete this course?</h2>
                         </ModalBody>
                         <ModalFooter>
                           <Button
@@ -382,7 +417,7 @@ function AdminCoursesPage() {
                           <Button
                             color='danger'
                             onPress={onClose}
-                            onClick={deleteUser}
+                            onClick={deleteCourse}
                           >
                             Delete
                           </Button>
