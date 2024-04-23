@@ -47,3 +47,10 @@
 a {
   @apply hover:underline;
 }
+
+.form-bg {
+  background-color: #e5e5f7;
+  opacity: 0.8;
+  background-image: radial-gradient(#444cf7 0.8px, #e5e5f7 0.8px);
+  background-size: 16px 16px;
+}

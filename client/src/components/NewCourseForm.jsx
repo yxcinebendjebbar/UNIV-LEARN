@@ -53,7 +53,7 @@ function NewCourseForm() {
   };
 
   return (
-    <form className='bg-gray-100/40 min-h-screen' onSubmit={handleSubmitCourse}>
+    <form className='form-bg min-h-screen' onSubmit={handleSubmitCourse}>
       {isUploading && (
         <div className='fixed top-0 left-0 w-full h-full bg-black/35 flex items-center justify-center'>
           <Spinner color='primary' />

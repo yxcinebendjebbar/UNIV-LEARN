@@ -2,6 +2,16 @@ import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar.jsx";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useAuth } from "../hooks/useAuth.jsx";
 import { MdEdit, MdDelete } from "react-icons/md";
 axios.defaults.withCredentials = true;
@@ -11,6 +21,23 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [myCourses, setMyCourses] = useState([]);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const [thumbnailSrc, setThumbnailSrc] = useState("");
+
+  const handleThumbnailChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+      const reader = new FileReader(); // Create a new FileReader object
+      reader.onload = () => {
+        // Set the thumbnailSrc state with the data URL of the selected file
+        setThumbnailSrc(reader.result);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  };
 
   useEffect(() => {
     const fetchMyCourses = async () => {
@@ -31,6 +58,79 @@ export default function Dashboard() {
 
     fetchMyCourses();
   }, []);
+
+  const updateCourse = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const newName = formData.get("newName");
+
+    const courseData = {
+      description: formData.get("description"),
+      faculty: formData.get("faculty"),
+      department: formData.get("department"),
+      specialty: formData.get("specialty"),
+      level: formData.get("level"),
+    };
+
+    const coursePhoto = formData.get("thumbnail");
+
+    console.log(selectedCourse?.courseName);
+
+    try {
+      let response;
+      if (selectedCourse?.courseName !== newName) {
+        response = await axios.put(
+          `/api/courses/update/name/${selectedCourse?._id}`,
+          { name: newName }
+        );
+      }
+      const response2 = await axios.put(
+        `api/courses/update/details/${selectedCourse?._id}`,
+        courseData
+      );
+
+      const response3 = await axios.put(
+        `api/courses/update/photoandvideo/${selectedCourse?._id}`,
+        {
+          name: selectedCourse?.courseName,
+          userId: selectedCourse?.userId,
+          courseId: selectedCourse?._id,
+          photo: coursePhoto,
+        },
+
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      console.log(response2);
+      console.log(response3);
+      alert("Course updated successfully!");
+      location.reload();
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteCourse = async () => {
+    try {
+      const response = await axios.delete(`api/courses/${selectedCourse?._id}`);
+      console.log(response);
+      alert("Course deleted successfully!");
+      location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -97,10 +197,24 @@ export default function Dashboard() {
                         <div className='truncate'>{course?.courseName}</div>
                         <div className='truncate'>{course?.rating}</div>
                         <div className='flex gap-4'>
-                          <button className='p-2 rounded-lg'>
+                          <button
+                            className='p-2 rounded-lg'
+                            onClick={() => {
+                              setSelectedAction("edit");
+                              setSelectedCourse(course);
+                              onOpen();
+                            }}
+                          >
                             <MdEdit />
                           </button>
-                          <button className='p-2 rounded-lg'>
+                          <button
+                            className='p-2 rounded-lg'
+                            onClick={() => {
+                              setSelectedAction("delete");
+                              setSelectedCourse(course);
+                              onOpen();
+                            }}
+                          >
                             <MdDelete />
                           </button>
                         </div>
@@ -112,6 +226,145 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+              <ModalContent>
+                {(onClose) => {
+                  switch (selectedAction) {
+                    case "edit":
+                      return (
+                        <>
+                          <ModalHeader className='flex flex-col gap-1'>
+                            {`Editing course's details`}
+                          </ModalHeader>
+                          <ModalBody>
+                            <form onSubmit={updateCourse}>
+                              <div className='flex flex-col gap-2'>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='courseName'>
+                                    Course Name
+                                  </label>
+                                  <Input
+                                    id='courseName'
+                                    name='newName'
+                                    placeholder='Enter course name'
+                                    defaultValue={selectedCourse?.courseName}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='description'>
+                                    Description
+                                  </label>
+                                  <Input
+                                    id='description'
+                                    name='description'
+                                    placeholder='Enter course description'
+                                    defaultValue={selectedCourse?.description}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='faculty'>Faculty</label>
+                                  <Input
+                                    id='faculty'
+                                    name='faculty'
+                                    placeholder='Enter faculty'
+                                    defaultValue={selectedCourse?.faculty}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='department'>Department</label>
+                                  <Input
+                                    id='department'
+                                    name='department'
+                                    placeholder='Enter department'
+                                    defaultValue={selectedCourse?.department}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='specialty'>Specialty</label>
+                                  <Input
+                                    id='specialty'
+                                    name='specialty'
+                                    placeholder='Enter specialty'
+                                    defaultValue={selectedCourse?.specialty}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='level'>Level</label>
+                                  <Input
+                                    id='level'
+                                    placeholder='Enter level'
+                                    name='level'
+                                    defaultValue={selectedCourse?.level}
+                                  />
+                                </div>
+                                <div className='flex flex-wrap gap-2'>
+                                  <label htmlFor='thumbnail'>Thumbnail</label>
+                                  <input
+                                    id='thumbnail'
+                                    name='thumbnail'
+                                    type='file'
+                                    onChange={handleThumbnailChange}
+                                  />
+
+                                  <img
+                                    src={
+                                      thumbnailSrc ||
+                                      "https://via.placeholder.com/150x150"
+                                    }
+                                    className='h-40 object-cover rounded-lg'
+                                  />
+                                </div>
+                              </div>
+                              <Button
+                                radius='sm'
+                                color='primary'
+                                className='w-full mt-2'
+                                type='submit'
+                              >
+                                Edit
+                              </Button>
+                            </form>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button variant='light' onPress={onClose}>
+                              Close
+                            </Button>
+                          </ModalFooter>
+                        </>
+                      );
+                    case "delete":
+                      return (
+                        <>
+                          <ModalHeader className='flex flex-col gap-1'>
+                            {`Deleting ${selectedCourse?.courseName}`}
+                          </ModalHeader>
+                          <ModalBody>
+                            <h2>
+                              Are you sure you want to delete this course?
+                            </h2>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              color='primary'
+                              variant='light'
+                              onPress={onClose}
+                            >
+                              Close
+                            </Button>
+                            <Button
+                              color='danger'
+                              onPress={onClose}
+                              onClick={deleteCourse}
+                            >
+                              Delete
+                            </Button>
+                          </ModalFooter>
+                        </>
+                      );
+                  }
+                }}
+              </ModalContent>
+            </Modal>
           </main>
         </div>
       </div>
