@@ -18,9 +18,9 @@ const ProfilePage = () => {
     const fetchCourses = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("/api/courses/enrolled-courses/");
+        const res = await axios.post("/api/courses/enrolled-courses/");
         console.log(res);
-        setCourses(res.data);
+        setCourses(res.data.enrolledCourses);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -33,6 +33,7 @@ const ProfilePage = () => {
     fetchCourses();
   }, []);
 
+  console.log(courses);
   return (
     <div>
       <NavBar />
@@ -56,26 +57,37 @@ const ProfilePage = () => {
                 Currently no enrolled courses to display.
               </p>
             ) : (
-              <div className='grid grid-cols-3 gap-6'>
+              <div className='flex flex-col gap-4 items-center'>
                 <p className='font-medium'>My courses</p>
-                {courses.map((course) => {
-                  console.log(course);
-                  return (
-                    <div key={course.title}>
-                      <img src={course.thumbnail} alt='course thumbnail' />
-                      <p className='text-xl mt-2'>{course.title}</p>
-                      <div className='flex justify-between items-center'>
-                        <div className='h-[15px] w-[350px] rounded-full bg-[#d9d9d9]'>
-                          <div
-                            className={`h-[15px] bg-[#5D61D0] rounded-full`}
-                            style={{ width: `${course.progres}%` }}
-                          ></div>
+                <div className='grid grid-cols-3 gap-6 px-32'>
+                  {courses?.map((course) => {
+                    console.log(course);
+                    return (
+                      <div
+                        key={course?.courseName}
+                        className='flex flex-col items-center'
+                      >
+                        <img
+                          src={`http://localhost:8000/${course?.photo.slice(
+                            7
+                          )}`}
+                          alt='course thumbnail'
+                          className='w-64 rounded-lg object-cover'
+                        />
+                        <p className='text-xl mt-2'>{course?.courseName}</p>
+                        <div className='flex justify-between items-center'>
+                          <div className='h-[15px] w-[350px] rounded-full bg-[#d9d9d9]'>
+                            <div
+                              className={`h-[15px] bg-[#5D61D0] rounded-full`}
+                              style={{ width: Math.floor(Math.random() * 100) }}
+                            ></div>
+                          </div>
+                          <p>{course.progres}%</p>
                         </div>
-                        <p>{course.progres}%</p>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>

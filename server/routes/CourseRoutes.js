@@ -504,23 +504,31 @@ router.post("/enroll", isLoggedIn, async (req, res) => {
 });
 
 // Get enrolled courses
-router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
+router.post("/enrolled-courses", isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const role = req.session.user.role;
 
-    let user;
-    if (role === "student") {
-      user = await User.findById(userId).populate("enrolledCourses.courseId");
-    } else if (role === "teacher") {
-      user = await User.findById(userId).populate("enrolledCourses.courseId");
-    }
+    // Find the user by ID and populate the enrolledCourses field with courseId references
+    const user = await User.findById(userId).populate(
+      "enrolledCourses.courseId"
+    );
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json({ enrolledCourses: user.enrolledCourses });
+    // Extract enrolled courses from the user object and send as response
+    let enrolledCourses = [];
+    if (user.enrolledCourses.length > 0) {
+      enrolledCourses = user.enrolledCourses.map((course) => ({
+        courseName: course.courseId.courseName,
+        description: course.courseId.description,
+        photo: course.courseId.photo,
+        // Include other course details you want to send
+      }));
+    }
+
+    res.status(200).json({ enrolledCourses });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -569,11 +577,9 @@ router.put("/update/details/:id", isProfessor, async (req, res) => {
 
     // Verify if the user is the owner of the course
     if (course.userId.toString() !== userId.toString()) {
-      return res
-        .status(403)
-        .json({
-          message: "Unauthorized: You are not the owner of this course",
-        });
+      return res.status(403).json({
+        message: "Unauthorized: You are not the owner of this course",
+      });
     }
 
     // Update the course details
@@ -605,11 +611,9 @@ router.put("/update/name/:id", isProfessor, async (req, res) => {
 
     // Verify if the user is the owner of the course
     if (course.userId.toString() !== userId.toString()) {
-      return res
-        .status(403)
-        .json({
-          message: "Unauthorized: You are not the owner of this course",
-        });
+      return res.status(403).json({
+        message: "Unauthorized: You are not the owner of this course",
+      });
     }
 
     // Rename course directory and contents
@@ -705,11 +709,9 @@ router.put(
 
       // Verify if the user is the owner of the course
       if (course.userId.toString() !== userId.toString()) {
-        return res
-          .status(403)
-          .json({
-            message: "Unauthorized: You are not the owner of this course",
-          });
+        return res.status(403).json({
+          message: "Unauthorized: You are not the owner of this course",
+        });
       }
 
       // Function to remove directory recursively if empty

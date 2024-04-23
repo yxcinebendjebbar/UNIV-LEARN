@@ -172,6 +172,18 @@ function CoursesPage() {
     fetchCourses();
   }, []);
 
+  const enrollCourse = async (id) => {
+    try {
+      const response = await axios.post(`api/courses/enroll`, {
+        courseId: id,
+      });
+      alert(response.data.message);
+      navigate(`/courses/${id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   console.log(courses);
 
   const filteredCourses = useMemo(() => {
@@ -472,7 +484,7 @@ function CoursesPage() {
                   <button
                     className='Solid'
                     onClick={() => {
-                      navigate(`/courses/${course._id}`);
+                      enrollCourse(course._id);
                     }}
                   >
                     Enroll now

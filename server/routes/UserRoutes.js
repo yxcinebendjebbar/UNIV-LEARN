@@ -126,7 +126,7 @@ router.post("/login", async (req, res) => {
         auth: true,
       });
     });
-    console.log(req.session.user);
+
     // res.redirect("/hp");
   } catch (error) {
     res.status(500).json({ error: error.message });
