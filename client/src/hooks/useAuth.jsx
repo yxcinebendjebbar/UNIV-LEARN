@@ -1,11 +1,17 @@
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "./useLocalStorage";
+import { useSessionStorage } from "./useSessionStorage";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useLocalStorage("user", null);
+  const [user, setUser] = useSessionStorage("user", null);
   const navigate = useNavigate();
+
+  // for updating user settings
+
+  const updateUser = async (data) => {
+    setUser(data);
+  };
 
   // call this function when you want to authenticate the user
   const login = async (data) => {
@@ -35,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       loginAdmin,
       logoutAdmin,
       logout,
+      updateUser,
     }),
     [user]
   );

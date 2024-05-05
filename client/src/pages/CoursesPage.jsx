@@ -193,7 +193,9 @@ function CoursesPage() {
 
     if (searchText) {
       filtered = filtered.filter((course) => {
-        return course.name.toLowerCase().includes(searchText.toLowerCase());
+        return course.courseName
+          .toLowerCase()
+          .includes(searchText.toLowerCase());
       });
     }
 

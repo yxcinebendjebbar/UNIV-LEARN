@@ -5,7 +5,7 @@ import { CiMail, CiPhone, CiLocationOn } from "react-icons/ci";
 function Footer() {
   return (
     <footer className='p-8 border-t flex flex-col gap-4'>
-      <div className='flex justify-evenly items-start'>
+      <div className='flex justify-evenly items-start mb-4'>
         <div>
           <div className='flex items-center gap-2 mb-4'>
             <img
@@ -32,18 +32,9 @@ function Footer() {
         <div className='hidden lg:block'>
           <h2 className='text-xl font-bold'>Quick Links</h2>
           <div className='flex flex-col gap-2 font-medium'>
-            <a href='#'>Home</a>
-            <a href='#'>Courses</a>
-            <a href='#'>About</a>
-            <a href='#'>Contact</a>
-          </div>
-        </div>
-        <div className='hidden lg:block'>
-          <h2 className='text-xl font-bold'>About Us</h2>
-          <div className='flex flex-col gap-2 font-medium'>
-            <a href='#'>Company</a>
-            <a href='#'>Achievements</a>
-            <a href='#'>Our Goals</a>
+            <a href='/home'>Home</a>
+            <a href='/courses'>Courses</a>
+            <a href='/forums'>Forums</a>
           </div>
         </div>
       </div>

@@ -509,21 +509,25 @@ router.post("/enrolled-courses", isLoggedIn, async (req, res) => {
     const userId = req.session.user.id;
 
     // Find the user by ID and populate the enrolledCourses field with courseId references
-    const user = await User.findById(userId).populate(
-      "enrolledCourses.courseId"
-    );
+    const user = await User.findById(userId).populate({
+      path: "enrolledCourses",
+      populate: { path: "courseId" }, // Populate the courseId field
+    });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    console.log(user.enrolledCourses);
+
     // Extract enrolled courses from the user object and send as response
     let enrolledCourses = [];
     if (user.enrolledCourses.length > 0) {
-      enrolledCourses = user.enrolledCourses.map((course) => ({
-        courseName: course.courseId.courseName,
-        description: course.courseId.description,
-        photo: course.courseId.photo,
+      enrolledCourses = user.enrolledCourses.map((enrollment) => ({
+        courseId: enrollment.courseId._id, // Assuming you want courseId as well
+        courseName: enrollment.courseId.courseName,
+        description: enrollment.courseId.description,
+        photo: enrollment.courseId.photo,
         // Include other course details you want to send
       }));
     }

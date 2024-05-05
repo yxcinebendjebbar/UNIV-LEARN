@@ -5,7 +5,6 @@ import path from "path";
 import fs from "fs";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
-import { profile } from "console";
 
 const router = express.Router();
 
@@ -191,7 +190,9 @@ router.put(
         return res.status(404).json({ error: "not found" });
       }
 
-      res.status(200).json(updatedUser);
+      req.session.user.profilePicture = updatedUser.profilePicture;
+
+      res.status(200).json({ user: req.session.user });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -202,12 +203,23 @@ router.put(
 router.put("/profile/password", isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { passwrd } = req.body;
+    const { password, prevPw } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordMatch = await bcrypt.compare(prevPw, user.passwrd);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
 
     // Update the user's password
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { passwrd },
+      { passwrd: password },
       { new: true, runValidators: true }
     );
 
@@ -216,7 +228,7 @@ router.put("/profile/password", isLoggedIn, async (req, res) => {
     }
 
     // Respond with the updated user data
-    res.json(updatedUser);
+    res.json({ message: "Password updated successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -231,7 +243,7 @@ router.put("/profile/name", isLoggedIn, async (req, res) => {
     // Update the user's name
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { name },
+      { fullName: name },
       { new: true, runValidators: true }
     );
 
@@ -239,8 +251,9 @@ router.put("/profile/name", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    req.session.user.username = updatedUser.fullName;
     // Respond with the updated user data
-    res.json(updatedUser);
+    res.json({ user: req.session.user });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -263,8 +276,10 @@ router.put("/profile/email", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    req.session.user.email = updatedUser.email;
+
     // Respond with the updated user data
-    res.json(updatedUser);
+    res.json({ user: req.session.user });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

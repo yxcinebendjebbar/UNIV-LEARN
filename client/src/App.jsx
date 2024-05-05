@@ -18,6 +18,7 @@ import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
 import ForumsPage from "./pages/ForumsPage";
 import Replies from "./pages/Replies";
+import SettingsPage from "./pages/SettingsPage.jsx";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
@@ -87,6 +88,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/settings'
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
               </ProtectedRoute>
             }
           />

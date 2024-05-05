@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, Button, Spacer } from "@nextui-org/react";
 
 function NavBar() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
