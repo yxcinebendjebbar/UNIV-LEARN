@@ -123,18 +123,23 @@ router.get("/", isLoggedIn, async (req, res) => {
 //   }
 // });
 
-router.get("course/:id", isLoggedIn, async (req, res) => {
+router.get("/:id", isLoggedIn, async (req, res) => {
   try {
     const courseId = req.params.id;
 
-    const course = await Course.findById(courseId);
+    // Populate the 'teacher' field in the Course document
+    const course = await Course.findById(courseId).populate("userId");
+
+    // If 'teacher' is a field in the Course schema and it references the Teacher model
+    // Replace 'teacher' with the actual field name if different
 
     console.log(course);
 
     res.status(200).json(course);
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
-
 // Route for deleting a course by its ID
 router.delete("/deleteCourse/:id", isProfessor, async (req, res) => {
   try {
@@ -504,7 +509,7 @@ router.post("/enroll", isLoggedIn, async (req, res) => {
 });
 
 // Get enrolled courses
-router.get("/enrolled-courses", isLoggedIn, async (req, res) => {
+router.post("/enrolled-courses", isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user.id;
 
@@ -774,55 +779,59 @@ router.put(
   }
 );
 // Route to add a course to favorites
-router.post('/addFavorite', isLoggedIn, async (req, res) => {
+router.post("/addFavorite", isLoggedIn, async (req, res) => {
   try {
     const courseId = req.body.courseId; // Assuming courseId is sent as a string
     const userId = req.session.user.id;
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
-        // Check if the user is already enrolled in the course
-        if (
-          user.enrolledCourses.some(
-            (course) => course.courseId.toString() === courseId
-          )
-        ) {
-          return res
-            .status(400)
-            .json({ error: "Course already enrolled in favorite" });
-        }
+    // Check if the course is already in the user's favorites
+    const isAlreadyFavorite = user.favoriteCourses.some(
+      (course) => course.courseId.toString() === courseId
+    );
+    if (isAlreadyFavorite) {
+      // If the course is already in favorites, remove it
+      user.favoriteCourses = user.favoriteCourses.filter(
+        (course) => course.courseId.toString() !== courseId
+      );
+    } else {
+      // If the course is not in favorites, add it
+      user.favoriteCourses.push({
+        courseId: new mongoose.Types.ObjectId(courseId),
+      });
+    }
 
-        user.favoriteCourses.push({
-          courseId: new mongoose.Types.ObjectId(courseId),
-        }); // Convert courseId to ObjectId
     await user.save();
 
-    res.status(200).json({ message: 'Course added to favorites successfully' });
+    res.status(200).json({ message: "Favorite status updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // Route to get a user's favorite courses
-router.get('/favoriteCourses', isLoggedIn, async (req, res) => {
+router.get("/favoriteCourses", isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user.id; // Assuming user ID is stored in session as session.user.id
 
     // Find the user by userId
-    const user = await User.findById(userId).populate('favoriteCourses.courseId');
+    const user = await User.findById(userId).populate(
+      "favoriteCourses.courseId"
+    );
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Extract favorite courses from the user object and send as response
     let favoriteCourses = [];
     if (user.favoriteCourses.length > 0) {
-      favoriteCourses = user.favoriteCourses.map(course => ({
+      favoriteCourses = user.favoriteCourses.map((course) => ({
         courseName: course.courseId.courseName,
         description: course.courseId.description,
         photo: course.courseId.photo,
@@ -833,50 +842,51 @@ router.get('/favoriteCourses', isLoggedIn, async (req, res) => {
     res.status(200).json({ favoriteCourses });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.delete('/deleteFavorite', isLoggedIn, async (req, res) => {
+router.delete("/deleteFavorite", isLoggedIn, async (req, res) => {
   const userId = req.session.user.id;
   const courseId = req.body.courseId;
 
   try {
     // Validate courseId format
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ error: 'Invalid course ID format' });
+      return res.status(400).json({ error: "Invalid course ID format" });
     }
 
     // If courseId is "deleteFavorite", return an error
     if (courseId === "deleteFavorite") {
-      return res.status(400).json({ error: 'Invalid course ID' });
+      return res.status(400).json({ error: "Invalid course ID" });
     }
 
     // Find the user by userId
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Check if the course is in favorites
-    const favoriteIndex = user.favoriteCourses.findIndex(course => course.courseId.equals(courseId));
+    const favoriteIndex = user.favoriteCourses.findIndex((course) =>
+      course.courseId.equals(courseId)
+    );
     if (favoriteIndex === -1) {
-      return res.status(400).json({ error: 'Course is not in favorites' });
+      return res.status(400).json({ error: "Course is not in favorites" });
     }
 
     // Remove the course from favorites and save the user
     user.favoriteCourses.splice(favoriteIndex, 1);
     await user.save();
 
-    res.status(200).json({ message: 'Course deleted from favorites successfully' });
+    res
+      .status(200)
+      .json({ message: "Course deleted from favorites successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
 
 // router.get("/search", async (req, res) => {
 //   try {

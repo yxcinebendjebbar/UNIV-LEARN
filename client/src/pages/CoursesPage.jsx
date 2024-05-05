@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { IoMdSearch } from "react-icons/io";
+import { MdFavorite } from "react-icons/md";
 import { FaStar } from "react-icons/fa";
 import {
   Dropdown,
@@ -177,10 +178,11 @@ function CoursesPage() {
       const response = await axios.post(`api/courses/enroll`, {
         courseId: id,
       });
-      alert(response.data.message);
+      console.log(response.data.message);
       navigate(`/courses/${id}`);
     } catch (error) {
       console.error(error);
+      navigate(`/courses/${id}`);
     }
   };
 
@@ -251,6 +253,17 @@ function CoursesPage() {
     selectedDepartmentKey,
     selectedSpecialtyKey,
   ]);
+
+  const addFavorite = async (courseId) => {
+    try {
+      const response = await axios.post("api/courses/addFavorite", {
+        courseId,
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
@@ -499,6 +512,15 @@ function CoursesPage() {
                   >
                     View course
                   </button>
+                  <Button
+                    size='sm'
+                    isIconOnly
+                    onClick={() => {
+                      addFavorite(course._id);
+                    }}
+                  >
+                    <MdFavorite className='scale-150' />
+                  </Button>
                 </CardFooter>
               </Card>
             );

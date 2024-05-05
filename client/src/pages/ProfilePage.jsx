@@ -38,14 +38,9 @@ const ProfilePage = () => {
     <div>
       <NavBar />
       <div className='flex flex-col items-center mb-20'>
-        <img
-          src={`http://localhost:8000/${profile.profilePicture.slice(7)}`}
-          alt='profile picture'
-          className='h-48 w-48 mt-12 rounded-full'
-        />
-        <p className='text-3xl font-semibold mt-4'>{profile.username}</p>
-        {/* student or teacher */}
-        <p className='text-xl capitalize'>{profile.role}</p>
+        <h2 className='text-xl font-medium my-4 self-start mx-8'>
+          Continue where you left of:
+        </h2>
         <div className='flex flex-col'>
           <div className='flex flex-col items-center my-6'>
             {isLoading ? (
@@ -58,14 +53,16 @@ const ProfilePage = () => {
               </p>
             ) : (
               <div className='flex flex-col gap-4 items-center'>
-                <p className='font-medium'>My courses</p>
                 <div className='grid grid-cols-3 gap-6 px-32'>
                   {courses?.map((course) => {
                     console.log(course);
                     return (
                       <div
-                        key={course?.courseName}
-                        className='flex flex-col items-center'
+                        key={course?.courseId}
+                        className='flex flex-col items-center justify-between rounded-lg bg-white cursor-pointer'
+                        onClick={() => {
+                          window.location.href = `/courses/${course?.courseId}`;
+                        }}
                       >
                         <img
                           src={`http://localhost:8000/${course?.photo.slice(
@@ -74,16 +71,9 @@ const ProfilePage = () => {
                           alt='course thumbnail'
                           className='w-64 rounded-lg object-cover'
                         />
-                        <p className='text-xl mt-2'>{course?.courseName}</p>
-                        <div className='flex justify-between items-center'>
-                          <div className='h-[15px] w-[350px] rounded-full bg-[#d9d9d9]'>
-                            <div
-                              className={`h-[15px] bg-[#5D61D0] rounded-full`}
-                              style={{ width: Math.floor(Math.random() * 100) }}
-                            ></div>
-                          </div>
-                          <p>{course.progres}%</p>
-                        </div>
+                        <p className='text-xl font-medium m-4 text-center'>
+                          {course?.courseName}
+                        </p>
                       </div>
                     );
                   })}

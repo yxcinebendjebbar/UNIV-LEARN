@@ -48,10 +48,10 @@ function HomePage() {
       const response = await axios.post(`api/courses/enroll`, {
         courseId: id,
       });
-      alert(response.data.message);
       navigate(`/courses/${id}`);
     } catch (error) {
       console.error(error);
+      navigate(`/courses/${id}`);
     }
   };
 
