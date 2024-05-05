@@ -60,6 +60,10 @@ const userSchema = new Schema({
     type: [enrolledCourseSchema],
     default: [],
   },
+  favoriteCourses: {
+    type: [enrolledCourseSchema],
+    default: [],
+  },
   profilePicture: {
     type: String,
     default: "assets/default-profilepic.jpg",
