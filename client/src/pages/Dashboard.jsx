@@ -226,7 +226,11 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              scrollBehavior='inside'
+            >
               <ModalContent>
                 {(onClose) => {
                   switch (selectedAction) {

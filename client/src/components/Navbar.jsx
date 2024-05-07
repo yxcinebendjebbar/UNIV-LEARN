@@ -177,7 +177,7 @@ function NavBar() {
                     <a href='/courses'>Courses</a>
                   </li>
                   <li>
-                    <a href='/learning-paths'>Forums</a>
+                    <a href='/forums'>Forums</a>
                   </li>
                   <li>
                     <a href='/settings'>Settings</a>

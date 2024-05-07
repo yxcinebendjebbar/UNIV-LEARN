@@ -19,6 +19,8 @@ import CoursePage from "./pages/CoursePage";
 import ForumsPage from "./pages/ForumsPage";
 import Replies from "./pages/Replies";
 import SettingsPage from "./pages/SettingsPage.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
@@ -35,6 +37,8 @@ function App() {
           <Route path='/signup-teacher' element={<TeacherSignupPage />} />
           <Route path='/login-teacher' element={<TeacherLoginPage />} />
           <Route path='/aplogin' element={<AdminLoginPage />} />
+          <Route path='/forgotpw' element={<ForgotPassword />} />
+          <Route path='/resetpassword/:id' element={<ResetPassword />} />
           <Route
             path='/ap'
             element={

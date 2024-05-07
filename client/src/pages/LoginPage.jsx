@@ -93,7 +93,7 @@ function LoginPage() {
                 <div className='flex items-center h-5'></div>
               </div>
               <a
-                href='#'
+                href='/forgotpw'
                 className='text-sm font-medium text-primary-600 hover:underline dark:text-primary-500'
               >
                 Forgot password?

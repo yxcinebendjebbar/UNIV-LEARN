@@ -9,9 +9,8 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 
 const ProfilePage = () => {
-  const { user } = useAuth();
-  const profile = user;
   const [courses, setCourses] = useState([]);
+  const [favoriteCourses, setFavoriteCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -19,8 +18,10 @@ const ProfilePage = () => {
       setIsLoading(true);
       try {
         const res = await axios.post("/api/courses/enrolled-courses/");
+        const res2 = await axios.post("/api/courses/favoriteCourses");
         console.log(res);
         setCourses(res.data.enrolledCourses);
+        setFavoriteCourses(res2.data.favoriteCourses);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -33,13 +34,14 @@ const ProfilePage = () => {
     fetchCourses();
   }, []);
 
-  console.log(courses);
+  console.log(favoriteCourses);
+
   return (
     <div>
       <NavBar />
-      <div className='flex flex-col items-center mb-20'>
+      <main className='flex flex-col items-center mb-20'>
         <h2 className='text-xl font-medium my-4 self-start mx-8'>
-          Continue where you left of:
+          Favorite Courses:
         </h2>
         <div className='flex flex-col'>
           <div className='flex flex-col items-center my-6'>
@@ -47,19 +49,18 @@ const ProfilePage = () => {
               <div className='w-full h-full flex items-center justify-center'>
                 <Spinner size='large' color='primary' />
               </div>
-            ) : !courses.length ? (
+            ) : !favoriteCourses.length ? (
               <p className='text-2xl text-default-400'>
-                Currently no enrolled courses to display.
+                Currently no favorite courses to display.
               </p>
             ) : (
               <div className='flex flex-col gap-4 items-center'>
-                <div className='grid grid-cols-3 gap-6 px-32'>
-                  {courses?.map((course) => {
-                    console.log(course);
+                <div className='flex flex-wrap gap-6 px-32'>
+                  {favoriteCourses?.map((course) => {
                     return (
                       <div
                         key={course?.courseId}
-                        className='flex flex-col items-center justify-between rounded-lg bg-white cursor-pointer'
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 cursor-pointer'
                         onClick={() => {
                           window.location.href = `/courses/${course?.courseId}`;
                         }}
@@ -82,7 +83,52 @@ const ProfilePage = () => {
             )}
           </div>
         </div>
-      </div>
+      </main>
+      <section className='flex flex-col items-center mb-20'>
+        <h2 className='text-xl font-medium my-4 self-start mx-8'>
+          Continue where you left of:
+        </h2>
+        <div className='flex flex-col'>
+          <div className='flex flex-col items-center my-6'>
+            {isLoading ? (
+              <div className='w-full h-full flex items-center justify-center'>
+                <Spinner size='large' color='primary' />
+              </div>
+            ) : !courses.length ? (
+              <p className='text-2xl text-default-400'>
+                Currently no enrolled courses to display.
+              </p>
+            ) : (
+              <div className='flex flex-col gap-4 items-center'>
+                <div className='flex flex-wrap gap-6 px-32'>
+                  {courses?.map((course) => {
+                    return (
+                      <div
+                        key={course?.courseId}
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 cursor-pointer'
+                        onClick={() => {
+                          window.location.href = `/courses/${course?.courseId}`;
+                        }}
+                      >
+                        <img
+                          src={`http://localhost:8000/${course?.photo.slice(
+                            7
+                          )}`}
+                          alt='course thumbnail'
+                          className='w-64 rounded-lg object-cover'
+                        />
+                        <p className='text-xl font-medium m-4 text-center'>
+                          {course?.courseName}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
       <Footer />
     </div>
   );

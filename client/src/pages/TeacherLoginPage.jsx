@@ -42,7 +42,7 @@ function LoginPage() {
     logIn(email, password);
   };
   return (
-    <div className='flex flex-col items-center justify-start px-6 py-8 mx-auto md:h-screen lg:py-0'>
+    <div className='flex flex-col items-center justify-start px-6 py-8 mx-auto h-screen lg:py-0'>
       <div className='self-end p-4'>
         <Switcher />
       </div>
@@ -93,7 +93,7 @@ function LoginPage() {
                 <div className='flex items-center h-5'></div>
               </div>
               <a
-                href='#'
+                href='/forgotpw'
                 className='text-sm font-medium text-primary-600 hover:underline dark:text-primary-500'
               >
                 Forgot password?

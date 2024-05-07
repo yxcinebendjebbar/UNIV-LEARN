@@ -75,7 +75,7 @@ function SignupPage() {
     signup(fullName, email, password);
   };
   return (
-    <div className='flex flex-col items-center justify-start px-6 py-8 mx-auto md:h-screen lg:py-0'>
+    <div className='flex flex-col items-center justify-start px-6 py-8 mx-auto h-screen lg:py-0'>
       <div className='self-end p-4'>
         <Switcher />
       </div>
@@ -153,17 +153,7 @@ function SignupPage() {
                 required={true}
               />
             </div>
-            <div className='flex items-center justify-between'>
-              <div className='flex items-start'>
-                <div className='flex items-center h-5'></div>
-              </div>
-              <a
-                href='#'
-                className='text-sm font-medium text-primary-600 hover:underline dark:text-primary-500'
-              >
-                Forgot password?
-              </a>
-            </div>
+
             <Button
               type='submit'
               className='w-full'

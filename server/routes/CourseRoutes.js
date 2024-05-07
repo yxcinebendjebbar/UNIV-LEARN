@@ -815,7 +815,7 @@ router.post("/addFavorite", isLoggedIn, async (req, res) => {
 });
 
 // Route to get a user's favorite courses
-router.get("/favoriteCourses", isLoggedIn, async (req, res) => {
+router.post("/favoriteCourses", isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user.id; // Assuming user ID is stored in session as session.user.id
 
@@ -832,6 +832,7 @@ router.get("/favoriteCourses", isLoggedIn, async (req, res) => {
     let favoriteCourses = [];
     if (user.favoriteCourses.length > 0) {
       favoriteCourses = user.favoriteCourses.map((course) => ({
+        courseId: course.courseId._id, // Assuming you want courseId as well
         courseName: course.courseId.courseName,
         description: course.courseId.description,
         photo: course.courseId.photo,
@@ -840,48 +841,6 @@ router.get("/favoriteCourses", isLoggedIn, async (req, res) => {
     }
 
     res.status(200).json({ favoriteCourses });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.delete("/deleteFavorite", isLoggedIn, async (req, res) => {
-  const userId = req.session.user.id;
-  const courseId = req.body.courseId;
-
-  try {
-    // Validate courseId format
-    if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ error: "Invalid course ID format" });
-    }
-
-    // If courseId is "deleteFavorite", return an error
-    if (courseId === "deleteFavorite") {
-      return res.status(400).json({ error: "Invalid course ID" });
-    }
-
-    // Find the user by userId
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Check if the course is in favorites
-    const favoriteIndex = user.favoriteCourses.findIndex((course) =>
-      course.courseId.equals(courseId)
-    );
-    if (favoriteIndex === -1) {
-      return res.status(400).json({ error: "Course is not in favorites" });
-    }
-
-    // Remove the course from favorites and save the user
-    user.favoriteCourses.splice(favoriteIndex, 1);
-    await user.save();
-
-    res
-      .status(200)
-      .json({ message: "Course deleted from favorites successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import nodemailer from "nodemailer";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
 
@@ -297,6 +298,57 @@ router.delete("/profile", isLoggedIn, async (req, res) => {
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+//forgot password route
+
+router.post("/forgotpass", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "univlearn13@gmail.com",
+        pass: process.env.APPPASSWORD,
+      },
+    });
+
+    const receiver = {
+      from: "univlearn13@gmail.com",
+      to: email,
+      subject: "Password Reset",
+      text: `Click on the link to reset your password: http://localhost:5173/resetpassword/${user?._id}`,
+    };
+    transporter.sendMail(receiver);
+    res.status(200).json({ message: "Email sent successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+});
+
+router.put("/resetpass", async (req, res) => {
+  const { id, password } = req.body;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const updated = await User.findByIdAndUpdate(
+      id,
+      { passwrd: password },
+      { new: true, runValidators: true }
+    );
+    res
+      .status(200)
+      .json({ message: "Password updated successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
   }
 });
 
