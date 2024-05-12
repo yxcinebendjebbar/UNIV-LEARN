@@ -133,8 +133,6 @@ router.get("/:id", isLoggedIn, async (req, res) => {
     // If 'teacher' is a field in the Course schema and it references the Teacher model
     // Replace 'teacher' with the actual field name if different
 
-    console.log(course);
-
     res.status(200).json(course);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -205,8 +203,15 @@ router.post(
   async (req, res) => {
     try {
       const userId = req.session.user.id;
-      const { name, description, specialty, faculty, department, level } =
-        req.body; // Use 'name' field as 'courseName'
+      const {
+        name,
+        description,
+        summary,
+        specialty,
+        faculty,
+        department,
+        level,
+      } = req.body; // Use 'name' field as 'courseName'
       const { photo, videos } = req.files;
 
       const normalizedPhotoPath = photo[0].path.replace(/\\/g, "/");
@@ -229,6 +234,7 @@ router.post(
         userId,
         courseName: name,
         description,
+        summary,
         specialty,
         faculty,
         department,
@@ -523,19 +529,20 @@ router.post("/enrolled-courses", isLoggedIn, async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log(user.enrolledCourses);
-
     // Extract enrolled courses from the user object and send as response
     let enrolledCourses = [];
     if (user.enrolledCourses.length > 0) {
-      enrolledCourses = user.enrolledCourses.map((enrollment) => ({
-        courseId: enrollment.courseId._id, // Assuming you want courseId as well
-        courseName: enrollment.courseId.courseName,
-        description: enrollment.courseId.description,
-        photo: enrollment.courseId.photo,
-        // Include other course details you want to send
-      }));
+      enrolledCourses = user.enrolledCourses.map((course) => {
+        console.log("enrolled course before here: ", course);
+        return {
+          courseId: course?.courseId._id,
+          courseName: course?.courseId.courseName,
+          photo: course?.courseId.photo,
+        };
+      });
     }
+
+    console.log("enrolledCourses: ", enrolledCourses);
 
     res.status(200).json({ enrolledCourses });
   } catch (error) {
@@ -564,6 +571,7 @@ router.put("/update/details/:id", isProfessor, async (req, res) => {
     // Filter out fields that shouldn't be updated
     const allowedFields = [
       "description",
+      "summary",
       "specialty",
       "faculty",
       "department",
@@ -746,7 +754,6 @@ router.put(
         // Remove the old videos
         await Promise.all(
           course.videos.map(async (video) => {
-            console.log(video.folderPath);
             await fsExtra.remove(video.originalVideoPath);
             await fsExtra.remove(
               path.dirname(path.dirname(video.m3u8MasterPath))

@@ -60,7 +60,6 @@ const upload = multer({ storage });
 
 // User sign up
 router.post("/signup", async (req, res) => {
-  console.log(req.body);
   try {
     const { fullName, email, passwrd, role } = req.body;
 
@@ -76,6 +75,7 @@ router.post("/signup", async (req, res) => {
       username: user.fullName,
       role: user.role,
       id: user._id,
+      status: user.status,
       profilePicture: user.profilePicture,
     };
     req.session.save((err) => {
@@ -113,6 +113,7 @@ router.post("/login", async (req, res) => {
       username: user.fullName,
       role: user.role,
       id: user._id,
+      status: user.status,
       profilePicture: user.profilePicture,
     };
     req.session.save((err) => {
@@ -347,6 +348,50 @@ router.put("/resetpass", async (req, res) => {
     res
       .status(200)
       .json({ message: "Password updated successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+});
+
+router.post("/verify-email", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const user = await User.findOne({ email });
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "univlearn13@gmail.com",
+        pass: process.env.APPPASSWORD,
+      },
+    });
+
+    const receiver = {
+      from: "univlearn13@gmail.com",
+      to: email,
+      subject: "Email Verification",
+      text: `Click on the link to verify your email: http://localhost:5173/emailverification/${user?._id}`,
+    };
+    transporter.sendMail(receiver);
+    console.log("Email sent successfully");
+    res.status(200).json({ message: "Email sent successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+});
+
+router.post("/activate-account/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { status: "allowed" },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "Account activated successfully", success: true });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }

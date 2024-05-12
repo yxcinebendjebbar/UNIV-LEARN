@@ -27,7 +27,6 @@ function ForgotPassword() {
         id,
         password,
       });
-      console.log(response.data);
       if (response.data.success) {
         setIsSubmitted(true);
       }

@@ -16,7 +16,6 @@ function ForgotPassword() {
     setEmail(formData.get("email"));
     try {
       const response = await axios.post("/api/users/forgotpass", { email });
-      console.log(response.data);
       if (response.data.success) {
         setIsSubmitted(true);
       }
@@ -24,8 +23,6 @@ function ForgotPassword() {
       console.error(error);
     }
   };
-
-  console.log(isSubmitted);
 
   return (
     <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0'>

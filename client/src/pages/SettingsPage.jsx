@@ -41,8 +41,6 @@ function SettingsPage() {
         }
       );
 
-      console.log(response.data);
-
       updateUser(response.data.user);
       location.reload();
 
@@ -65,7 +63,6 @@ function SettingsPage() {
       const res = await axios.put("/api/users/profile/name", {
         name: userName,
       });
-      console.log(res);
       updateUser(res.data.user);
       location.reload();
       alert("User name updated successfully");
@@ -86,7 +83,6 @@ function SettingsPage() {
       const response = await axios.put("/api/users/profile/email", {
         email: email,
       });
-      console.log(response.data);
       updateUser(response.data.user);
       alert("User email updated successfully!");
       location.reload();
@@ -116,7 +112,6 @@ function SettingsPage() {
         prevPw: prevPass,
       });
 
-      console.log(response.data);
       alert(response.data.message);
       location.reload();
     } catch (error) {
@@ -128,7 +123,7 @@ function SettingsPage() {
     <>
       <NavBar />
       <div className='bg-gray-100/40 min-h-screen flex flex-col items-center'>
-        <div className='rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-3xl bg-white min-h-screen flex flex-col items-center p-12'>
+        <div className='rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-3xl bg-white dark:bg-neutral-900 min-h-screen flex flex-col items-center p-12'>
           <form
             onSubmit={updateUserProfilePicture}
             className='flex flex-col items-center gap-3 mb-4'

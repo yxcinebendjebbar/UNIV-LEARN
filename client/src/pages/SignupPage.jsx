@@ -19,9 +19,18 @@ function SignupPage() {
         { withCredentials: true }
       )
       .then(async (res) => {
-        console.log(res);
+        if (res.data.user.status === "pending") {
+          await axios
+            .post("/api/users/verify-email", { email: email })
+            .then((res) => {
+              console.log("email sent");
+              if (res.data.success) {
+                location.href = "/pending";
+              }
+            });
+        }
         if (res.data.auth) {
-          await login(res.data.user);
+          await login({ ...res.data.user, email: email });
         }
       })
       .catch((err) => {

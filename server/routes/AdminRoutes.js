@@ -509,6 +509,7 @@ router.put("/courses/details/:id", isAdmin, async (req, res) => {
     // Filter out fields that shouldn't be updated
     const allowedFields = [
       "description",
+      "summary",
       "specialty",
       "faculty",
       "department",

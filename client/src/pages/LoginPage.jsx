@@ -17,9 +17,11 @@ function LoginPage() {
         { withCredentials: true }
       )
       .then(async (res) => {
-        console.log(res);
+        if (res.data.user.status === "pending") {
+          window.location.href = "/pending";
+        }
         if (res.data.auth) {
-          await login(res.data.user);
+          await login({ ...res.data.user, email: email });
         }
       })
       .catch((err) => {

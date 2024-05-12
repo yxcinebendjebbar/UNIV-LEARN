@@ -23,8 +23,6 @@ function NavBar() {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  console.log(user);
-
   const { logout } = useAuth();
 
   const location = useLocation();

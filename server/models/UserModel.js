@@ -54,7 +54,8 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    default: "allowed",
+    enum: ["allowed", "blocked", "pending"],
+    default: "pending",
   },
   enrolledCourses: {
     type: [enrolledCourseSchema],

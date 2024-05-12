@@ -35,43 +35,7 @@ function CoursePage() {
       });
   }, []);
 
-  let video = course?.videos[0];
-
-  let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
-
-  // const videoJsOptions = {
-  //   autoplay: false,
-  //   controls: true,
-  //   responsive: true,
-  //   fluid: true,
-  //   sources: course?.videos.map((video) => {
-  //     let videoSrc = `http://localhost:8000/${video?.m3u8MasterPath.slice(8)}`;
-  //     return {
-  //       src: videoSrc,
-  //       type: "application/x-mpegURL",
-  //     };
-  //   }),
-  //   plugin: {
-  //     videojsResolutionSwitcher: {
-  //       default: "low",
-  //       dynamicLabel: true,
-  //     },
-  //   },
-  // };
-
-  // const handlePlayerReady = (player) => {
-  //   playerRef.current = player;
-
-  //   player.on("waiting", () => {
-  //     videojs.log("player is waiting");
-  //   });
-
-  //   player.on("dispose", () => {
-  //     videojs.log("player will dispose");
-  //   });
-  // };
-
-  const navigate = useNavigate();
+  console.log(course);
 
   let courseSrc = course?.photo.slice(8);
 
@@ -125,6 +89,8 @@ function CoursePage() {
                 </CardIntro>
               </div>
               <Courseinfo
+                profileData={course?.userId}
+                statData={course?.enrollmentCount}
                 style={{
                   display: "flex",
                   alignContent: "center",
@@ -132,7 +98,7 @@ function CoursePage() {
                 }}
               />
 
-              <DescriptionComp />
+              <DescriptionComp summary={course?.summary} />
             </div>
           </div>
         </main>

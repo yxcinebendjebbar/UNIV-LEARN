@@ -13,6 +13,7 @@ import {
   Spinner,
   Input,
   getKeyValue,
+  Textarea,
 } from "@nextui-org/react";
 import {
   Modal,
@@ -81,6 +82,7 @@ function AdminCoursesPage() {
 
     const courseData = {
       description: formData.get("description"),
+      summary: formData.get("summary"),
       faculty: formData.get("faculty"),
       department: formData.get("department"),
       specialty: formData.get("specialty"),
@@ -139,6 +141,7 @@ function AdminCoursesPage() {
       );
       console.log(response);
       alert("Course deleted successfully!");
+      location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -222,7 +225,11 @@ function AdminCoursesPage() {
               </div>
             )}
           </div>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <Modal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            scrollBehavior='inside'
+          >
             <ModalContent>
               {(onClose) => {
                 switch (selectedAction) {
@@ -246,6 +253,14 @@ function AdminCoursesPage() {
                               </p>
                               <p className='text-sm'>
                                 {selectedCourse?.description}
+                              </p>
+                            </div>
+                            <div className='flex flex-col gap-2'>
+                              <p className='text-sm font-medium'>
+                                Course Summary
+                              </p>
+                              <p className='text-sm'>
+                                {selectedCourse?.summary}
                               </p>
                             </div>
                             <div className='flex flex-col gap-2'>
@@ -319,11 +334,20 @@ function AdminCoursesPage() {
                               </div>
                               <div className='flex flex-col gap-2'>
                                 <label htmlFor='description'>Description</label>
-                                <Input
+                                <Textarea
                                   id='description'
                                   name='description'
                                   placeholder='Enter course description'
                                   defaultValue={selectedCourse?.description}
+                                />
+                              </div>
+                              <div className='flex flex-col gap-2'>
+                                <label htmlFor='description'>Summary</label>
+                                <Textarea
+                                  id='summary'
+                                  name='summary'
+                                  placeholder='Enter course summary'
+                                  defaultValue={selectedCourse?.summary}
                                 />
                               </div>
                               <div className='flex flex-col gap-2'>

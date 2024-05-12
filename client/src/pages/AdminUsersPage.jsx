@@ -125,6 +125,7 @@ function AdminUsersPage() {
       console.log(response.data);
       alert("User deleted successfully!");
       setIsUploading(false);
+      location.reload();
     } catch (error) {
       console.error(error);
       setIsUploading(false);

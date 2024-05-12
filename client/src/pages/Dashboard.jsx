@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar.jsx";
 import axios from "axios";
-import { Spinner } from "@nextui-org/react";
+import { Spinner, Textarea } from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
@@ -69,6 +69,7 @@ export default function Dashboard() {
 
     const courseData = {
       description: formData.get("description"),
+      summary: formData.get("summary"),
       faculty: formData.get("faculty"),
       department: formData.get("department"),
       specialty: formData.get("specialty"),
@@ -258,11 +259,20 @@ export default function Dashboard() {
                                   <label htmlFor='description'>
                                     Description
                                   </label>
-                                  <Input
+                                  <Textarea
                                     id='description'
                                     name='description'
                                     placeholder='Enter course description'
                                     defaultValue={selectedCourse?.description}
+                                  />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                  <label htmlFor='summary'>Summary</label>
+                                  <Textarea
+                                    id='summary'
+                                    name='summary'
+                                    placeholder='Enter course summary'
+                                    defaultValue={selectedCourse?.summary}
                                   />
                                 </div>
                                 <div className='flex flex-col gap-2'>

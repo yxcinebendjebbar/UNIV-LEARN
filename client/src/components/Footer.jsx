@@ -17,8 +17,7 @@ function Footer() {
           </div>
           <div className='hidden lg:flex flex-col gap-3 font-medium'>
             <div className='flex items-center gap-2'>
-              <CiMail className='scale-150' />{" "}
-              <p>support.univlearn@gmail.com</p>
+              <CiMail className='scale-150' /> <p>univlearn13@gmail.com</p>
             </div>
             <div className='flex items-center gap-2'>
               <CiPhone className='scale-150' /> <p>+213 779 52 78 89</p>

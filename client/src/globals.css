@@ -22,7 +22,7 @@
 }
 
 .Solid {
-  @apply bg-neutral-900 text-neutral-100 px-4 py-2 rounded hover:bg-neutral-800 transition-all dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900;
+  @apply bg-primary text-neutral-100 px-4 py-2 rounded hover:bg-primary-300 transition-all;
 }
 .Bordered {
   @apply border border-neutral-900 rounded transition-all hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-900 px-4 py-2 dark:border-neutral-100 dark:text-neutral-100;
@@ -41,7 +41,7 @@
 }
 
 .text-subheader {
-  @apply md:text-lg lg:text-xl text-gray-600 dark:text-gray-400;
+  @apply md:text-lg lg:text-xl text-default-400;
 }
 
 a {

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
 import { Spinner } from "@nextui-org/react";
 import NavBar from "../components/NavBar.jsx";
 import Footer from "../components/Footer";
@@ -19,7 +18,6 @@ const ProfilePage = () => {
       try {
         const res = await axios.post("/api/courses/enrolled-courses/");
         const res2 = await axios.post("/api/courses/favoriteCourses");
-        console.log(res);
         setCourses(res.data.enrolledCourses);
         setFavoriteCourses(res2.data.favoriteCourses);
         setIsLoading(false);
@@ -33,8 +31,6 @@ const ProfilePage = () => {
 
     fetchCourses();
   }, []);
-
-  console.log(favoriteCourses);
 
   return (
     <div>
@@ -55,12 +51,12 @@ const ProfilePage = () => {
               </p>
             ) : (
               <div className='flex flex-col gap-4 items-center'>
-                <div className='flex flex-wrap gap-6 px-32'>
+                <div className='flex flex-wrap gap-6 px-16'>
                   {favoriteCourses?.map((course) => {
                     return (
                       <div
                         key={course?.courseId}
-                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 cursor-pointer'
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 max-w-80 cursor-pointer'
                         onClick={() => {
                           window.location.href = `/courses/${course?.courseId}`;
                         }}
@@ -70,9 +66,9 @@ const ProfilePage = () => {
                             7
                           )}`}
                           alt='course thumbnail'
-                          className='w-64 rounded-lg object-cover'
+                          className=' rounded-lg object-cover'
                         />
-                        <p className='text-xl font-medium m-4 text-center'>
+                        <p className='text-xl font-medium py-4 text-center'>
                           {course?.courseName}
                         </p>
                       </div>
@@ -105,7 +101,7 @@ const ProfilePage = () => {
                     return (
                       <div
                         key={course?.courseId}
-                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 cursor-pointer'
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 max-w-80 cursor-pointer'
                         onClick={() => {
                           window.location.href = `/courses/${course?.courseId}`;
                         }}
@@ -115,7 +111,7 @@ const ProfilePage = () => {
                             7
                           )}`}
                           alt='course thumbnail'
-                          className='w-64 rounded-lg object-cover'
+                          className='rounded-lg object-cover'
                         />
                         <p className='text-xl font-medium m-4 text-center'>
                           {course?.courseName}

@@ -21,10 +21,12 @@ import Replies from "./pages/Replies";
 import SettingsPage from "./pages/SettingsPage.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import AdminCoursesPage from "./pages/AdminCoursesPage.jsx";
+import PendingPage from "./pages/PendingPage.jsx";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path='/aplogin' element={<AdminLoginPage />} />
           <Route path='/forgotpw' element={<ForgotPassword />} />
           <Route path='/resetpassword/:id' element={<ResetPassword />} />
+          <Route path='/emailverification/:id' element={<VerifyEmail />} />
+          <Route path='/pending' element={<PendingPage />} />
           <Route
             path='/ap'
             element={
@@ -147,6 +151,9 @@ const ProtectedRoute = ({ children }) => {
     // user is not authenticated
     alert("You need to login first!");
     return <Navigate to='/login' />;
+  }
+  if (user.status === "pending") {
+    return <Navigate to='/pending' />;
   }
   return children;
 };

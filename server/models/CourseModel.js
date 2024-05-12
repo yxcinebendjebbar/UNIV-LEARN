@@ -33,6 +33,7 @@ const courseSchema = new Schema({
     type: String,
     required: true,
   },
+  summary: String,
   specialty: String,
   faculty: String,
   department: String,
@@ -50,7 +51,7 @@ const courseSchema = new Schema({
   enrollmentCount: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
 // Custom validator function to ensure at least one video is provided
