@@ -31,7 +31,7 @@ function SignupPage() {
             });
         }
         if (res.data.auth) {
-          await login(res.data.user);
+          await login({ ...res.data.user, email: email });
         }
       })
       .catch((err) => {

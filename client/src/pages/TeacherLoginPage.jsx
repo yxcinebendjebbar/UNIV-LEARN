@@ -21,7 +21,7 @@ function LoginPage() {
           window.location.href = "/pending";
         }
         if (res.data.auth) {
-          await login(res.data.user);
+          await login({ ...res.data.user, email: email });
         }
       })
       .catch((err) => {
