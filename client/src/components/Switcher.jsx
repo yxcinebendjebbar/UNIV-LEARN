@@ -4,9 +4,10 @@ import { CiLight } from "react-icons/ci";
 
 function Switcher() {
   const [darkMode, setDarkMode] = useState(false);
+  const dark = localStorage.getItem("darkMode");
 
   useEffect(() => {
-    if (darkMode) {
+    if (dark === "true") {
       document.body.classList.remove("light");
       document.body.classList.add("dark");
     } else {
@@ -15,9 +16,16 @@ function Switcher() {
     }
   }, [darkMode]);
 
+  console.log(dark, darkMode);
+
   return (
     <div>
-      <button onClick={() => setDarkMode(!darkMode)}>
+      <button
+        onClick={() => {
+          setDarkMode(!darkMode);
+          localStorage.setItem("darkMode", !darkMode);
+        }}
+      >
         {darkMode ? (
           <CiLight className='scale-150' />
         ) : (

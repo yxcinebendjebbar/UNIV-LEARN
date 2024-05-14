@@ -371,9 +371,13 @@ router.post("/verify-email", async (req, res) => {
       subject: "Email Verification",
       text: `Click on the link to verify your email: http://localhost:5173/emailverification/${user?._id}`,
     };
-    transporter.sendMail(receiver);
-    console.log("Email sent successfully");
-    res.status(200).json({ message: "Email sent successfully", success: true });
+    if (user?.role === "student") {
+      transporter.sendMail(receiver);
+      console.log("Email sent successfully");
+      res
+        .status(200)
+        .json({ message: "Email sent successfully", success: true });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }

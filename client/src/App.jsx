@@ -27,6 +27,7 @@ import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import AdminCoursesPage from "./pages/AdminCoursesPage.jsx";
 import PendingPage from "./pages/PendingPage.jsx";
+import AdminRequestsPage from "./pages/AdminRequestsPage.jsx";
 
 function App() {
   return (
@@ -64,6 +65,14 @@ function App() {
             element={
               <AdminAccessRoute>
                 <AdminCoursesPage />
+              </AdminAccessRoute>
+            }
+          />
+          <Route
+            path='/ap/requests'
+            element={
+              <AdminAccessRoute>
+                <AdminRequestsPage />
               </AdminAccessRoute>
             }
           />

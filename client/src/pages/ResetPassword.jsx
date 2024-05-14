@@ -27,8 +27,12 @@ function ForgotPassword() {
         id,
         password,
       });
+      console.log(response.data);
       if (response.data.success) {
         setIsSubmitted(true);
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1000);
       }
     } catch (error) {
       console.error(error);
@@ -93,10 +97,7 @@ function ForgotPassword() {
               Reset Password
             </Button>
             {isSubmitted && (
-              <p className='text-success'>
-                Password reset successfully.{" "}
-                <a href='/login'>Please login to continue</a>.
-              </p>
+              <p className='text-success'>Password reset successfully.</p>
             )}
           </form>
         </div>

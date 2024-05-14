@@ -88,15 +88,17 @@ const Replies = () => {
           </p>
         </div>
       )}
-      <div className='block max-w-4xl  mx-auto p-8 bg-white dark:bg-neutral-800 shadow-lg rounded-lg mt-20 '>
-        <h2 className=' text-2xl font-semibold mb-4'>Replies</h2>
+      <h2 className=' text-2xl font-semibold absolute top-72 left-[45%]'>
+        Replies
+      </h2>
+      <div className='block max-w-4xl  mx-auto p-8 bg-white dark:bg-neutral-800 shadow-lg rounded-lg mt-20 overflow-y-scroll h-[35rem]'>
         {replies &&
           replies.map((reply) => (
             <div key={reply?._id} className=' block items-center'>
               <div className='flex font-bold  text-gray-400'>
                 <p> {reply?.authorId?.fullName}</p>
               </div>
-              <p className=' max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg ml-2 mb-6'>
+              <p className=' max-w-4xl mx-auto p-4 bg-white dark:bg-neutral-700 shadow-lg rounded-lg ml-2 mb-6'>
                 {reply?.content}
               </p>
             </div>

@@ -53,7 +53,10 @@ function NewCourseForm() {
   };
 
   return (
-    <form className='form-bg min-h-screen' onSubmit={handleSubmitCourse}>
+    <form
+      className='form-bg flex justify-center py-3 min-h-screen'
+      onSubmit={handleSubmitCourse}
+    >
       {isUploading && (
         <div className='fixed top-0 left-0 w-full h-full bg-black/35 flex items-center justify-center'>
           <Spinner color='primary' />
@@ -203,15 +206,12 @@ function NewCourseForm() {
           </div>
           <div className='space-y-6'>
             <div className='grid gap-2'>
-              <label className='font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg'>
-                Videos
-              </label>
               <div className='grid gap-2'>
                 <label
                   className='font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base'
                   htmlFor='videos'
                 >
-                  Videos
+                  Video
                 </label>
                 <input
                   className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-lg ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
@@ -221,13 +221,6 @@ function NewCourseForm() {
                   required
                   type='file'
                   accept='video/*'
-                  multiple
-                />
-                <input
-                  className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-lg ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-                  id='videos'
-                  placeholder='Enter the video title'
-                  required
                 />
               </div>
             </div>

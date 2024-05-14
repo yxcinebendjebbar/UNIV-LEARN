@@ -60,10 +60,10 @@ const ForumsPage = () => {
   return (
     <>
       <NavBar />
-      <main className='bg-gray-100 pt-20 min-h-screen'>
+      <main className='bg-gray-100 dark:bg-neutral-900 pt-20 min-h-screen'>
         {user && user.role === "teacher" && (
-          <div className='max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mb-8'>
-            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
+          <div className='max-w-4xl mx-auto p-8 bg-white dark:bg-neutral-800 shadow-lg rounded-lg mb-8'>
+            <h2 className='text-2xl font-semibold dark:text-white  text-gray-800 mb-4'>
               Create a Thread
             </h2>
             <form onSubmit={handleSubmit}>
@@ -112,9 +112,9 @@ const ForumsPage = () => {
               <div key={thread._id} className='mb-4'>
                 <Link
                   to={`/replies/${thread._id}`}
-                  className='justify-between  flex bg-white shadow-lg rounded-lg mb-1 p-4 hover:bg-gray-300 transition duration-300 cursor-pointer'
+                  className='justify-between  flex bg-white dark:bg-neutral-800 shadow-lg rounded-lg mb-1 p-4 hover:bg-gray-500 transition duration-300 cursor-pointer'
                 >
-                  <h3 className='text-xl font-semibold text-gray-800'>
+                  <h3 className='text-xl font-semibold text-gray-800 dark:text-white'>
                     {thread.title}
                   </h3>
                   <div className='flex justify-end text-gray-500 ml-2 mr-2'>

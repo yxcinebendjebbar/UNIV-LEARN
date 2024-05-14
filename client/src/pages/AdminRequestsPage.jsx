@@ -88,7 +88,6 @@ function AdminUsersPage() {
     if (form.role.value) {
       userData.role = form.role.value;
     }
-
     if (form.status.value) {
       userData.status = form.status.value;
     }
@@ -160,6 +159,10 @@ function AdminUsersPage() {
       setIsLoading(false);
     }
   }, []);
+
+  const filteredUsers = users.filter(
+    (user) => user.role == "teacher" && user.status == "pending"
+  );
 
   const renderCell = useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
@@ -258,8 +261,8 @@ function AdminUsersPage() {
               )}
             </TableHeader>
             <TableBody emptyContent={"No users to display."}>
-              {users &&
-                users?.map((user) => (
+              {filteredUsers &&
+                filteredUsers?.map((user) => (
                   <TableRow key={user?.id}>
                     {columns.map((column) => (
                       <TableCell key={column.uid}>

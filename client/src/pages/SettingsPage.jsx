@@ -122,7 +122,7 @@ function SettingsPage() {
   return (
     <>
       <NavBar />
-      <div className='bg-gray-100/40 min-h-screen flex flex-col items-center'>
+      <div className='dark:bg-neutral-950 min-h-screen flex flex-col items-center'>
         <div className='rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-3xl bg-white dark:bg-neutral-900 min-h-screen flex flex-col items-center p-12'>
           <form
             onSubmit={updateUserProfilePicture}

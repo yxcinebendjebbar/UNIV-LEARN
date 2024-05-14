@@ -56,7 +56,7 @@ const ProfilePage = () => {
                     return (
                       <div
                         key={course?.courseId}
-                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 max-w-80 cursor-pointer'
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-800 max-w-80 cursor-pointer'
                         onClick={() => {
                           window.location.href = `/courses/${course?.courseId}`;
                         }}
@@ -101,7 +101,7 @@ const ProfilePage = () => {
                     return (
                       <div
                         key={course?.courseId}
-                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-950 max-w-80 cursor-pointer'
+                        className='flex flex-col items-center justify-between rounded-lg bg-white shadow dark:shadow-white/5 dark:bg-neutral-800 max-w-80 cursor-pointer'
                         onClick={() => {
                           window.location.href = `/courses/${course?.courseId}`;
                         }}
