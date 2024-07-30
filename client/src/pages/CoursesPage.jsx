@@ -17,19 +17,18 @@ import {
 } from "@nextui-org/react";
 import { Card, CardHeader, CardContent, CardFooter } from "../components/Card";
 
-axios.defaults.baseURL = "http://localhost:8000";
-
+axios.defaults.baseURL = "https://univ-learn.onrender.com";
 const SearchBar = ({ setSearchText }) => {
   return (
-    <div className='flex justify-center items-center gap-3 m-4 min-w-20 lg:mx-80 lg:min-w-32 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 lg:my-32'>
-      <IoMdSearch className='scale-150' />
+    <div className="flex justify-center items-center gap-3 m-4 min-w-20 lg:mx-80 lg:min-w-32 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 lg:my-32">
+      <IoMdSearch className="scale-150" />
       <input
-        type='text'
-        placeholder='Search for courses'
+        type="text"
+        placeholder="Search for courses"
         onChange={(e) => setSearchText(e.target.value)}
-        className='bg-transparent w-full focus:outline-none h-full'
+        className="bg-transparent w-full focus:outline-none h-full"
       />
-      <button className='Light'>Search</button>
+      <button className="Light">Search</button>
     </div>
   );
 };
@@ -269,16 +268,16 @@ function CoursesPage() {
     <div>
       <NavBar />
       <SearchBar setSearchText={setSearchText} />
-      <main className='px-4 lg:px-32 mb-8'>
-        <h2 className='text-header mb-8'>Browse Courses</h2>
-        <div className='p-4 mb-8 bg-white relative dark:bg-neutral-700 border border-neutral-500 rounded flex flex-wrap items-center gap-4'>
-          <Dropdown radius='sm'>
+      <main className="px-4 lg:px-32 mb-8">
+        <h2 className="text-header mb-8">Browse Courses</h2>
+        <div className="p-4 mb-8 bg-white relative dark:bg-neutral-700 border border-neutral-500 rounded flex flex-wrap items-center gap-4">
+          <Dropdown radius="sm">
             <DropdownTrigger>
               <Button
-                radius='sm'
-                variant='light'
-                color='default'
-                className='font-medium'
+                radius="sm"
+                variant="light"
+                color="default"
+                className="font-medium"
               >
                 Faculty: {selectedFacultyKey}
               </Button>
@@ -289,23 +288,23 @@ function CoursesPage() {
                   defaultValue={selectedFacultyKey}
                   onValueChange={setSelectedFacultyKey}
                 >
-                  <Radio value='None'>None</Radio>
-                  <Radio value='Faculty of Science'>Faculty of Science</Radio>
-                  <Radio value='Faculty of Medicine'>Faculty of Medicine</Radio>
-                  <Radio value='Faculty of Economics'>
+                  <Radio value="None">None</Radio>
+                  <Radio value="Faculty of Science">Faculty of Science</Radio>
+                  <Radio value="Faculty of Medicine">Faculty of Medicine</Radio>
+                  <Radio value="Faculty of Economics">
                     Faculty of Economics
                   </Radio>
                 </RadioGroup>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Dropdown radius='sm'>
+          <Dropdown radius="sm">
             <DropdownTrigger>
               <Button
-                radius='sm'
-                variant='light'
-                color='default'
-                className='font-medium'
+                radius="sm"
+                variant="light"
+                color="default"
+                className="font-medium"
               >
                 Department: {selectedDepartmentKey}
               </Button>
@@ -317,7 +316,7 @@ function CoursesPage() {
                   onValueChange={setSelectedDepartmentKey}
                 >
                   {selectedFacultyKey === "None" && (
-                    <Radio value='None'>None</Radio>
+                    <Radio value="None">None</Radio>
                   )}
                   {selectedFacultyKey === "Faculty of Science" &&
                     scienceDepartments.map((dept) => (
@@ -341,13 +340,13 @@ function CoursesPage() {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Dropdown radius='sm'>
+          <Dropdown radius="sm">
             <DropdownTrigger>
               <Button
-                radius='sm'
-                variant='light'
-                color='default'
-                className='font-medium'
+                radius="sm"
+                variant="light"
+                color="default"
+                className="font-medium"
               >
                 Specialty: {selectedSpecialtyKey}
               </Button>
@@ -359,7 +358,7 @@ function CoursesPage() {
                   onValueChange={setSelectedSpecialtyKey}
                 >
                   {selectedDepartmentKey === "None" && (
-                    <Radio value='None'>None</Radio>
+                    <Radio value="None">None</Radio>
                   )}
                   {selectedDepartmentKey === "Computer Science" &&
                     csSpecialities.map((specialty) => (
@@ -437,13 +436,13 @@ function CoursesPage() {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Dropdown radius='sm'>
+          <Dropdown radius="sm">
             <DropdownTrigger>
               <Button
-                radius='sm'
-                variant='light'
-                color='default'
-                className='font-medium'
+                radius="sm"
+                variant="light"
+                color="default"
+                className="font-medium"
               >
                 Level: {selectedLevelKey}
               </Button>
@@ -454,10 +453,10 @@ function CoursesPage() {
                   defaultValue={selectedLevelKey}
                   onValueChange={setSelectedLevelKey}
                 >
-                  <Radio value='None'>None</Radio>
-                  <Radio value='Beginner'>Beginner</Radio>
-                  <Radio value='Intermediate'>Intermediate</Radio>
-                  <Radio value='Advanced'>Advanced</Radio>
+                  <Radio value="None">None</Radio>
+                  <Radio value="Beginner">Beginner</Radio>
+                  <Radio value="Intermediate">Intermediate</Radio>
+                  <Radio value="Advanced">Advanced</Radio>
                 </RadioGroup>
               </DropdownItem>
             </DropdownMenu>
@@ -466,38 +465,38 @@ function CoursesPage() {
             onClick={() => {
               handleReset();
             }}
-            className='Solid'
+            className="Solid"
           >
             Reset all
           </Button>
         </div>
-        <div className='flex flex-wrap items-start justify-center gap-4'>
+        <div className="flex flex-wrap items-start justify-center gap-4">
           {filteredCourses.map((course) => {
             let courseSrc = course?.photo.slice(8);
             return (
               <Card
                 key={course._id}
-                classNames='bg-white dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5'
+                classNames="bg-white dark:bg-neutral-800 w-[282px] border dark:border-neutral-600 shadow-lg dark:shadow-white/5"
               >
                 <CardHeader>
                   <img
-                    lazy='true'
-                    draggable='false'
+                    lazy="true"
+                    draggable="false"
                     src={`http://localhost:8000/${courseSrc}`}
                     alt={course?.courseName}
-                    className='w-full h-[177px] object-cover'
+                    className="w-full h-[177px] object-cover"
                   />
                 </CardHeader>
-                <CardContent classNames='p-4 flex items-center justify-between'>
-                  <h3 className='text-lg font-semibold'>{course.courseName}</h3>
+                <CardContent classNames="p-4 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">{course.courseName}</h3>
 
-                  <p className='flex items-center'>
-                    {course.rating} <FaStar color='yellow' />
+                  <p className="flex items-center">
+                    {course.rating} <FaStar color="yellow" />
                   </p>
                 </CardContent>
-                <CardFooter classNames='pb-4 flex justify-center items-center'>
+                <CardFooter classNames="pb-4 flex justify-center items-center">
                   <button
-                    className='Solid'
+                    className="Solid"
                     onClick={() => {
                       enrollCourse(course._id);
                     }}
@@ -505,7 +504,7 @@ function CoursesPage() {
                     Enroll now
                   </button>
                   <button
-                    className='Light'
+                    className="Light"
                     onClick={() => {
                       navigate(`/courses/${course._id}`);
                     }}
@@ -513,13 +512,13 @@ function CoursesPage() {
                     View course
                   </button>
                   <Button
-                    size='sm'
+                    size="sm"
                     isIconOnly
                     onClick={() => {
                       addFavorite(course._id);
                     }}
                   >
-                    <MdFavorite className='scale-150' />
+                    <MdFavorite className="scale-150" />
                   </Button>
                 </CardFooter>
               </Card>

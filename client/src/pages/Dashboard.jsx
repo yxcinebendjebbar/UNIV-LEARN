@@ -15,8 +15,7 @@ import {
 import { useAuth } from "../hooks/useAuth.jsx";
 import { MdEdit, MdDelete } from "react-icons/md";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
-
+axios.defaults.baseURL = "https://univ-learn.onrender.com";
 export default function Dashboard() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -136,50 +135,50 @@ export default function Dashboard() {
   return (
     <>
       <NavBar />
-      <div className=' min-h-screen w-full '>
-        <div className='flex flex-col'>
-          <header className='flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40'>
-            <a className='lg:hidden' href='#'>
+      <div className=" min-h-screen w-full ">
+        <div className="flex flex-col">
+          <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
+            <a className="lg:hidden" href="#">
               <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='24'
-                height='24'
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                className='h-6 w-6'
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                className="h-6 w-6"
               >
-                <path d='M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z'></path>
-                <path d='m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9'></path>
-                <path d='M12 3v6'></path>
+                <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
+                <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
+                <path d="M12 3v6"></path>
               </svg>
-              <span className='sr-only'>Home</span>
+              <span className="sr-only">Home</span>
             </a>
-            <div className='flex-1'>
-              <h1 className='font-semibold text-lg'>Courses</h1>
+            <div className="flex-1">
+              <h1 className="font-semibold text-lg">Courses</h1>
             </div>
-            <nav className='flex items-center gap-4 md:gap-2 lg:gap-4'>
+            <nav className="flex items-center gap-4 md:gap-2 lg:gap-4">
               <a
-                className='rounded-lg border border-gray-200  px-3 py-2 text-sm  dark:border-gray-800'
-                href='/new-course'
+                className="rounded-lg border border-gray-200  px-3 py-2 text-sm  dark:border-gray-800"
+                href="/new-course"
               >
                 Add New Course
               </a>
             </nav>
           </header>
-          <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
-            <div className='border shadow-sm rounded-lg'>
-              <div className='grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
-                <div className='md:font-medium'>Thumbnail</div>
-                <div className='md:font-medium'>Title</div>
-                <div className='md:font-medium'>Rating</div>
-                <div className='md:font-medium'>Actions</div>
+          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+            <div className="border shadow-sm rounded-lg">
+              <div className="grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4">
+                <div className="md:font-medium">Thumbnail</div>
+                <div className="md:font-medium">Title</div>
+                <div className="md:font-medium">Rating</div>
+                <div className="md:font-medium">Actions</div>
               </div>
 
-              <div className='grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4'>
+              <div className="grid items-center grid-cols-[100px_1fr_100px_100px] px-4 py-2 md:grid-cols-[100px_1fr_150px_150px] dark:grid-cols-[100px_1fr_150px_150px] gap-x-4">
                 {isLoading ? (
-                  <div className='w-full h-full flex items-center justify-center'>
-                    <Spinner size='lg' color='primary' />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Spinner size="lg" color="primary" />
                   </div>
                 ) : myCourses ? (
                   myCourses?.map((course) => {
@@ -189,17 +188,17 @@ export default function Dashboard() {
                         <div>
                           <img
                             src={`http://localhost:8000/${courseSrc}`}
-                            width='100'
-                            height='60'
+                            width="100"
+                            height="60"
                             alt={course?.courseName}
-                            className='rounded-md aspect-video overflow-hidden object-cover border'
+                            className="rounded-md aspect-video overflow-hidden object-cover border"
                           />
                         </div>
-                        <div className='truncate'>{course?.courseName}</div>
-                        <div className='truncate'>{course?.rating}</div>
-                        <div className='flex gap-4'>
+                        <div className="truncate">{course?.courseName}</div>
+                        <div className="truncate">{course?.rating}</div>
+                        <div className="flex gap-4">
                           <button
-                            className='p-2 rounded-lg'
+                            className="p-2 rounded-lg"
                             onClick={() => {
                               setSelectedAction("edit");
                               setSelectedCourse(course);
@@ -209,7 +208,7 @@ export default function Dashboard() {
                             <MdEdit />
                           </button>
                           <button
-                            className='p-2 rounded-lg'
+                            className="p-2 rounded-lg"
                             onClick={() => {
                               setSelectedAction("delete");
                               setSelectedCourse(course);
@@ -223,14 +222,14 @@ export default function Dashboard() {
                     );
                   })
                 ) : (
-                  <div className='text-center w-full'>No courses found</div>
+                  <div className="text-center w-full">No courses found</div>
                 )}
               </div>
             </div>
             <Modal
               isOpen={isOpen}
               onOpenChange={onOpenChange}
-              scrollBehavior='inside'
+              scrollBehavior="inside"
             >
               <ModalContent>
                 {(onClose) => {
@@ -238,85 +237,85 @@ export default function Dashboard() {
                     case "edit":
                       return (
                         <>
-                          <ModalHeader className='flex flex-col gap-1'>
+                          <ModalHeader className="flex flex-col gap-1">
                             {`Editing course's details`}
                           </ModalHeader>
                           <ModalBody>
                             <form onSubmit={updateCourse}>
-                              <div className='flex flex-col gap-2'>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='courseName'>
+                              <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="courseName">
                                     Course Name
                                   </label>
                                   <Input
-                                    id='courseName'
-                                    name='newName'
-                                    placeholder='Enter course name'
+                                    id="courseName"
+                                    name="newName"
+                                    placeholder="Enter course name"
                                     defaultValue={selectedCourse?.courseName}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='description'>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="description">
                                     Description
                                   </label>
                                   <Textarea
-                                    id='description'
-                                    name='description'
-                                    placeholder='Enter course description'
+                                    id="description"
+                                    name="description"
+                                    placeholder="Enter course description"
                                     defaultValue={selectedCourse?.description}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='summary'>Summary</label>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="summary">Summary</label>
                                   <Textarea
-                                    id='summary'
-                                    name='summary'
-                                    placeholder='Enter course summary'
+                                    id="summary"
+                                    name="summary"
+                                    placeholder="Enter course summary"
                                     defaultValue={selectedCourse?.summary}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='faculty'>Faculty</label>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="faculty">Faculty</label>
                                   <Input
-                                    id='faculty'
-                                    name='faculty'
-                                    placeholder='Enter faculty'
+                                    id="faculty"
+                                    name="faculty"
+                                    placeholder="Enter faculty"
                                     defaultValue={selectedCourse?.faculty}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='department'>Department</label>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="department">Department</label>
                                   <Input
-                                    id='department'
-                                    name='department'
-                                    placeholder='Enter department'
+                                    id="department"
+                                    name="department"
+                                    placeholder="Enter department"
                                     defaultValue={selectedCourse?.department}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='specialty'>Specialty</label>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="specialty">Specialty</label>
                                   <Input
-                                    id='specialty'
-                                    name='specialty'
-                                    placeholder='Enter specialty'
+                                    id="specialty"
+                                    name="specialty"
+                                    placeholder="Enter specialty"
                                     defaultValue={selectedCourse?.specialty}
                                   />
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                  <label htmlFor='level'>Level</label>
+                                <div className="flex flex-col gap-2">
+                                  <label htmlFor="level">Level</label>
                                   <Input
-                                    id='level'
-                                    placeholder='Enter level'
-                                    name='level'
+                                    id="level"
+                                    placeholder="Enter level"
+                                    name="level"
                                     defaultValue={selectedCourse?.level}
                                   />
                                 </div>
-                                <div className='flex flex-wrap gap-2'>
-                                  <label htmlFor='thumbnail'>Thumbnail</label>
+                                <div className="flex flex-wrap gap-2">
+                                  <label htmlFor="thumbnail">Thumbnail</label>
                                   <input
-                                    id='thumbnail'
-                                    name='thumbnail'
-                                    type='file'
+                                    id="thumbnail"
+                                    name="thumbnail"
+                                    type="file"
                                     onChange={handleThumbnailChange}
                                   />
 
@@ -325,22 +324,22 @@ export default function Dashboard() {
                                       thumbnailSrc ||
                                       "https://via.placeholder.com/150x150"
                                     }
-                                    className='h-40 object-cover rounded-lg'
+                                    className="h-40 object-cover rounded-lg"
                                   />
                                 </div>
                               </div>
                               <Button
-                                radius='sm'
-                                color='primary'
-                                className='w-full mt-2'
-                                type='submit'
+                                radius="sm"
+                                color="primary"
+                                className="w-full mt-2"
+                                type="submit"
                               >
                                 Edit
                               </Button>
                             </form>
                           </ModalBody>
                           <ModalFooter>
-                            <Button variant='light' onPress={onClose}>
+                            <Button variant="light" onPress={onClose}>
                               Close
                             </Button>
                           </ModalFooter>
@@ -349,7 +348,7 @@ export default function Dashboard() {
                     case "delete":
                       return (
                         <>
-                          <ModalHeader className='flex flex-col gap-1'>
+                          <ModalHeader className="flex flex-col gap-1">
                             {`Deleting ${selectedCourse?.courseName}`}
                           </ModalHeader>
                           <ModalBody>
@@ -359,14 +358,14 @@ export default function Dashboard() {
                           </ModalBody>
                           <ModalFooter>
                             <Button
-                              color='primary'
-                              variant='light'
+                              color="primary"
+                              variant="light"
                               onPress={onClose}
                             >
                               Close
                             </Button>
                             <Button
-                              color='danger'
+                              color="danger"
                               onPress={onClose}
                               onClick={deleteCourse}
                             >

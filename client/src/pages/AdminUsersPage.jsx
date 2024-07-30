@@ -30,7 +30,7 @@ import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://univ-learn.onrender.com";
 axios.defaults.withCredentials = true;
 
 const statusColorMap = {
@@ -180,27 +180,27 @@ function AdminUsersPage() {
         );
       case "role":
         return (
-          <div className='flex flex-col'>
-            <p className='text-bold text-sm capitalize'>{cellValue}</p>
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
       case "status":
         return (
           <Chip
-            className='capitalize'
+            className="capitalize"
             color={statusColorMap[user.status]}
-            size='sm'
-            variant='flat'
+            size="sm"
+            variant="flat"
           >
             {cellValue}
           </Chip>
         );
       case "actions":
         return (
-          <div className='relative flex items-center gap-2'>
-            <Tooltip content='Details'>
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Details">
               <span
-                className='text-lg text-default-400 cursor-pointer active:opacity-50'
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
                 onClick={() => {
                   setSelectedUser(user);
                   setSelectedAction("details");
@@ -210,9 +210,9 @@ function AdminUsersPage() {
                 <FaRegEye />
               </span>
             </Tooltip>
-            <Tooltip content='Edit user'>
+            <Tooltip content="Edit user">
               <span
-                className='text-lg text-default-400 cursor-pointer active:opacity-50'
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
                 onClick={() => {
                   setSelectedUser(user);
                   setSelectedAction("edit");
@@ -222,9 +222,9 @@ function AdminUsersPage() {
                 <CiEdit />
               </span>
             </Tooltip>
-            <Tooltip color='danger' content='Delete user'>
+            <Tooltip color="danger" content="Delete user">
               <span
-                className='text-lg text-danger cursor-pointer active:opacity-50'
+                className="text-lg text-danger cursor-pointer active:opacity-50"
                 onClick={() => {
                   setSelectedUser(user);
                   setSelectedAction("delete");
@@ -242,11 +242,11 @@ function AdminUsersPage() {
   }, []);
 
   return (
-    <div className='flex justify-start'>
+    <div className="flex justify-start">
       <Sidebar />
-      <div className='grid place-items-center w-full'>
-        <div className='self-stretch mx-5 mt-8 w-full p-4'>
-          <Table radius='sm'>
+      <div className="grid place-items-center w-full">
+        <div className="self-stretch mx-5 mt-8 w-full p-4">
+          <Table radius="sm">
             <TableHeader columns={columns}>
               {(column) => (
                 <TableColumn
@@ -270,10 +270,10 @@ function AdminUsersPage() {
                 ))}
             </TableBody>
           </Table>
-          <div className=''>
+          <div className="">
             {isLoading && (
-              <div className='flex justify-center items-center w-full h-full bg-black/35'>
-                <Spinner size='lg' />
+              <div className="flex justify-center items-center w-full h-full bg-black/35">
+                <Spinner size="lg" />
               </div>
             )}
           </div>
@@ -284,35 +284,35 @@ function AdminUsersPage() {
                   case "details":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`${selectedUser?.fullName}'s details`}
                         </ModalHeader>
                         <ModalBody>
-                          <div className='flex flex-col gap-2'>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Full Name</p>
-                              <p className='text-sm'>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Full Name</p>
+                              <p className="text-sm">
                                 {selectedUser?.fullName}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Email</p>
-                              <p className='text-sm'>{selectedUser?.email}</p>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Email</p>
+                              <p className="text-sm">{selectedUser?.email}</p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Role</p>
-                              <p className='text-sm'>{selectedUser?.role}</p>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Role</p>
+                              <p className="text-sm">{selectedUser?.role}</p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Status</p>
-                              <p className='text-sm'>{selectedUser?.status}</p>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Status</p>
+                              <p className="text-sm">{selectedUser?.status}</p>
                             </div>
                           </div>
                         </ModalBody>
                         <ModalFooter>
                           <Button
-                            color='primary'
-                            variant='light'
+                            color="primary"
+                            variant="light"
                             onPress={onClose}
                           >
                             Close
@@ -323,62 +323,62 @@ function AdminUsersPage() {
                   case "edit":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`Editing ${selectedUser?.fullName}'s details`}
                         </ModalHeader>
                         <ModalBody>
                           <form
-                            className='flex flex-col items-center gap-2'
+                            className="flex flex-col items-center gap-2"
                             onSubmit={updateUser}
                           >
-                            <div className='flex flex-col items-center gap-2'>
-                              <p className='font-medium'>Profile Picture</p>
+                            <div className="flex flex-col items-center gap-2">
+                              <p className="font-medium">Profile Picture</p>
                               <img
                                 src={
                                   thumbnailSrc ||
                                   "https://via.placeholder.com/150x150"
                                 }
-                                alt='profile picture'
-                                className='rounded-full w-24 h-24'
+                                alt="profile picture"
+                                className="rounded-full w-24 h-24"
                               />
                               <input
-                                type='file'
-                                accept='image/*'
-                                name='profilePicture'
+                                type="file"
+                                accept="image/*"
+                                name="profilePicture"
                                 onChange={handleThumbnailChange}
                               />
                             </div>
-                            <div className='w-full'>
+                            <div className="w-full">
                               <Input
-                                type='text'
-                                label='Full Name'
-                                name='fullName'
+                                type="text"
+                                label="Full Name"
+                                name="fullName"
                                 value={fullName || selectedUser?.fullName}
                                 onValueChange={setFullName}
                               />
                             </div>
-                            <div className='w-full'>
+                            <div className="w-full">
                               <Input
-                                type='email'
-                                label='Email'
-                                name='email'
+                                type="email"
+                                label="Email"
+                                name="email"
                                 value={email || selectedUser?.email}
                                 onValueChange={setEmail}
                               />
                             </div>
-                            <div className='w-full'>
+                            <div className="w-full">
                               <Input
-                                type='text'
-                                label='Role'
-                                name='role'
+                                type="text"
+                                label="Role"
+                                name="role"
                                 value={role || selectedUser?.role}
                                 onValueChange={setRole}
                               />
                             </div>
-                            <div className='w-full'>
+                            <div className="w-full">
                               <RadioGroup
-                                orientation='horizontal'
-                                name='status'
+                                orientation="horizontal"
+                                name="status"
                                 value={selectedUser?.status}
                                 onChange={(e) =>
                                   setSelectedUser({
@@ -387,25 +387,25 @@ function AdminUsersPage() {
                                   })
                                 }
                               >
-                                <Radio value='allowed'>Allowed</Radio>
-                                <Radio value='blocked'>Blocked</Radio>
-                                <Radio value='pending'>Pending</Radio>
+                                <Radio value="allowed">Allowed</Radio>
+                                <Radio value="blocked">Blocked</Radio>
+                                <Radio value="pending">Pending</Radio>
                               </RadioGroup>
                             </div>
                             <Button
-                              type='submit'
+                              type="submit"
                               onSubmit={() => {
                                 updateUser();
                                 onClose();
                               }}
-                              color='primary'
+                              color="primary"
                             >
                               Edit
                             </Button>
                           </form>
                         </ModalBody>
                         <ModalFooter>
-                          <Button variant='light' onPress={onClose}>
+                          <Button variant="light" onPress={onClose}>
                             Close
                           </Button>
                         </ModalFooter>
@@ -414,7 +414,7 @@ function AdminUsersPage() {
                   case "delete":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`Deleting ${selectedUser?.fullName}'s account`}
                         </ModalHeader>
                         <ModalBody>
@@ -422,14 +422,14 @@ function AdminUsersPage() {
                         </ModalBody>
                         <ModalFooter>
                           <Button
-                            color='primary'
-                            variant='light'
+                            color="primary"
+                            variant="light"
                             onPress={onClose}
                           >
                             Close
                           </Button>
                           <Button
-                            color='danger'
+                            color="danger"
                             onPress={onClose}
                             onClick={deleteUser}
                           >

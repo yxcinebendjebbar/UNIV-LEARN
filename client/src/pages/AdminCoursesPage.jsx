@@ -29,7 +29,7 @@ import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://univ-learn.onrender.com";
 axios.defaults.withCredentials = true;
 
 function AdminCoursesPage() {
@@ -148,17 +148,17 @@ function AdminCoursesPage() {
   };
 
   return (
-    <div className='flex justify-start'>
+    <div className="flex justify-start">
       <Sidebar />
-      <div className='grid place-items-center w-full'>
-        <div className='self-stretch mx-5 mt-8 w-full p-4'>
-          <Table radius='sm'>
+      <div className="grid place-items-center w-full">
+        <div className="self-stretch mx-5 mt-8 w-full p-4">
+          <Table radius="sm">
             <TableHeader>
               <TableColumn>Thumbnail</TableColumn>
               <TableColumn>Course Name</TableColumn>
               <TableColumn>Total Videos</TableColumn>
               <TableColumn>Total Enrolled</TableColumn>
-              <TableColumn align='center'>Actions</TableColumn>
+              <TableColumn align="center">Actions</TableColumn>
             </TableHeader>
             <TableBody emptyContent={"No courses to display."}>
               {courses &&
@@ -168,17 +168,17 @@ function AdminCoursesPage() {
                       <img
                         src={`http://localhost:8000/${course?.photo.slice(7)}`}
                         alt={course?.courseName}
-                        className='w-32 h-16 rounded object-cover'
+                        className="w-32 h-16 rounded object-cover"
                       />
                     </TableCell>
                     <TableCell>{course?.courseName}</TableCell>
                     <TableCell>{course?.videos?.length}</TableCell>
                     <TableCell>{course?.enrollmentCount}</TableCell>
                     <TableCell>
-                      <div className='relative flex items-center gap-2'>
-                        <Tooltip content='Details'>
+                      <div className="relative flex items-center gap-2">
+                        <Tooltip content="Details">
                           <span
-                            className='text-lg text-default-400 cursor-pointer active:opacity-50'
+                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
                             onClick={() => {
                               setSelectedCourse(course);
                               setSelectedAction("details");
@@ -188,9 +188,9 @@ function AdminCoursesPage() {
                             <FaRegEye />
                           </span>
                         </Tooltip>
-                        <Tooltip content='Edit course'>
+                        <Tooltip content="Edit course">
                           <span
-                            className='text-lg text-default-400 cursor-pointer active:opacity-50'
+                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
                             onClick={() => {
                               setSelectedCourse(course);
                               setSelectedAction("edit");
@@ -200,9 +200,9 @@ function AdminCoursesPage() {
                             <CiEdit />
                           </span>
                         </Tooltip>
-                        <Tooltip color='danger' content='Delete course'>
+                        <Tooltip color="danger" content="Delete course">
                           <span
-                            className='text-lg text-danger cursor-pointer active:opacity-50'
+                            className="text-lg text-danger cursor-pointer active:opacity-50"
                             onClick={() => {
                               setSelectedCourse(course);
                               setSelectedAction("delete");
@@ -218,17 +218,17 @@ function AdminCoursesPage() {
                 ))}
             </TableBody>
           </Table>
-          <div className=''>
+          <div className="">
             {isLoading && (
-              <div className='flex justify-center items-center w-full h-full bg-black/35'>
-                <Spinner size='lg' />
+              <div className="flex justify-center items-center w-full h-full bg-black/35">
+                <Spinner size="lg" />
               </div>
             )}
           </div>
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            scrollBehavior='inside'
+            scrollBehavior="inside"
           >
             <ModalContent>
               {(onClose) => {
@@ -236,68 +236,68 @@ function AdminCoursesPage() {
                   case "details":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`${selectedCourse?.courseName}'s details`}
                         </ModalHeader>
                         <ModalBody>
-                          <div className='flex flex-col gap-2'>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Course Name</p>
-                              <p className='text-sm'>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Course Name</p>
+                              <p className="text-sm">
                                 {selectedCourse?.courseName}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">
                                 Course Description
                               </p>
-                              <p className='text-sm'>
+                              <p className="text-sm">
                                 {selectedCourse?.description}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">
                                 Course Summary
                               </p>
-                              <p className='text-sm'>
+                              <p className="text-sm">
                                 {selectedCourse?.summary}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Faculty</p>
-                              <p className='text-sm'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Faculty</p>
+                              <p className="text-sm">
                                 {selectedCourse?.faculty}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Department</p>
-                              <p className='text-sm'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Department</p>
+                              <p className="text-sm">
                                 {selectedCourse?.department}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Specialty</p>
-                              <p className='text-sm'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Specialty</p>
+                              <p className="text-sm">
                                 {selectedCourse?.specialty}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>Level</p>
-                              <p className='text-sm'>{selectedCourse?.level}</p>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">Level</p>
+                              <p className="text-sm">{selectedCourse?.level}</p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">
                                 Total Enrollment
                               </p>
-                              <p className='text-sm'>
+                              <p className="text-sm">
                                 {selectedCourse?.enrollmentCount}
                               </p>
                             </div>
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-sm font-medium'>
+                            <div className="flex flex-col gap-2">
+                              <p className="text-sm font-medium">
                                 Total Videos
                               </p>
-                              <p className='text-sm'>
+                              <p className="text-sm">
                                 {selectedCourse?.videos.length}
                               </p>
                             </div>
@@ -305,8 +305,8 @@ function AdminCoursesPage() {
                         </ModalBody>
                         <ModalFooter>
                           <Button
-                            color='primary'
-                            variant='light'
+                            color="primary"
+                            variant="light"
                             onPress={onClose}
                           >
                             Close
@@ -317,81 +317,81 @@ function AdminCoursesPage() {
                   case "edit":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`Editing course's details`}
                         </ModalHeader>
                         <ModalBody>
                           <form onSubmit={updateCourse}>
-                            <div className='flex flex-col gap-2'>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='courseName'>Course Name</label>
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="courseName">Course Name</label>
                                 <Input
-                                  id='courseName'
-                                  name='newName'
-                                  placeholder='Enter course name'
+                                  id="courseName"
+                                  name="newName"
+                                  placeholder="Enter course name"
                                   defaultValue={selectedCourse?.courseName}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='description'>Description</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="description">Description</label>
                                 <Textarea
-                                  id='description'
-                                  name='description'
-                                  placeholder='Enter course description'
+                                  id="description"
+                                  name="description"
+                                  placeholder="Enter course description"
                                   defaultValue={selectedCourse?.description}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='description'>Summary</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="description">Summary</label>
                                 <Textarea
-                                  id='summary'
-                                  name='summary'
-                                  placeholder='Enter course summary'
+                                  id="summary"
+                                  name="summary"
+                                  placeholder="Enter course summary"
                                   defaultValue={selectedCourse?.summary}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='faculty'>Faculty</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="faculty">Faculty</label>
                                 <Input
-                                  id='faculty'
-                                  name='faculty'
-                                  placeholder='Enter faculty'
+                                  id="faculty"
+                                  name="faculty"
+                                  placeholder="Enter faculty"
                                   defaultValue={selectedCourse?.faculty}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='department'>Department</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="department">Department</label>
                                 <Input
-                                  id='department'
-                                  name='department'
-                                  placeholder='Enter department'
+                                  id="department"
+                                  name="department"
+                                  placeholder="Enter department"
                                   defaultValue={selectedCourse?.department}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='specialty'>Specialty</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="specialty">Specialty</label>
                                 <Input
-                                  id='specialty'
-                                  name='specialty'
-                                  placeholder='Enter specialty'
+                                  id="specialty"
+                                  name="specialty"
+                                  placeholder="Enter specialty"
                                   defaultValue={selectedCourse?.specialty}
                                 />
                               </div>
-                              <div className='flex flex-col gap-2'>
-                                <label htmlFor='level'>Level</label>
+                              <div className="flex flex-col gap-2">
+                                <label htmlFor="level">Level</label>
                                 <Input
-                                  id='level'
-                                  placeholder='Enter level'
-                                  name='level'
+                                  id="level"
+                                  placeholder="Enter level"
+                                  name="level"
                                   defaultValue={selectedCourse?.level}
                                 />
                               </div>
-                              <div className='flex flex-wrap gap-2'>
-                                <label htmlFor='thumbnail'>Thumbnail</label>
+                              <div className="flex flex-wrap gap-2">
+                                <label htmlFor="thumbnail">Thumbnail</label>
                                 <input
-                                  id='thumbnail'
-                                  name='thumbnail'
-                                  type='file'
+                                  id="thumbnail"
+                                  name="thumbnail"
+                                  type="file"
                                   onChange={handleThumbnailChange}
                                 />
 
@@ -400,22 +400,22 @@ function AdminCoursesPage() {
                                     thumbnailSrc ||
                                     "https://via.placeholder.com/150x150"
                                   }
-                                  className='h-40 object-cover rounded-lg'
+                                  className="h-40 object-cover rounded-lg"
                                 />
                               </div>
                             </div>
                             <Button
-                              radius='sm'
-                              color='primary'
-                              className='w-full mt-2'
-                              type='submit'
+                              radius="sm"
+                              color="primary"
+                              className="w-full mt-2"
+                              type="submit"
                             >
                               Edit
                             </Button>
                           </form>
                         </ModalBody>
                         <ModalFooter>
-                          <Button variant='light' onPress={onClose}>
+                          <Button variant="light" onPress={onClose}>
                             Close
                           </Button>
                         </ModalFooter>
@@ -424,7 +424,7 @@ function AdminCoursesPage() {
                   case "delete":
                     return (
                       <>
-                        <ModalHeader className='flex flex-col gap-1'>
+                        <ModalHeader className="flex flex-col gap-1">
                           {`Deleting ${selectedCourse?.courseName}`}
                         </ModalHeader>
                         <ModalBody>
@@ -432,14 +432,14 @@ function AdminCoursesPage() {
                         </ModalBody>
                         <ModalFooter>
                           <Button
-                            color='primary'
-                            variant='light'
+                            color="primary"
+                            variant="light"
                             onPress={onClose}
                           >
                             Close
                           </Button>
                           <Button
-                            color='danger'
+                            color="danger"
                             onPress={onClose}
                             onClick={deleteCourse}
                           >
