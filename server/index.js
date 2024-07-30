@@ -16,7 +16,7 @@ const PORT = 8000;
 
 app.use(
   cors({
-    origin: "https://univ-learn.vercel.app/*",
+    origin: "https://univ-learn.vercel.app/",
     credentials: true,
   })
 );
