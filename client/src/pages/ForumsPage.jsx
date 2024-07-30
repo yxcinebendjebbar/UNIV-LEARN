@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar.jsx";
 import Footer from "../components/Footer";
 import Likes from "../components/Likes";
 import Comments from "../components/Comments";

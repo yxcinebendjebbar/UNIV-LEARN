@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ReactHlsPlayer from "react-hls-player";
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar.jsx";
 import Footer from "../components/Footer";
 import { FaStar } from "react-icons/fa";
 import { CardIntro, CardIntroHeader } from "../components/CardIntro";

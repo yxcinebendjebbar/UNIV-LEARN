@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar.jsx";
 import Footer from "../components/Footer";
 
 axios.defaults.withCredentials = true;

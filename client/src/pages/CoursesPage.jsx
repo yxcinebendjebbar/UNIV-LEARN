@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar.jsx";
 import Footer from "../components/Footer";
 import { IoMdSearch } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
