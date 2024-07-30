@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ReactHlsPlayer from "react-hls-player";
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 import { FaStar } from "react-icons/fa";
 import { CardIntro, CardIntroHeader } from "../components/CardIntro";
@@ -39,7 +39,7 @@ function CoursePage() {
 
   return (
     <div className="Course page">
-      <NavBar />
+      <Navbar />
       {!course ? (
         <div className="h-full w-full bg-black/35">
           <Spinner />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 
 axios.defaults.withCredentials = true;
@@ -66,7 +66,7 @@ const Replies = () => {
 
   return (
     <div>
-      <NavBar />
+      <Navbar />
       {isLoading && (
         <div className="flex justify-center items-center mt-20">
           <Spinner size="large" />

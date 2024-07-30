@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import axios from "axios";
 import { Spinner, Textarea } from "@nextui-org/react";
 import {
@@ -134,7 +134,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className=" min-h-screen w-full ">
         <div className="flex flex-col">
           <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">

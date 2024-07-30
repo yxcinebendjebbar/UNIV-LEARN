@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 import Likes from "../components/Likes";
 import Comments from "../components/Comments";
@@ -58,7 +58,7 @@ const ForumsPage = () => {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <main className="bg-gray-100 dark:bg-neutral-900 pt-20 min-h-screen">
         {user && user.role === "teacher" && (
           <div className="max-w-4xl mx-auto p-8 bg-white dark:bg-neutral-800 shadow-lg rounded-lg mb-8">

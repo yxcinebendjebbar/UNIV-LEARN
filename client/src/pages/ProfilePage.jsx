@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 
 axios.defaults.withCredentials = true;
@@ -33,7 +33,7 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <NavBar />
+      <Navbar />
       <main className="flex flex-col items-center mb-20">
         <h2 className="text-xl font-medium my-4 self-start mx-8">
           Favorite Courses:

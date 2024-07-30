@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Accordion from "../components/Accordion";
 import studying from "../assets/studying-header.png";
 import studentImg from "../assets/student.jpg";
@@ -32,7 +32,7 @@ const categories = [
 function LandingPage() {
   return (
     <div className="w-screen">
-      <NavBar />
+      <Navbar />
       <main className="mx-8 md:px-24 mt-32 mb-52">
         <div className="flex items-center justify-between">
           <div className="text-center md:text-left flex flex-col items-center gap-2 md:items-start">

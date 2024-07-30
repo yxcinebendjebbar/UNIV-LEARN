@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 import { IoMdSearch } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
@@ -266,7 +266,7 @@ function CoursesPage() {
 
   return (
     <div>
-      <NavBar />
+      <Navbar />
       <SearchBar setSearchText={setSearchText} />
       <main className="px-4 lg:px-32 mb-8">
         <h2 className="text-header mb-8">Browse Courses</h2>

@@ -8,7 +8,7 @@ import univlearn from "../assets/univ-learn-logo-black.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, Button, Spacer } from "@nextui-org/react";
 
-function NavBar() {
+function Navbar() {
   const { user } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -200,4 +200,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default Navbar;

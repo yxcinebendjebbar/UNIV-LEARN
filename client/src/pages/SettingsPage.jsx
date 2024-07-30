@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth.jsx";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 
 axios.defaults.baseURL = "https://univ-learn.onrender.com";
@@ -121,7 +121,7 @@ function SettingsPage() {
   };
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className="dark:bg-neutral-950 min-h-screen flex flex-col items-center">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-3xl bg-white dark:bg-neutral-900 min-h-screen flex flex-col items-center p-12">
           <form
