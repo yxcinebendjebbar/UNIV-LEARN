@@ -14,7 +14,12 @@ dotenv.config();
 const app = express();
 const PORT = 8000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://univ-learn.vercel.app/*",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
