@@ -61,7 +61,7 @@ const ProfilePage = () => {
                         }}
                       >
                         <img
-                          src={`http://localhost:8000/${course?.photo.slice(
+                          src={`https://univ-learn.onrender.com/${course?.photo.slice(
                             7
                           )}`}
                           alt="course thumbnail"
@@ -106,7 +106,7 @@ const ProfilePage = () => {
                         }}
                       >
                         <img
-                          src={`http://localhost:8000/${course?.photo.slice(
+                          src={`https://univ-learn.onrender.com/${course?.photo.slice(
                             7
                           )}`}
                           alt="course thumbnail"

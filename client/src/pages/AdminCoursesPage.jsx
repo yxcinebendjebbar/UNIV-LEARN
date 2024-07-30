@@ -166,7 +166,9 @@ function AdminCoursesPage() {
                   <TableRow key={course?._id}>
                     <TableCell>
                       <img
-                        src={`http://localhost:8000/${course?.photo.slice(7)}`}
+                        src={`https://univ-learn.onrender.com/${course?.photo.slice(
+                          7
+                        )}`}
                         alt={course?.courseName}
                         className="w-32 h-16 rounded object-cover"
                       />

@@ -92,7 +92,7 @@ function HomePage() {
                   <img
                     lazy="true"
                     draggable="false"
-                    src={`http://localhost:8000/${courseSrc}`}
+                    src={`https://univ-learn.onrender.com/${courseSrc}`}
                     alt={course?.courseName}
                     className="w-full h-[177px] object-cover"
                   />
@@ -157,7 +157,7 @@ function HomePage() {
             return (
               <div className="flex flex-col justify-center items-center">
                 <img
-                  src={`http://localhost:8000/${prof.profilePicture[0].slice(
+                  src={`https://univ-learn.onrender.com/${prof.profilePicture[0].slice(
                     7
                   )}`}
                   alt={prof.name[0]}

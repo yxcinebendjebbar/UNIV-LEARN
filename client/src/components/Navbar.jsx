@@ -28,23 +28,23 @@ function NavBar() {
   const location = useLocation();
 
   return (
-    <nav className='h-16 flex items-center justify-between border-b border-neutral-800'>
-      <div className='p-4 flex items-center gap-2'>
+    <nav className="h-16 flex items-center justify-between border-b border-neutral-800">
+      <div className="p-4 flex items-center gap-2">
         <img
           src={univlearn}
-          alt='UnivLearn'
+          alt="UnivLearn"
           width={32}
-          className='dark:invert'
+          className="dark:invert"
         />
-        <h1 className='text-2xl font-bold hidden sm:block md:text-3xl lg:text-4xl'>
+        <h1 className="text-2xl font-bold hidden sm:block md:text-3xl lg:text-4xl">
           UNIVLEARN
         </h1>
       </div>
       {location.pathname === "/" && (
-        <ul className='flex items-center gap-2 mr-4'>
+        <ul className="flex items-center gap-2 mr-4">
           <li>
             <button
-              className='Solid '
+              className="Solid "
               onClick={() => {
                 window.location.href = "/login";
               }}
@@ -54,7 +54,7 @@ function NavBar() {
           </li>
           <li>
             <button
-              className='Bordered'
+              className="Bordered"
               onClick={() => {
                 window.location.href = "/signup";
               }}
@@ -62,37 +62,37 @@ function NavBar() {
               Sign up
             </button>
           </li>
-          <li className='mx-3'>
+          <li className="mx-3">
             <Switcher />
           </li>
         </ul>
       )}
       {location.pathname !== "/" && (
-        <div className='flex justify-center items-center gap-8 pr-4'>
-          <div className='hidden lg:block'>
-            <ul className='flex items-center gap-4 text-lg font-medium'>
+        <div className="flex justify-center items-center gap-8 pr-4">
+          <div className="hidden lg:block">
+            <ul className="flex items-center gap-4 text-lg font-medium">
               <li>
-                <a href='/home'>Home</a>
+                <a href="/home">Home</a>
               </li>
               {user.role === "teacher" && (
                 <li>
-                  <a href='/dashboard'>Dashboard</a>
+                  <a href="/dashboard">Dashboard</a>
                 </li>
               )}
               <li>
-                <a href='/courses'>Courses</a>
+                <a href="/courses">Courses</a>
               </li>
               <li>
-                <a href='/forums'>Forums</a>
+                <a href="/forums">Forums</a>
               </li>
               <li>
                 <div>
                   <Avatar
-                    src={`http://localhost:8000/${user?.profilePicture.slice(
+                    src={`https://univ-learn.onrender.com/${user?.profilePicture.slice(
                       7
                     )}`}
-                    className=' cursor-pointer'
-                    draggable='false'
+                    className=" cursor-pointer"
+                    draggable="false"
                     onClick={toggleProfileMenu}
                   />
                 </div>
@@ -102,20 +102,20 @@ function NavBar() {
                       initial={{ y: -100, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -100, opacity: 0 }}
-                      className='absolute right-0 top-16 origin-top bg-neutral-50 border rounded dark:bg-neutral-900'
+                      className="absolute right-0 top-16 origin-top bg-neutral-50 border rounded dark:bg-neutral-900"
                     >
-                      <ul className='flex flex-col items-start gap-4 p-4 text-base font-normal'>
+                      <ul className="flex flex-col items-start gap-4 p-4 text-base font-normal">
                         <li>
-                          <a href='/profile'>View Profile</a>
+                          <a href="/profile">View Profile</a>
                         </li>
                         <li>
-                          <a href='/settings'>Settings</a>
+                          <a href="/settings">Settings</a>
                         </li>
                         <li>
                           <Button
-                            variant='light'
-                            radius='sm'
-                            color='danger'
+                            variant="light"
+                            radius="sm"
+                            color="danger"
                             onClick={() => {
                               logout();
                             }}
@@ -132,7 +132,7 @@ function NavBar() {
           </div>
           <Switcher />
           <CiMenuFries
-            className='scale-150 cursor-pointer lg:hidden'
+            className="scale-150 cursor-pointer lg:hidden"
             onClick={toggleMenu}
           />
           <AnimatePresence>
@@ -141,48 +141,48 @@ function NavBar() {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -100, opacity: 0 }}
-                className='w-full fixed right-0 top-0 origin-top-right h-screen z-50 bg-neutral-100 dark:bg-neutral-900'
+                className="w-full fixed right-0 top-0 origin-top-right h-screen z-50 bg-neutral-100 dark:bg-neutral-900"
               >
-                <div className='flex justify-end p-4'>
+                <div className="flex justify-end p-4">
                   <IoClose
-                    className='scale-150 cursor-pointer'
+                    className="scale-150 cursor-pointer"
                     onClick={toggleMenu}
                   />
                 </div>
-                <ul className='flex flex-col items-start px-4 gap-4'>
-                  <li className='flex gap-3 items-center border-b w-full pb-4'>
+                <ul className="flex flex-col items-start px-4 gap-4">
+                  <li className="flex gap-3 items-center border-b w-full pb-4">
                     <Avatar
-                      size='lg'
-                      src={`http://localhost:8000/${user?.profilePicture.slice(
+                      size="lg"
+                      src={`https://univ-learn.onrender.com/${user?.profilePicture.slice(
                         7
                       )}`}
-                      draggable='false'
+                      draggable="false"
                     />
                     <div>
-                      <h2 className='text-header'>{user?.username}</h2>
-                      <a href='/profile'>View Profile</a>
+                      <h2 className="text-header">{user?.username}</h2>
+                      <a href="/profile">View Profile</a>
                     </div>
                   </li>
                   <li>
-                    <a href='/home'>Home</a>
+                    <a href="/home">Home</a>
                   </li>
                   {user.role === "teacher" && (
                     <li>
-                      <a href='/dashboard'>Dashboard</a>
+                      <a href="/dashboard">Dashboard</a>
                     </li>
                   )}
                   <li>
-                    <a href='/courses'>Courses</a>
+                    <a href="/courses">Courses</a>
                   </li>
                   <li>
-                    <a href='/forums'>Forums</a>
+                    <a href="/forums">Forums</a>
                   </li>
                   <li>
-                    <a href='/settings'>Settings</a>
+                    <a href="/settings">Settings</a>
                   </li>
                   <li>
                     <button
-                      className='text-red-500 hover:underline'
+                      className="text-red-500 hover:underline"
                       onClick={() => {
                         logout();
                       }}

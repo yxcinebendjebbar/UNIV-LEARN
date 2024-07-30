@@ -131,7 +131,9 @@ function SettingsPage() {
             <img
               src={
                 thumbnailSrc ||
-                `http://localhost:8000/${user.profilePicture.slice(7)}`
+                `https://univ-learn.onrender.com/${user.profilePicture.slice(
+                  7
+                )}`
               }
               alt="previous Profile picture"
               className="h-40 w-40 rounded-full"

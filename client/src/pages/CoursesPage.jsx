@@ -482,7 +482,7 @@ function CoursesPage() {
                   <img
                     lazy="true"
                     draggable="false"
-                    src={`http://localhost:8000/${courseSrc}`}
+                    src={`https://univ-learn.onrender.com/${courseSrc}`}
                     alt={course?.courseName}
                     className="w-full h-[177px] object-cover"
                   />

@@ -69,7 +69,7 @@ function CoursePage() {
                         <img
                           lazy="true"
                           draggable="false"
-                          src={`http://localhost:8000/${courseSrc}`}
+                          src={`https://univ-learn.onrender.com/${courseSrc}`}
                           alt={course?.courseName}
                           className="w-full h-auto"
                         />
@@ -107,7 +107,7 @@ function CoursePage() {
       <div className="lg:mx-60">
         {course?.videos.length === 1 ? (
           <ReactHlsPlayer
-            src={`http://localhost:8000/${course?.videos[0].m3u8MasterPath.slice(
+            src={`https://univ-learn.onrender.com/${course?.videos[0].m3u8MasterPath.slice(
               8
             )}`}
             controls
@@ -115,7 +115,7 @@ function CoursePage() {
         ) : (
           <div className="flex flex-col lg:flex-row">
             <ReactHlsPlayer
-              src={`http://localhost:8000/${course?.videos[
+              src={`https://univ-learn.onrender.com/${course?.videos[
                 activeVideoIndex
               ].m3u8MasterPath.slice(8)}`}
               controls
@@ -124,7 +124,7 @@ function CoursePage() {
               {course?.videos.map((video, index) => (
                 <div key={index} onClick={() => handleVideoClick(index)}>
                   <video
-                    src={`http://localhost:8000/${video.m3u8MasterPath.slice(
+                    src={`https://univ-learn.onrender.com/${video.m3u8MasterPath.slice(
                       8
                     )}`}
                     className="w-40 cursor-pointer p-2"

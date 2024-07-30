@@ -170,7 +170,9 @@ function AdminUsersPage() {
           <User
             avatarProps={{
               radius: "lg",
-              src: `http://localhost:8000/${user.profilePicture.slice(7)}`,
+              src: `https://univ-learn.onrender.com/${user.profilePicture.slice(
+                7
+              )}`,
             }}
             description={user.email}
             name={user.fullName}

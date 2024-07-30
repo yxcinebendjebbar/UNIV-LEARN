@@ -187,7 +187,7 @@ export default function Dashboard() {
                       <>
                         <div>
                           <img
-                            src={`http://localhost:8000/${courseSrc}`}
+                            src={`https://univ-learn.onrender.com/${courseSrc}`}
                             width="100"
                             height="60"
                             alt={course?.courseName}
