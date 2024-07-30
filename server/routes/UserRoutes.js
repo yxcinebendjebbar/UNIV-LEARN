@@ -324,7 +324,7 @@ router.post("/forgotpass", async (req, res) => {
       from: "univlearn13@gmail.com",
       to: email,
       subject: "Password Reset",
-      text: `Click on the link to reset your password: http://localhost:5173/resetpassword/${user?._id}`,
+      text: `Click on the link to reset your password: https://univ-learn.vercel.app/resetpassword/${user?._id}`,
     };
     transporter.sendMail(receiver);
     res.status(200).json({ message: "Email sent successfully", success: true });
