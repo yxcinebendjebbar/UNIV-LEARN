@@ -16,6 +16,7 @@ const PORT = 8000;
 
 app.use(
   cors({
+    origin: true,
     credentials: true,
   })
 );
