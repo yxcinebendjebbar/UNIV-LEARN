@@ -35,8 +35,6 @@ function CoursePage() {
       });
   }, []);
 
-  console.log(course);
-
   let courseSrc = course?.photo.slice(8);
 
   return (
