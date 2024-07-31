@@ -32,16 +32,16 @@ app.use((req, res, next) => {
 });
 
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: "auto", maxAge: 1000 * 60 * 60 * 24 },
+    cookie: { secure: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30 },
   })
 );
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("uploads"));
 app.use(express.static("assets"));
 
