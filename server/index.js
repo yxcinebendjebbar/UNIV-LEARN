@@ -15,7 +15,7 @@ const app = express();
 const PORT = 8000;
 
 const corsOptions = {
-  origin: "https://univ-learn.vercel.app/",
+  origin: ["https://univ-learn.vercel.app/", "http://localhost:5173/"],
   optionsSuccessStatus: 200,
   credentials: true,
 };
