@@ -54,6 +54,14 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.get("/isLoggedIn", (req, res) => {
+  if (req.session.user) {
+    res.send({ isLoggedIn: true });
+  } else {
+    res.send({ isLoggedIn: false });
+  }
+});
+
 // const requireAuth = (req, res, next) => {
 //   if (req.session.userId) {
 //     next(); // User is authenticated, continue to next middleware
