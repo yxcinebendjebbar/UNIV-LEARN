@@ -16,20 +16,8 @@ const PORT = 8000;
 
 const corsOptions = {
   origin: ["https://univ-learn.vercel.app", "http://localhost:5173"],
-  optionsSuccessStatus: 200,
   credentials: true,
 };
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
 
 app.use(cors(corsOptions));
 app.use(
@@ -37,7 +25,7 @@ app.use(
     secret: "secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30 },
+    cookie: { secure: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 15 },
   })
 );
 app.use(express.json());
