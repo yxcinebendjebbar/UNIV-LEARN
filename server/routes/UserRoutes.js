@@ -112,7 +112,7 @@ router.post("/signup", async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    return res.status(200).json({ token: token });
+    return res.status(200).json({ token: token, status: user.status });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -147,7 +147,7 @@ router.post("/login", async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    return res.status(200).json({ token: token });
+    return res.status(200).json({ token: token, status: user.status });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
