@@ -20,14 +20,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(
-  session({
-    secret: "secret-key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 15 },
-  })
-);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("uploads"));

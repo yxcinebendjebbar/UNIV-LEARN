@@ -6,22 +6,46 @@ import fs from "fs";
 import nodemailer from "nodemailer";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
 const isLoggedIn = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized access" });
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    next();
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
   }
-  next();
 };
 const isProfessor = (req, res, next) => {
-  if (!req.session.user || req.session.user.role !== "teacher") {
-    return res
-      .status(403)
-      .json({ error: "Only professors can perform this action" });
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY);
+    if (decoded.user.role === "professor") {
+      next();
+    }
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
   }
-  next();
 };
 
 // Array of allowed file extensions
@@ -71,25 +95,23 @@ router.post("/signup", async (req, res) => {
     });
 
     const user = await newUser.save();
-    req.session.user = {
-      username: user.fullName,
-      role: user.role,
-      id: user._id,
-      status: user.status,
-      profilePicture: user.profilePicture,
-    };
-    req.session.save((err) => {
-      if (err) {
-        return res.status(500).json({ error: "Session error", err });
-      }
-      res.status(201).json({
-        message: "User created successfully",
-        user: req.session.user,
-        auth: true,
-      });
-    });
+    const token = await jwt.sign(
+      {
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          fullName: user.fullName,
+          profilePicture: user.profilePicture,
+        },
+      },
+      process.env.SECRET_JWT_KEY,
+      { expiresIn: "15d" }
+    );
+
+    return res.status(200).json({ token: token });
   } catch (error) {
-    res.status(500).json({ error: error.message, auth: false });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -108,27 +130,21 @@ router.post("/login", async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ error: "Incorrect password" });
     }
+    const token = await jwt.sign(
+      {
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          fullName: user.fullName,
+          profilePicture: user.profilePicture,
+        },
+      },
+      process.env.SECRET_JWT_KEY,
+      { expiresIn: "15d" }
+    );
 
-    req.session.user = {
-      username: user.fullName,
-      role: user.role,
-      id: user._id,
-      status: user.status,
-      profilePicture: user.profilePicture,
-    };
-    req.session.save((err) => {
-      if (err) {
-        return res.status(500).json({ error: "Session error", err });
-      }
-      // res.send("Login successful, session user id: " + req.session.user.id);
-      res.status(200).json({
-        message: "Login successful",
-        user: req.session.user,
-        auth: true,
-      });
-    });
-
-    // res.redirect("/hp");
+    return res.status(200).json({ token: token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
