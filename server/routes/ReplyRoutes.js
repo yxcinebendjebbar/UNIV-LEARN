@@ -5,10 +5,41 @@ import Reply from "../models/ReplyModel.js";
 const router = express.Router();
 
 const isLoggedIn = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized access" });
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    next();
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
   }
-  next();
+};
+const isProfessor = (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY);
+    if (decoded.user.role === "professor") {
+      next();
+    }
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
+  }
 };
 
 router.post("/:forumId/replies", isLoggedIn, async (req, res) => {

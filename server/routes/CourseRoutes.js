@@ -14,19 +14,41 @@ const router = express.Router();
 ffmpeg.setFfmpegPath("C:/ffmpeg-6.1.1-full_build/bin/ffmpeg");
 
 const isLoggedIn = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized access" });
-  }
-  next();
-};
+  let token;
 
-const isProfessor = (req, res, next) => {
-  if (!req.session.user || req.session.user.role !== "teacher") {
-    return res
-      .status(403)
-      .json({ error: "Only professors can perform this action" });
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    next();
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
   }
-  next();
+};
+const isProfessor = (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    const bearer = req.headers.authorization.split(" ");
+    token = bearer[1];
+
+    req.token = token;
+    const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY);
+    if (decoded.user.role === "professor") {
+      next();
+    }
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
+  }
 };
 
 // Define storage for files using Multer
