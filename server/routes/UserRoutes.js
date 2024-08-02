@@ -7,6 +7,9 @@ import nodemailer from "nodemailer";
 import User from "../models/UserModel.js";
 import Course from "../models/CourseModel.js";
 import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
 
