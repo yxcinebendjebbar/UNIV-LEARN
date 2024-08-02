@@ -112,7 +112,15 @@ router.post("/signup", async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    return res.status(200).json({ token: token, status: user.status });
+    return res.status(200).json({
+      token: token,
+      user: {
+        email: user.email,
+        role: user.role,
+        fullName: user.fullName,
+        profilePicture: user.profilePicture,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -147,7 +155,15 @@ router.post("/login", async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    return res.status(200).json({ token: token, status: user.status });
+    return res.status(200).json({
+      token: token,
+      user: {
+        email: user.email,
+        role: user.role,
+        fullName: user.fullName,
+        profilePicture: user.profilePicture,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
